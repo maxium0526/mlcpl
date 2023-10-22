@@ -274,6 +274,62 @@ def Open_Images(dataset_path, split=None, transform=transforms.ToTensor(), use_c
         return valid_dataset
     else:
         return train_dataset, valid_dataset
+    
+def Open_Images_V3(dataset_path, split='train', transform=transforms.ToTensor(), use_cache=True, cache_dir='output/dataset'):
+    from pathlib import Path
+
+    if split == 'train':
+        subset = 'train'
+    elif split == 'valid':
+        subset = 'validation'
+    elif split == 'test':
+        subset = 'test'
+
+    categories = pd.read_csv(os.path.join(dataset_path, 'classes-trainable.txt'), header=None)[0].tolist()
+    num_categories = len(categories)
+
+    if use_cache and os.path.exists(os.path.join(cache_dir, split+'.csv')) and os.path.exists(os.path.join(cache_dir, 'valid.csv')):
+        return MLCPLDataset(dataset_path, pd.read_csv(os.path.join(cache_dir, split+'.csv')), num_categories, transform)
+
+    df = pd.read_csv(os.path.join(dataset_path, subset, 'annotations-human.csv'))
+    df = df.drop('Source', axis=1)
+    df = df[df['LabelName'].isin(categories)] # drop the annotations not belong to trainable categories
+    df['LabelName'] = df['LabelName'].apply(lambda x: categories.index(x))
+    df_pos = df[df['Confidence'] == 1].drop('Confidence', axis=1)
+
+    df_neg = df[df['Confidence'] == 0].drop('Confidence', axis=1)
+    df_pos = df_pos.groupby('ImageID').agg(list).rename(columns={'LabelName': 'Positive'})
+    df_neg = df_neg.groupby('ImageID').agg(list).rename(columns={'LabelName': 'Negative'})
+    df = pd.merge(df_pos, df_neg, on='ImageID', how='outer')
+    df = df.reset_index()
+    df = df.rename(columns={'ImageID': 'Id'})
+
+    df['Uncertain'] = np.nan
+    df['Positive'] = df['Positive'].fillna("").apply(list).apply(lambda x: json.dumps(x).replace(',', ';'))
+    df['Negative'] = df['Negative'].fillna("").apply(list).apply(lambda x: json.dumps(x).replace(',', ';'))
+    df['Uncertain'] = df['Uncertain'].fillna("").apply(list).apply(lambda x: json.dumps(x).replace(',', ';'))
+
+    paths = [f'{subset}/{img_id}.jpg' for img_id in df['Id'].tolist()]
+    df.insert(loc=1, column='Path', value=paths)
+
+    # check if the images exists:
+    non_exist_indices = []
+    num_exist, num_non_exist = 0, 0
+    for i, row in df.iterrows():
+        if os.path.isfile(os.path.join(dataset_path, row['Path'])):
+            num_exist += 1
+        else:
+            num_non_exist += 1
+            non_exist_indices.append(i)
+        print(f'Checked {i+1}/{len(df)} images. Exist: {num_exist}. Not found: {num_non_exist}', end='\r')
+    print()
+
+    df = df.drop(non_exist_indices)
+    
+    Path(cache_dir).mkdir(parents=True, exist_ok=True)
+    df.to_csv(os.path.join(cache_dir, split+'.csv'))
+
+    return MLCPLDataset(dataset_path, df, num_categories, transform)
 
 def CheXpert(dataset_path, competition_categories=False):
     results = []
