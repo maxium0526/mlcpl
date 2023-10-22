@@ -32,8 +32,7 @@ def CFT(
     batch_size=None,
     epochs=1,
     early_stopping=None,
-    validation_metric=None,unknown_label_strategy=unknown_to_unknown,
-    uncertain_label_strategy=uncertain_to_unknown,
+    validation_metric=None,
     device='cuda',
     tblog=None,
     excellog=None,
@@ -43,8 +42,6 @@ def CFT(
 
     z_train, y_train = training_data
     z_valid, y_valid = validation_data
-    z_train, y_train = z_train.to(device), unknown_label_strategy(uncertain_label_strategy(y_train.to(device)))
-    z_valid, y_valid = z_valid.to(device), y_valid.to(device)
     
     weight, bias = weight.to(device), bias.to(device)
 
@@ -56,25 +53,23 @@ def CFT(
         head_weight = torch.nn.Parameter(weight[i:i+1, :].clone().detach())
         head_bias = torch.nn.Parameter(bias[i:i+1].clone().detach())
 
-        # prepare training data
-        if len(z_train.shape) == 3:             # (batch_size, num_categories, feature_dim)     # For SSGRLs
-            head_z_train = z_train[:, i, :]
-        else:                                   # (batch_size, feature_dim)                     # For vanilla CNNs
-            head_z_train = z_train
-        head_y_train = y_train[:, i:i+1]
+        # prepare training data            
+        head_z_train, head_y_train = z_train, y_train[:, i:i+1]
+        if head_y_train.dtype == torch.int8:
+            head_y_train = head_y_train.to(torch.float32)
+            head_y_train[head_y_train==-1] = torch.nan
         train_label_map = ~torch.isnan(head_y_train).view(-1)
         head_z_train, head_y_train = head_z_train[train_label_map, :], head_y_train[train_label_map, :]
-        # head_z_train, head_y_train = head_z_train.to(config.DEVICE), head_y_train.to(config.DEVICE)
+        head_y_train = head_y_train.to(device)
 
         # prepare validation data
-        if len(z_valid.shape) == 3:             # (batch_size, num_categories, feature_dim)     # For SSGRLs
-            head_z_valid = z_valid[:, i, :]
-        else:                                   # (batch_size, feature_dim)                     # For vanilla CNNs
-            head_z_valid = z_valid
-        head_y_valid = y_valid[:, i:i+1]
+        head_z_valid, head_y_valid = z_valid, y_valid[:, i:i+1]
+        if head_y_valid.dtype == torch.int8:
+            head_y_valid = head_y_valid.to(torch.float32)
+            head_y_valid[head_y_valid==-1] = torch.nan
         valid_label_map = ~torch.isnan(head_y_valid).view(-1)
         head_z_valid, head_y_valid = head_z_valid[valid_label_map, :], head_y_valid[valid_label_map, :]
-        # head_z_valid, head_y_valid = head_z_valid.to(config.DEVICE), head_y_valid.to(config.DEVICE)
+        head_y_valid = head_y_valid.to(device)
 
         if (head_y_train==0).sum() == 0 or (head_y_train==1).sum() == 0:
             print(f'Category {i} cannot be trained. Skip.')
@@ -104,7 +99,10 @@ def CFT(
         # writing logs to loggers
         for record in records:
             excellog.add('category_'+str(i), record)
-            tblog.add_scalars('category_'+str(i), record, record['Epoch'])
+            try:
+                tblog.add_scalars('category_'+str(i), record, record['Epoch'])
+            except:
+                print('Error occured during logging Tensorboard.')    
     excellog.flush()
     tblog.flush()
 
