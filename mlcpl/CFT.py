@@ -1,11 +1,8 @@
 import torch
 import numpy as np
-import os
-from datetime import datetime
-from pathlib import Path
 from .label_strategy import *
 from .helper import *
-from torch.utils.data import Dataset, DataLoader
+from torch.utils.data import Dataset
 
 class FTDataset(Dataset):
     def __init__(self, Z, Y):
@@ -97,14 +94,25 @@ def CFT(
         finetuned_bias[i:i+1] = head_best_bias
 
         # writing logs to loggers
-        for record in records:
-            excellog.add('category_'+str(i), record)
+        if excellog:
+            print('Logging to excel file...', end='')
             try:
-                tblog.add_scalars('category_'+str(i), record, record['Epoch'])
+                for record in records:
+                    excellog.add('category_'+str(i), record)
+                excellog.flush()
+                print('Done.')
             except:
-                print('Error occured during logging Tensorboard.')    
-    excellog.flush()
-    tblog.flush()
+                print('Failed.')
+
+        if excellog:
+            print('Logging to Tensorboard...', end='')
+            try:
+                for record in records:
+                    tblog.add_scalars('category_'+str(i), record, record['Epoch'])
+                tblog.flush()
+                print('Done.')
+            except:
+                print('Failed.')
 
     return finetuned_weight, finetuned_bias
 
