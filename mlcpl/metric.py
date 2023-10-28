@@ -1,5 +1,3 @@
-from torchmetrics import Metric
-from torchmetrics.functional.classification import binary_auroc, binary_average_precision, binary_f1_score, binary_precision, binary_recall
 import torch
 
 class PartialMultilabelMetric():

@@ -1,6 +1,3 @@
-import torch
-import numpy as np
-import torchmetrics
 import pandas as pd
 
 def print_record(log, end='\r'):
