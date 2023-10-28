@@ -123,6 +123,4 @@ def edit_targets_parital_labels(partial_loss_mode, likelihood_topk, prior_thresh
                 targets_weights += (targets != -1).float()
                 targets_weights = targets_weights.bool()
 
-        negative_backprop_fun_jit(targets, xs_neg_prob, targets_weights, num_top_k)
-
     return targets_weights, xs_neg
