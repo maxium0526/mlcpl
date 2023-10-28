@@ -31,8 +31,15 @@ class MLCPLDataset(Dataset):
         img_path = os.path.join(self.dataset_path, path)
         img = self.read_func(img_path)
         img = self.transform(img)
-        target = to_one_hot(self.num_categories, pos_category_nos, neg_category_nos, unc_category_nos)
+        target = self.__to_one_hot(pos_category_nos, neg_category_nos, unc_category_nos)
         return img, target
+    
+    def __to_one_hot(self, pos_category_nos, neg_category_nos, unc_category_nos):
+        one_hot = torch.full((self.num_categories, ), torch.nan, dtype=torch.float32)
+        one_hot[np.array(pos_category_nos)] = 1.0
+        one_hot[np.array(neg_category_nos)] = 0.0
+        one_hot[np.array(unc_category_nos)] = -1.0
+        return one_hot
 
     def test(self):
         return self.__getitem__(0)
@@ -95,13 +102,6 @@ def drop_labels(old_records, target_partial_ratio, seed=526):
         new_unc_category_nos = [no for no in unc_category_nos if rng.random() < target_partial_ratio]
         new_records.append((i, path, new_pos_category_nos, new_neg_category_nos, new_unc_category_nos))
     return new_records
-
-def to_one_hot(num_categories, pos_category_nos, neg_category_nos, unc_category_nos):
-    one_hot = torch.full((num_categories, ), torch.nan, dtype=torch.float32)
-    one_hot[np.array(pos_category_nos)] = 1.0
-    one_hot[np.array(neg_category_nos)] = 0.0
-    one_hot[np.array(unc_category_nos)] = -1.0
-    return one_hot
 
 def records_to_df(records):
     df = pd.DataFrame(records, columns=['Id', 'Path', 'Positive', 'Negative', 'Uncertain'])
