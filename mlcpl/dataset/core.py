@@ -6,6 +6,7 @@ import pandas as pd
 from PIL import Image
 import json
 import pydicom as dicom
+from ..helper import dotdict
 
 def read_jpg(img_path):
     return Image.open(img_path).convert('RGB')
@@ -56,9 +57,6 @@ class MLCPLDataset(Dataset):
         return samples
 
     def get_statistics(self):
-        if self.statistics is not None:
-            return self.statistics
-
         num_categories = self.num_categories
         num_samples = len(self.records)
         num_labels = num_samples * num_categories
