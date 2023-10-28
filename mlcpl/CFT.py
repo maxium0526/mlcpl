@@ -95,16 +95,15 @@ def CFT(
 
         # writing logs to loggers
         if excellog:
-            print('Logging to excel file...', end='')
+            print('Logging to excel file cache...', end='')
             try:
                 for record in records:
                     excellog.add('category_'+str(i), record)
-                excellog.flush()
                 print('Done.')
             except:
                 print('Failed.')
 
-        if excellog:
+        if tblog:
             print('Logging to Tensorboard...', end='')
             try:
                 for record in records:
@@ -113,6 +112,22 @@ def CFT(
                 print('Done.')
             except:
                 print('Failed.')
+    
+    if excellog:
+        print('Saving excel file...', end='')
+        try:
+            excellog.flush()
+            print('Done.')
+        except:
+            print('Failed.')
+
+    if tblog:
+        print('Flushing Tensorboard...', end='')
+        try:
+            tblog.flush()
+            print('Done.')
+        except:
+            print('Failed.')
 
     return finetuned_weight, finetuned_bias
 
