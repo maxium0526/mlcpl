@@ -104,7 +104,6 @@ def to_one_hot(num_categories, pos_category_nos, neg_category_nos, unc_category_
     return one_hot
 
 def records_to_df(records):
-    records = [(i, path, json.dumps(pos_category_nos).replace(',', ';'), json.dumps(neg_category_nos).replace(',', ';'), json.dumps(unc_category_nos).replace(',', ';')) for (i, path, pos_category_nos, neg_category_nos, unc_category_nos) in records]
     df = pd.DataFrame(records, columns=['Id', 'Path', 'Positive', 'Negative', 'Uncertain'])
     return df
 
@@ -113,9 +112,9 @@ def df_to_records(df):
     for i, row in df.iterrows():
         id = row['Id']
         path = row['Path']
-        pos_category_nos = json.loads(row['Positive'].replace(';', ','))
-        neg_category_nos = json.loads(row['Negative'].replace(';', ','))
-        unc_category_nos = json.loads(row['Uncertain'].replace(';', ','))
+        pos_category_nos = json.loads(row['Positive'])
+        neg_category_nos = json.loads(row['Negative'])
+        unc_category_nos = json.loads(row['Uncertain'])
         records.append((id, path, pos_category_nos, neg_category_nos, unc_category_nos))
     
     return records
