@@ -31,7 +31,7 @@ class MLCPLDataset(Dataset):
         img_path = os.path.join(self.dataset_path, path)
         img = self.read_func(img_path)
         img = self.transform(img)
-        target = to_one_hot(self.num_categories, np.array(pos_category_nos), np.array(neg_category_nos), np.array(unc_category_nos))
+        target = to_one_hot(self.num_categories, pos_category_nos, neg_category_nos, unc_category_nos)
         return img, target
 
     def test(self):
@@ -98,9 +98,9 @@ def drop_labels(old_records, target_partial_ratio, seed=526):
 
 def to_one_hot(num_categories, pos_category_nos, neg_category_nos, unc_category_nos):
     one_hot = torch.full((num_categories, ), torch.nan, dtype=torch.float32)
-    one_hot[pos_category_nos] = 1.0
-    one_hot[neg_category_nos] = 0.0
-    one_hot[unc_category_nos] = -1.0
+    one_hot[np.array(pos_category_nos)] = 1.0
+    one_hot[np.array(neg_category_nos)] = 0.0
+    one_hot[np.array(unc_category_nos)] = -1.0
     return one_hot
 
 def records_to_df(records):
