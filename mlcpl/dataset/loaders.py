@@ -7,8 +7,14 @@ import json
 import glob
 from .core import *
 
-def MSCOCO(dataset_path, year='2014', split='train', partial_ratio=1.0, transform=transforms.ToTensor()):
+def MSCOCO(dataset_path, year='2014', split='train', partial_ratio=1.0, use_cache=True, cache_dir='output/dataset', transform=transforms.ToTensor()):
+    from pathlib import Path
     from pycocotools.coco import COCO
+
+    num_categories = 80
+
+    if use_cache and os.path.exists(os.path.join(cache_dir, split+'.csv')) and os.path.exists(os.path.join(cache_dir, 'valid.csv')):
+        return MLCPLDataset(dataset_path, pd.read_csv(os.path.join(cache_dir, split+'.csv')), num_categories, transform)
 
     if split == 'train':
         subset = 'train'
@@ -17,7 +23,6 @@ def MSCOCO(dataset_path, year='2014', split='train', partial_ratio=1.0, transfor
 
     coco = COCO(os.path.join(dataset_path, 'annotations', f'instances_{subset}{year}.json'))
     all_category_ids = coco.getCatIds()
-    num_categories = len(all_category_ids)
 
     records = []
     image_ids = coco.getImgIds()
@@ -33,6 +38,9 @@ def MSCOCO(dataset_path, year='2014', split='train', partial_ratio=1.0, transfor
     
     records = fill_nan_to_negative(records, num_categories)
     records = drop_labels(records, partial_ratio)
+
+    Path(cache_dir).mkdir(parents=True, exist_ok=True)
+    records_to_df(records).to_csv(os.path.join(cache_dir, split+'.csv'))
 
     return MLCPLDataset(dataset_path, records_to_df(records), num_categories, transform)
 
