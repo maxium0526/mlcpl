@@ -2,5 +2,6 @@ __pycache__/
 output/
 *.py
 !/mlcpl/*.py
+!/mlcpl/dataset/*.py
 max
 max.pub
