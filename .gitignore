@@ -3,5 +3,6 @@ output/
 *.py
 !/mlcpl/*.py
 !/mlcpl/dataset/*.py
+!/mlcpl/loss/*.py
 max
 max.pub
