@@ -16,24 +16,21 @@ def read_dicom(img_path):
     return pil_img
 
 class MLCPLDataset(Dataset):
-    def __init__(self, dataset_path, df, num_categories, transform, read_func=read_jpg):
+    def __init__(self, dataset_path, records, num_categories, transform, read_func=read_jpg):
         self.dataset_path = dataset_path
-        self.df = df
+        self.records = records
         self.num_categories = num_categories
         self.transform = transform
         self.read_func = read_func
 
     def __len__(self):
-        return self.df.shape[0]
+        return len(self.records)
 
     def __getitem__(self, idx):
-        row = self.df.iloc[idx]
-        img_path = os.path.join(self.dataset_path, row['Path'])
+        id, path, pos_category_nos, neg_category_nos, unc_category_nos = self.records[idx]
+        img_path = os.path.join(self.dataset_path, path)
         img = self.read_func(img_path)
         img = self.transform(img)
-        pos_category_nos = json.loads(row['Positive'].replace(';', ','))
-        neg_category_nos = json.loads(row['Negative'].replace(';', ','))
-        unc_category_nos = json.loads(row['Uncertain'].replace(';', ','))
         target = to_one_hot(self.num_categories, np.array(pos_category_nos), np.array(neg_category_nos), np.array(unc_category_nos))
         return img, target
 
@@ -110,3 +107,15 @@ def records_to_df(records):
     records = [(i, path, json.dumps(pos_category_nos).replace(',', ';'), json.dumps(neg_category_nos).replace(',', ';'), json.dumps(unc_category_nos).replace(',', ';')) for (i, path, pos_category_nos, neg_category_nos, unc_category_nos) in records]
     df = pd.DataFrame(records, columns=['Id', 'Path', 'Positive', 'Negative', 'Uncertain'])
     return df
+
+def df_to_records(df):
+    records = []
+    for i, row in df.iterrows():
+        id = row['Id']
+        path = row['Path']
+        pos_category_nos = json.loads(row['Positive'].replace(';', ','))
+        neg_category_nos = json.loads(row['Negative'].replace(';', ','))
+        unc_category_nos = json.loads(row['Uncertain'].replace(';', ','))
+        records.append((id, path, pos_category_nos, neg_category_nos, unc_category_nos))
+    
+    return records

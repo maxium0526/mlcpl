@@ -14,7 +14,7 @@ def MSCOCO(dataset_path, year='2014', split='train', partial_ratio=1.0, use_cach
     num_categories = 80
 
     if use_cache and os.path.exists(os.path.join(cache_dir, split+'.csv')) and os.path.exists(os.path.join(cache_dir, 'valid.csv')):
-        return MLCPLDataset(dataset_path, pd.read_csv(os.path.join(cache_dir, split+'.csv')), num_categories, transform)
+        return MLCPLDataset(dataset_path, df_to_records(pd.read_csv(os.path.join(cache_dir, split+'.csv'))), num_categories, transform)
 
     if split == 'train':
         subset = 'train'
@@ -42,7 +42,7 @@ def MSCOCO(dataset_path, year='2014', split='train', partial_ratio=1.0, use_cach
     Path(cache_dir).mkdir(parents=True, exist_ok=True)
     records_to_df(records).to_csv(os.path.join(cache_dir, split+'.csv'))
 
-    return MLCPLDataset(dataset_path, records_to_df(records), num_categories, transform)
+    return MLCPLDataset(dataset_path, records, num_categories, transform)
 
 def Pascal_VOC_2007(dataset_path, split='train', partial_ratio=1.0, transform=transforms.ToTensor()):
 
@@ -86,7 +86,7 @@ def Pascal_VOC_2007(dataset_path, split='train', partial_ratio=1.0, transform=tr
     records = fill_nan_to_negative(records, num_categories)
     records = drop_labels(records, partial_ratio)
 
-    return MLCPLDataset(dataset_path, records_to_df(records), num_categories, transform)
+    return MLCPLDataset(dataset_path, records, num_categories, transform)
 
 def LVIS(dataset_path, split='train', transform=transforms.ToTensor()):
     from lvis import LVIS
@@ -115,15 +115,15 @@ def LVIS(dataset_path, split='train', transform=transforms.ToTensor()):
         neg_category_nos = [all_category_ids.index(neg_category_id) for neg_category_id in img['neg_category_ids']]
         records.append((img_id, path, pos_category_nos, neg_category_nos, []))
 
-    return MLCPLDataset(dataset_path, records_to_df(records), num_categories, transform)
+    return MLCPLDataset(dataset_path, records, num_categories, transform)
 
 def Open_Images(dataset_path, split=None, transform=transforms.ToTensor(), use_cache=True, cache_dir='output/dataset'):
     from pathlib import Path
     num_categories = 9605
 
     if use_cache and os.path.exists(os.path.join(cache_dir, 'train.csv')) and os.path.exists(os.path.join(cache_dir, 'valid.csv')):
-        train_dataset = MLCPLDataset(dataset_path, pd.read_csv(os.path.join(cache_dir, 'train.csv')), num_categories, transform)
-        valid_dataset = MLCPLDataset(dataset_path, pd.read_csv(os.path.join(cache_dir, 'valid.csv')), num_categories, transform)
+        train_dataset = MLCPLDataset(dataset_path, df_to_records(pd.read_csv(os.path.join(cache_dir, 'train.csv'))), num_categories, transform)
+        valid_dataset = MLCPLDataset(dataset_path, df_to_records(pd.read_csv(os.path.join(cache_dir, 'valid.csv'))), num_categories, transform)
     else:
         raw_data = pd.read_csv(os.path.join(dataset_path, 'data.csv'))
 
@@ -159,12 +159,12 @@ def Open_Images(dataset_path, split=None, transform=transforms.ToTensor(), use_c
             else:
                 valid_records.append(record)
 
-        train_dataset = MLCPLDataset(dataset_path, records_to_df(train_records), num_categories, transform)
-        valid_dataset = MLCPLDataset(dataset_path, records_to_df(valid_records), num_categories, transform)
+        train_dataset = MLCPLDataset(dataset_path, train_records, num_categories, transform)
+        valid_dataset = MLCPLDataset(dataset_path, valid_records, num_categories, transform)
 
         Path(cache_dir).mkdir(parents=True, exist_ok=True)
-        train_dataset.df.to_csv(os.path.join(cache_dir, 'train.csv'))
-        valid_dataset.df.to_csv(os.path.join(cache_dir, 'valid.csv'))
+        records_to_df(train_records).to_csv(os.path.join(cache_dir, 'train.csv'))
+        records_to_df(valid_records).to_csv(os.path.join(cache_dir, 'valid.csv'))
 
     if split == 'train':
         return train_dataset
@@ -187,7 +187,7 @@ def Open_Images_V3(dataset_path, split='train', transform=transforms.ToTensor(),
     num_categories = len(categories)
 
     if use_cache and os.path.exists(os.path.join(cache_dir, split+'.csv')) and os.path.exists(os.path.join(cache_dir, 'valid.csv')):
-        return MLCPLDataset(dataset_path, pd.read_csv(os.path.join(cache_dir, split+'.csv')), num_categories, transform)
+        return MLCPLDataset(dataset_path, df_to_records(pd.read_csv(os.path.join(cache_dir, split+'.csv'))), num_categories, transform)
 
     df = pd.read_csv(os.path.join(dataset_path, subset, 'annotations-human.csv'))
     df = df.drop('Source', axis=1)
@@ -227,31 +227,37 @@ def Open_Images_V3(dataset_path, split='train', transform=transforms.ToTensor(),
     Path(cache_dir).mkdir(parents=True, exist_ok=True)
     df.to_csv(os.path.join(cache_dir, split+'.csv'))
 
-    return MLCPLDataset(dataset_path, df, num_categories, transform)
+    return MLCPLDataset(dataset_path, df_to_records(df), num_categories, transform)
 
-def CheXpert(dataset_path, competition_categories=False):
-    results = []
-    for split in ['train', 'valid']:
-        df = pd.read_csv(os.path.join(dataset_path, split+'.csv'))
+def CheXpert(dataset_path, split='train', competition_categories=False, transform=transforms.ToTensor()):
 
-        if competition_categories is True:
-            categories = ['Atelectasis', 'Cardiomegaly', 'Consolidation', 'Edema', 'Pleural Effusion']
-        else:
-            categories = df.columns.tolist()[5:]
-            categories.sort()
-            
-        records = []
-        for i, row in df.iterrows():
-            print(f'Loading row: {i+1} / {df.shape[0]}', end='\r')
-            path = os.path.join(*(row['Path'].split('/')[1:]))
-            pos_category_nos = [no for no, category in enumerate(categories) if row[category]==1]
-            neg_category_nos = [no for no, category in enumerate(categories) if row[category]==0]
-            unc_category_nos = [no for no, category in enumerate(categories) if row[category]==-1]
-            records.append((i, path, pos_category_nos, neg_category_nos, unc_category_nos))
-        results.append(records)
-    results.append(categories)
+    if split == 'train':
+        subset = 'train'
+    elif split == 'valid':
+        subset = 'valid'
+    elif split == 'test':
+        subset = 'test'
 
-    return results
+    df = pd.read_csv(os.path.join(dataset_path, subset+'.csv'))
+
+    if competition_categories is True:
+        categories = ['Atelectasis', 'Cardiomegaly', 'Consolidation', 'Edema', 'Pleural Effusion']
+    else:
+        categories = df.columns.tolist()[5:]
+        categories.sort()
+
+    num_categories = len(categories)
+        
+    records = []
+    for i, row in df.iterrows():
+        print(f'Loading row: {i+1} / {df.shape[0]}', end='\r')
+        path = os.path.join(*(row['Path'].split('/')[1:]))
+        pos_category_nos = [no for no, category in enumerate(categories) if row[category]==1]
+        neg_category_nos = [no for no, category in enumerate(categories) if row[category]==0]
+        unc_category_nos = [no for no, category in enumerate(categories) if row[category]==-1]
+        records.append((i, path, pos_category_nos, neg_category_nos, unc_category_nos))
+
+    return MLCPLDataset(dataset_path, records, num_categories, transform=transform)
 
 def RSNA_2023_2D(dataset_path, train_valid_ratio=0.8, seed=526, transform=transforms.ToTensor()):
     df = pd.read_csv(os.path.join(dataset_path, 'train.csv'))
@@ -278,7 +284,7 @@ def RSNA_2023_2D(dataset_path, train_valid_ratio=0.8, seed=526, transform=transf
                 records.append((patient_id, img_dir, positive_nos, negative_nos, []))
                 counter += 1
 
-        dataset = MLCPLDataset(dataset_path, records_to_df(records), num_categories, transform, read_func=read_dicom)
+        dataset = MLCPLDataset(dataset_path, records, num_categories, transform, read_func=read_dicom)
         outputs.append(dataset)
 
     return outputs
@@ -308,7 +314,7 @@ def RSNA_2023_3D(dataset_path, train_valid_ratio=0.8, seed=526, transform=transf
                 records.append((patient_id, img_dir, positive_nos, negative_nos, []))
                 counter += 1
 
-        dataset = MLCPLDataset(dataset_path, records_to_df(records), num_categories, transform, read_func=read_dicom)
+        dataset = MLCPLDataset(dataset_path, records, num_categories, transform, read_func=read_dicom)
         outputs.append(dataset)
 
     return outputs
