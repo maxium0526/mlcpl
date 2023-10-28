@@ -1,5 +1,6 @@
 import torch
 from torch import nn as nn, Tensor
+from torchvision.ops import sigmoid_focal_loss
 
 # from https://github.com/Alibaba-MIIL/PartialLabelingCSL/blob/main/src/loss_functions/partial_asymmetric_loss.py 
 class PartialSelectiveLoss(nn.Module):
@@ -28,6 +29,10 @@ class PartialSelectiveLoss(nn.Module):
         self.alpha_neg = alpha_neg
         self.alpha_unann = alpha_unann
 
+        self.lossfn_pos = FocalLossTerm(self.alpha_pos, self.gamma_pos)
+        self.lossfn_neg = FocalLossTerm(self.alpha_neg, self.gamma_neg)
+        self.lossfn_unann = FocalLossTerm(self.alpha_unann, self.gamma_unann)
+
         self.prior_path = prior_path
         self.partial_loss_mode = partial_loss_mode
         self.likelihood_topk = likelihood_topk
@@ -41,7 +46,7 @@ class PartialSelectiveLoss(nn.Module):
             
     def forward(self, logits, targets):
         targets = torch.where(torch.isnan(targets), -1, targets) # adopt to my code
-
+        
         # Positive, Negative and Un-annotated indexes
         targets_pos = (targets == 1).float()
         targets_neg = (targets == 0).float()
@@ -64,23 +69,25 @@ class PartialSelectiveLoss(nn.Module):
                                                               prior_classes=prior_classes)
 
         # Loss calculation
-        BCE_pos = self.alpha_pos * targets_pos * torch.log(torch.clamp(xs_pos, min=1e-8))
-        BCE_neg = self.alpha_neg * targets_neg * torch.log(torch.clamp(xs_neg, min=1e-8))
-        BCE_unann = self.alpha_unann * targets_unann * torch.log(torch.clamp(xs_neg, min=1e-8))
+        BCE_pos = targets_pos * self.lossfn_pos(torch.clamp(xs_pos, min=1e-8))
+        BCE_neg = targets_neg * self.lossfn_neg(torch.clamp(xs_neg, min=1e-8))
+        BCE_unann = targets_unann * self.lossfn_unann(torch.clamp(xs_neg, min=1e-8))
 
         BCE_loss = BCE_pos + BCE_neg + BCE_unann
-
-        # Adding asymmetric gamma weights
-        with torch.no_grad():
-            asymmetric_w = torch.pow(1 - xs_pos * targets_pos - xs_neg * (targets_neg + targets_unann),
-                                     self.gamma_pos * targets_pos + self.gamma_neg * targets_neg +
-                                     self.gamma_unann * targets_unann)
-        BCE_loss *= asymmetric_w
 
         # partial labels weights
         BCE_loss *= targets_weights
 
         return -BCE_loss.sum()
+    
+class FocalLossTerm():
+    def __init__(self, alpha=1, gamma=1) -> None:
+        super(FocalLossTerm, self).__init__()
+        self.alpha = alpha
+        self.gamma = gamma
+    
+    def __call__(self, p):
+        return self.alpha * torch.pow(1 - p, self.gamma) * torch.log(p)
 
 
 def edit_targets_parital_labels(partial_loss_mode, likelihood_topk, prior_threshold, targets, targets_weights, xs_neg, prior_classes=None):
@@ -123,7 +130,7 @@ def edit_targets_parital_labels(partial_loss_mode, likelihood_topk, prior_thresh
                 targets_weights += (targets != -1).float()
                 targets_weights = targets_weights.bool()
 
-        negative_backprop_fun_jit(targets, xs_neg_prob, targets_weights, num_top_k)
+        targets_weights = negative_backprop_fun_jit(targets, xs_neg_prob, targets_weights, num_top_k)
 
     return targets_weights, xs_neg
 
@@ -138,3 +145,4 @@ def negative_backprop_fun_jit(targets: Tensor, xs_neg_prob: Tensor, targets_weig
         ind_class_sort = torch.argsort(xs_neg_prob_flatten[cond_flatten])
         targets_weights_flatten[
             cond_flatten[ind_class_sort[:num_top_k]]] = 0
+        return targets_weights_flatten.reshape(targets.shape)
