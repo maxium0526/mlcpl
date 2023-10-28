@@ -126,15 +126,3 @@ def edit_targets_parital_labels(partial_loss_mode, likelihood_topk, prior_thresh
         negative_backprop_fun_jit(targets, xs_neg_prob, targets_weights, num_top_k)
 
     return targets_weights, xs_neg
-
-
-# @torch.jit.script
-def negative_backprop_fun_jit(targets: Tensor, xs_neg_prob: Tensor, targets_weights: Tensor, num_top_k: int):
-    with torch.no_grad():
-        targets_flatten = targets.flatten()
-        cond_flatten = torch.where(targets_flatten == -1)[0]
-        targets_weights_flatten = targets_weights.flatten()
-        xs_neg_prob_flatten = xs_neg_prob.flatten()
-        ind_class_sort = torch.argsort(xs_neg_prob_flatten[cond_flatten])
-        targets_weights_flatten[
-            cond_flatten[ind_class_sort[:num_top_k]]] = 0
