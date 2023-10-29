@@ -1,10 +1,8 @@
 import torch
 from torch import nn as nn, Tensor
-from torchvision.ops import sigmoid_focal_loss
 
 # from https://github.com/Alibaba-MIIL/PartialLabelingCSL/blob/main/src/loss_functions/partial_asymmetric_loss.py 
 class PartialSelectiveLoss(nn.Module):
-
     def __init__(
             self,
             clip = 0,
@@ -17,7 +15,8 @@ class PartialSelectiveLoss(nn.Module):
             prior_path = None,
             partial_loss_mode = 'negative',
             likelihood_topk = 5,
-            prior_threshold = 0.05
+            prior_threshold = 0.05,
+            reduction = 'mean',
             ):
         super(PartialSelectiveLoss, self).__init__()
 
@@ -37,6 +36,8 @@ class PartialSelectiveLoss(nn.Module):
         self.partial_loss_mode = partial_loss_mode
         self.likelihood_topk = likelihood_topk
         self.prior_threshold = prior_threshold
+
+        self.reduction = reduction
 
         self.targets_weights = None
 
@@ -69,16 +70,20 @@ class PartialSelectiveLoss(nn.Module):
                                                               prior_classes=prior_classes)
 
         # Loss calculation
-        BCE_pos = targets_pos * self.lossfn_pos(torch.clamp(xs_pos, min=1e-8))
-        BCE_neg = targets_neg * self.lossfn_neg(torch.clamp(xs_neg, min=1e-8))
-        BCE_unann = targets_unann * self.lossfn_unann(torch.clamp(xs_neg, min=1e-8))
+        loss_pos = targets_pos * self.lossfn_pos(torch.clamp(xs_pos, min=1e-8))
+        loss_neg = targets_neg * self.lossfn_neg(torch.clamp(xs_neg, min=1e-8))
+        loss_unann = targets_unann * self.lossfn_unann(torch.clamp(xs_neg, min=1e-8))
 
-        BCE_loss = BCE_pos + BCE_neg + BCE_unann
+        total_loss = loss_pos + loss_neg + loss_unann
 
         # partial labels weights
-        BCE_loss *= targets_weights
+        total_loss *= targets_weights
 
-        return -BCE_loss.sum()
+        if self.reduction == 'mean':
+            return total_loss.mean()
+        if self.reduction == 'sum':
+            return total_loss.sum()
+        return total_loss
     
 class FocalLossTerm():
     def __init__(self, alpha=1, gamma=1) -> None:
@@ -87,7 +92,7 @@ class FocalLossTerm():
         self.gamma = gamma
     
     def __call__(self, p):
-        return self.alpha * torch.pow(1 - p, self.gamma) * torch.log(p)
+        return - self.alpha * torch.pow(1 - p, self.gamma) * torch.log(p)
 
 
 def edit_targets_parital_labels(partial_loss_mode, likelihood_topk, prior_threshold, targets, targets_weights, xs_neg, prior_classes=None):
