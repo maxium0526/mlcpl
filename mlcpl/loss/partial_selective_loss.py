@@ -1,50 +1,246 @@
 import torch
-from torch import nn as nn, Tensor
+from torch import nn as nn
+
+def PartialNegativeBCELoss(
+    alpha_pos = 1,
+    alpha_neg = 1,
+    normalize = False,
+    reduction = 'mean',
+):
+    return PartialLoss(
+        lossfn_pos = BCELossTerm(alpha_pos),
+        lossfn_neg = BCELossTerm(alpha_neg),
+        lossfn_unann = BCELossTerm(alpha_neg),
+
+        partial_loss_mode = 'negative',
+        normalize = normalize,
+        reduction = reduction,
+    )
+
+def PartialBCELoss(
+    alpha_pos = 1,
+    alpha_neg = 1,
+    normalize = False,
+    reduction = 'mean',
+):
+    return PartialLoss(
+        lossfn_pos = BCELossTerm(alpha_pos),
+        lossfn_neg = BCELossTerm(alpha_neg),
+
+        partial_loss_mode = 'ignore',
+        normalize = normalize,
+        reduction = reduction,
+    )
+
+def PartialSelectiveBCELoss(
+    alpha_pos = 1,
+    alpha_neg = 1,
+    alpha_unann = 1,
+    normalize = False,
+    reduction = 'mean',
+    class_priors = None,
+    likelihood_topk = 5,
+    prior_threshold = 0.05,
+):
+    return PartialLoss(
+        lossfn_pos = BCELossTerm(alpha_pos),
+        lossfn_neg = BCELossTerm(alpha_neg),
+        lossfn_unann = BCELossTerm(alpha_unann),
+
+        partial_loss_mode = 'selective',
+        normalize = normalize,
+        reduction = reduction,
+        
+        class_priors = class_priors,
+        likelihood_topk = likelihood_topk,
+        prior_threshold = prior_threshold,
+    )
+
+def PartialNegativeFocalLoss(
+    gamma = 1,
+    alpha_pos = 1,
+    alpha_neg = 1,
+    normalize = False,
+    reduction = 'mean',
+):
+    return PartialLoss(
+        lossfn_pos = FocalLossTerm(alpha_pos, gamma),
+        lossfn_neg = FocalLossTerm(alpha_neg, gamma),
+        lossfn_unann = FocalLossTerm(alpha_neg, gamma),
+
+        partial_loss_mode = 'negative',
+        normalize = normalize,
+        reduction = reduction,
+    )
+
+def PartialFocalLoss(
+    gamma = 1,
+    alpha_pos = 1,
+    alpha_neg = 1,
+    normalize = False,
+    reduction = 'mean',
+):
+    return PartialLoss(
+        lossfn_pos = FocalLossTerm(alpha_pos, gamma),
+        lossfn_neg = FocalLossTerm(alpha_neg, gamma),
+
+        partial_loss_mode = 'ignore',
+        normalize = normalize,
+        reduction = reduction,
+    )
+
+def PartialSelectiveFocalLoss(
+    gamma = 1,
+    alpha_pos = 1,
+    alpha_neg = 1,
+    alpha_unann = 1,
+    normalize = False,
+    reduction = 'mean',
+    class_priors = None,
+    likelihood_topk = 5,
+    prior_threshold = 0.05,
+):
+    return PartialLoss(
+        lossfn_pos = FocalLossTerm(alpha_pos, gamma),
+        lossfn_neg = FocalLossTerm(alpha_neg, gamma),
+        lossfn_unann = FocalLossTerm(alpha_unann, gamma),
+
+        partial_loss_mode = 'selective',
+        normalize = normalize,
+        reduction = reduction,
+        
+        class_priors = class_priors,
+        likelihood_topk = likelihood_topk,
+        prior_threshold = prior_threshold,
+    )
+
+def PartialNegativeAsymmetricLoss(
+    clip = 0,
+    gamma_pos = 0,
+    gamma_neg = 1,
+    alpha_pos = 1,
+    alpha_neg = 1,
+    normalize = False,
+    reduction = 'mean',
+):
+    return PartialLoss(
+        lossfn_pos = FocalLossTerm(alpha_pos, gamma_pos),
+        lossfn_neg = FocalLossTerm(alpha_neg, gamma_neg, clip),
+        lossfn_unann = FocalLossTerm(alpha_neg, gamma_neg, clip),
+
+        partial_loss_mode = 'negative',
+        normalize = normalize,
+        reduction = reduction,
+    )
+
+def PartialAsymmetricLoss(
+    clip = 0,
+    gamma_pos = 0,
+    gamma_neg = 1,
+    alpha_pos = 1,
+    alpha_neg = 1,
+    normalize = False,
+    reduction = 'mean',
+):
+    return PartialLoss(
+        lossfn_pos = FocalLossTerm(alpha_pos, gamma_pos),
+        lossfn_neg = FocalLossTerm(alpha_neg, gamma_neg, clip),
+
+        partial_loss_mode = 'ignore',
+        normalize = normalize,
+        reduction = reduction,
+    )
+
+def PartialSelectiveAsymmetricLoss(
+    clip = 0,
+    gamma_pos = 0,
+    gamma_neg = 1,
+    gamma_unann = 2,
+    alpha_pos = 1,
+    alpha_neg = 1,
+    alpha_unann = 1,
+    normalize = False,
+    reduction = 'mean',
+    class_priors = None,
+    likelihood_topk = 5,
+    prior_threshold = 0.05,
+):
+    return PartialLoss(
+        lossfn_pos = FocalLossTerm(alpha_pos, gamma_pos),
+        lossfn_neg = FocalLossTerm(alpha_neg, gamma_neg, clip),
+        lossfn_unann = FocalLossTerm(alpha_unann, gamma_unann, clip),
+
+        partial_loss_mode = 'selective',
+        normalize = normalize,
+        reduction = reduction,
+        
+        class_priors = class_priors,
+        likelihood_topk = likelihood_topk,
+        prior_threshold = prior_threshold,
+    )
+
+# Ignore the label
+class NoneLossTerm(nn.Module):
+    def __init__(self) -> None:
+        super(NoneLossTerm, self).__init__()
+    
+    def forward(self, p):
+        return 0 * p
+    
+class BCELossTerm(nn.Module):
+    def __init__(self, alpha=1) -> None:
+        super(BCELossTerm, self).__init__()
+        self.alpha = alpha
+    
+    def forward(self, p):
+        return - self.alpha * torch.log(p)
+    
+class FocalLossTerm(nn.Module):
+    def __init__(self, alpha=1, gamma=1, shift=0) -> None:
+        super(FocalLossTerm, self).__init__()
+        self.alpha = alpha
+        self.gamma = gamma
+        self.shift = shift # negative term of asymmetric loss
+    
+    def forward(self, p):
+        p = torch.clamp(p + self.shift, max=1)
+        return - self.alpha * torch.pow(1 - p, self.gamma) * torch.log(p)
 
 # from https://github.com/Alibaba-MIIL/PartialLabelingCSL/blob/main/src/loss_functions/partial_asymmetric_loss.py 
-class PartialSelectiveLoss(nn.Module):
+class PartialLoss(nn.Module):
     def __init__(
             self,
-            clip = 0,
-            gamma_pos = 0,
-            gamma_neg = 1,
-            gamma_unann = 2,
-            alpha_pos = 1,
-            alpha_neg = 1,
-            alpha_unann = 1,
-            prior_path = None,
-            partial_loss_mode = 'negative',
+            lossfn_pos = NoneLossTerm(),
+            lossfn_neg = NoneLossTerm(),
+            lossfn_unann = NoneLossTerm(),
+
+            partial_loss_mode = 'ignore',
+            normalize = False,
+            reduction = 'mean',
+
+            # arguments for selective mode
+            class_priors = None,
             likelihood_topk = 5,
             prior_threshold = 0.05,
-            reduction = 'mean',
+
+            fully_labeled_warning = True # print the warning if the labels seems fully-labeled
             ):
-        super(PartialSelectiveLoss, self).__init__()
+        super(PartialLoss, self).__init__()
 
-        self.clip = clip
-        self.gamma_pos = gamma_pos
-        self.gamma_neg = gamma_neg
-        self.gamma_unann = gamma_unann
-        self.alpha_pos = alpha_pos
-        self.alpha_neg = alpha_neg
-        self.alpha_unann = alpha_unann
+        self.lossfn_pos = lossfn_pos
+        self.lossfn_neg = lossfn_neg
+        self.lossfn_unann = lossfn_unann
 
-        self.lossfn_pos = FocalLossTerm(self.alpha_pos, self.gamma_pos)
-        self.lossfn_neg = FocalLossTerm(self.alpha_neg, self.gamma_neg)
-        self.lossfn_unann = FocalLossTerm(self.alpha_unann, self.gamma_unann)
-
-        self.prior_path = prior_path
+        self.class_priors = class_priors
         self.partial_loss_mode = partial_loss_mode
         self.likelihood_topk = likelihood_topk
         self.prior_threshold = prior_threshold
-
+        self.normalize = normalize
         self.reduction = reduction
 
-        self.targets_weights = None
+        self.fully_labeled_warning = fully_labeled_warning
+        self.fully_labeled_warning_trigger = True if self.fully_labeled_warning else False
 
-        if self.prior_path is not None:
-            self.prior_classes = torch.load(self.prior_path)
-            print("Prior file was loaded successfully. ")
-            
     def forward(self, logits, targets):
         targets = torch.where(torch.isnan(targets), -1, targets) # adopt to my code
         
@@ -53,21 +249,15 @@ class PartialSelectiveLoss(nn.Module):
         targets_neg = (targets == 0).float()
         targets_unann = (targets == -1).float()
 
+        if self.fully_labeled_warning_trigger and targets_unann.nonzero().sum() == 0:
+            print('The input batch data seems to be fully-labeled. This warning is only logged once.')
+            self.fully_labeled_warning_trigger = False
+
         # Activation
         xs_pos = torch.sigmoid(logits)
         xs_neg = 1.0 - xs_pos
 
-        if self.clip is not None and self.clip > 0:
-            xs_neg.add_(self.clip).clamp_(max=1)
-
-        prior_classes = None
-        if hasattr(self, "prior_classes"):
-            # prior_classes = torch.tensor(list(self.prior_classes.values())).cuda()
-            prior_classes = self.prior_classes
-
-        targets_weights = self.targets_weights
-        targets_weights, xs_neg = edit_targets_parital_labels(self.partial_loss_mode, self.likelihood_topk, self.prior_threshold, targets, targets_weights, xs_neg,
-                                                              prior_classes=prior_classes)
+        targets_weights = self.__compute_targets_weights(xs_neg, targets)
 
         # Loss calculation
         loss_pos = targets_pos * self.lossfn_pos(torch.clamp(xs_pos, min=1e-8))
@@ -85,69 +275,49 @@ class PartialSelectiveLoss(nn.Module):
             return total_loss.sum()
         return total_loss
     
-class FocalLossTerm():
-    def __init__(self, alpha=1, gamma=1) -> None:
-        super(FocalLossTerm, self).__init__()
-        self.alpha = alpha
-        self.gamma = gamma
-    
-    def __call__(self, p):
-        return - self.alpha * torch.pow(1 - p, self.gamma) * torch.log(p)
+    def __compute_targets_weights(self, xs_neg, targets):
 
-
-def edit_targets_parital_labels(partial_loss_mode, likelihood_topk, prior_threshold, targets, targets_weights, xs_neg, prior_classes=None):
-    # targets_weights is and internal state of AsymmetricLoss class. we don't want to re-allocate it every batch
-    if partial_loss_mode is None:
         targets_weights = 1.0
 
-    elif partial_loss_mode == 'negative':
-        # set all unsure targets as negative
-        targets_weights = 1.0
+        if self.partial_loss_mode == 'negative':
+            # set all unsure targets as negative
+            targets_weights = 1.0
 
-    elif partial_loss_mode == 'ignore':
-        # remove all unsure targets (targets_weights=0)
-        targets_weights = torch.ones(targets.shape, device=torch.device('cuda'))
-        targets_weights[targets == -1] = 0
-
-    elif partial_loss_mode == 'ignore_normalize_classes':
-        # remove all unsure targets and normalize by Durand et al. https://arxiv.org/pdf/1902.09720.pdfs
-        alpha_norm, beta_norm = 1, 1
-        targets_weights = torch.ones(targets.shape, device=torch.device('cuda'))
-        n_annotated = 1 + torch.sum(targets != -1, axis=1)    # Add 1 to avoid dividing by zero
-
-        g_norm = alpha_norm * (1 / n_annotated) + beta_norm
-        n_classes = targets_weights.shape[1]
-        targets_weights *= g_norm.repeat([n_classes, 1]).T
-        targets_weights[targets == -1] = 0
-
-    elif partial_loss_mode == 'selective':
-        if targets_weights is None or targets_weights.shape != targets.shape:
+        elif self.partial_loss_mode == 'ignore':
+            # remove all unsure targets (targets_weights=0)
             targets_weights = torch.ones(targets.shape, device=torch.device('cuda'))
-        else:
-            targets_weights[:] = 1.0
-        num_top_k = likelihood_topk * targets_weights.shape[0]
+            targets_weights[targets == -1] = 0
 
-        xs_neg_prob = xs_neg
-        if prior_classes is not None:
-            if prior_threshold:
-                idx_ignore = torch.where(prior_classes > prior_threshold)[0]
-                targets_weights[:, idx_ignore] = 0
-                targets_weights += (targets != -1).float()
-                targets_weights = targets_weights.bool()
+        elif self.partial_loss_mode == 'selective':
+            targets_weights = torch.ones(targets.shape, device=torch.device('cuda'))
 
-        targets_weights = negative_backprop_fun_jit(targets, xs_neg_prob, targets_weights, num_top_k)
+            if self.class_priors is not None:
+                if self.prior_threshold:
+                    idx_ignore = torch.where(self.class_priors > self.prior_threshold)[0]
+                    targets_weights[:, idx_ignore] = 0
+                    targets_weights += (targets != -1).float()
+                    targets_weights = targets_weights.bool()
 
-    return targets_weights, xs_neg
+            # ignore top-k
+            with torch.no_grad():
+                num_top_k = self.likelihood_topk * targets_weights.shape[0]
+
+                targets_flatten = targets.flatten()
+                cond_flatten = torch.where(targets_flatten == -1)[0]
+                targets_weights_flatten = targets_weights.flatten()
+                xs_neg_flatten = xs_neg.flatten()
+                ind_class_sort = torch.argsort(xs_neg_flatten[cond_flatten])
+                targets_weights_flatten[
+                    cond_flatten[ind_class_sort[:num_top_k]]] = 0
+                targets_weights
+
+        if self.normalize: # https://arxiv.org/pdf/1902.09720.pdfs
+            alpha_norm, beta_norm = 1, 1
+            n_annotated = 1 + torch.sum(targets_weights == 1, axis=1)    # Add 1 to avoid dividing by zero
+            g_norm = alpha_norm * (1 / n_annotated) + beta_norm
+            n_classes = targets_weights.shape[1]
+            targets_weights *= g_norm.repeat([n_classes, 1]).T
+
+        return targets_weights
 
 
-# @torch.jit.script
-def negative_backprop_fun_jit(targets: Tensor, xs_neg_prob: Tensor, targets_weights: Tensor, num_top_k: int):
-    with torch.no_grad():
-        targets_flatten = targets.flatten()
-        cond_flatten = torch.where(targets_flatten == -1)[0]
-        targets_weights_flatten = targets_weights.flatten()
-        xs_neg_prob_flatten = xs_neg_prob.flatten()
-        ind_class_sort = torch.argsort(xs_neg_prob_flatten[cond_flatten])
-        targets_weights_flatten[
-            cond_flatten[ind_class_sort[:num_top_k]]] = 0
-        return targets_weights_flatten.reshape(targets.shape)
