@@ -203,9 +203,9 @@ def Open_Images_V3(dataset_path, split='train', transform=transforms.ToTensor(),
     df = df.rename(columns={'ImageID': 'Id'})
 
     df['Uncertain'] = np.nan
-    df['Positive'] = df['Positive'].fillna("").apply(list).apply(lambda x: json.dumps(x).replace(',', ';'))
-    df['Negative'] = df['Negative'].fillna("").apply(list).apply(lambda x: json.dumps(x).replace(',', ';'))
-    df['Uncertain'] = df['Uncertain'].fillna("").apply(list).apply(lambda x: json.dumps(x).replace(',', ';'))
+    df['Positive'] = df['Positive'].fillna("").apply(list).apply(lambda x: json.dumps(x))
+    df['Negative'] = df['Negative'].fillna("").apply(list).apply(lambda x: json.dumps(x))
+    df['Uncertain'] = df['Uncertain'].fillna("").apply(list).apply(lambda x: json.dumps(x))
 
     paths = [f'{subset}/{img_id}.jpg' for img_id in df['Id'].tolist()]
     df.insert(loc=1, column='Path', value=paths)
