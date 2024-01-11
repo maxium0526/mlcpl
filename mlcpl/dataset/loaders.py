@@ -173,7 +173,7 @@ def Open_Images(dataset_path, split=None, transform=transforms.ToTensor(), use_c
     else:
         return train_dataset, valid_dataset
     
-def Open_Images_V3(dataset_path, split='train', transform=transforms.ToTensor(), use_cache=True, cache_dir='output/dataset'):
+def Open_Images_V3(dataset_path, split='train', transform=transforms.ToTensor(), use_cache=True, cache_dir='output/dataset', check_images=True):
     from pathlib import Path
 
     if split == 'train':
@@ -210,19 +210,20 @@ def Open_Images_V3(dataset_path, split='train', transform=transforms.ToTensor(),
     paths = [f'{subset}/{img_id}.jpg' for img_id in df['Id'].tolist()]
     df.insert(loc=1, column='Path', value=paths)
 
-    # check if the images exists:
-    non_exist_indices = []
-    num_exist, num_non_exist = 0, 0
-    for i, row in df.iterrows():
-        if os.path.isfile(os.path.join(dataset_path, row['Path'])):
-            num_exist += 1
-        else:
-            num_non_exist += 1
-            non_exist_indices.append(i)
-        print(f'Checked {i+1}/{len(df)} images. Exist: {num_exist}. Not found: {num_non_exist}', end='\r')
-    print()
+    if check_images:
+        # check if the images exists:
+        non_exist_indices = []
+        num_exist, num_non_exist = 0, 0
+        for i, row in df.iterrows():
+            if os.path.isfile(os.path.join(dataset_path, row['Path'])):
+                num_exist += 1
+            else:
+                num_non_exist += 1
+                non_exist_indices.append(i)
+            print(f'Checked {i+1}/{len(df)} images. Exist: {num_exist}. Not found: {num_non_exist}', end='\r')
+        print()
 
-    df = df.drop(non_exist_indices)
+        df = df.drop(non_exist_indices)
     
     Path(cache_dir).mkdir(parents=True, exist_ok=True)
     df.to_csv(os.path.join(cache_dir, split+'.csv'))
@@ -243,7 +244,22 @@ def CheXpert(dataset_path, split='train', competition_categories=False, transfor
     if competition_categories is True:
         categories = ['Atelectasis', 'Cardiomegaly', 'Consolidation', 'Edema', 'Pleural Effusion']
     else:
-        categories = df.columns.tolist()[5:]
+        categories = [
+            'Atelectasis',
+            'Cardiomegaly',
+            'Consolidation',
+            'Edema',
+            'Pleural Effusion',
+            'No Finding',
+            'Enlarged Cardiomediastinum',
+            'Lung Opacity',
+            'Lung Lesion',
+            'Pneumonia',
+            'Pneumothorax',
+            'Pleural Other',
+            'Fracture',
+            'Support Devices',
+            ]
         categories.sort()
 
     num_categories = len(categories)
@@ -251,13 +267,16 @@ def CheXpert(dataset_path, split='train', competition_categories=False, transfor
     records = []
     for i, row in df.iterrows():
         print(f'Loading row: {i+1} / {df.shape[0]}', end='\r')
-        path = os.path.join(*(row['Path'].split('/')[1:]))
+        if subset in ['train', 'valid']:
+            path = os.path.join(*(row['Path'].split('/')[1:]))
+        else: # test
+            path = os.path.join(*(row['Path'].split('/')))
         pos_category_nos = [no for no, category in enumerate(categories) if row[category]==1]
         neg_category_nos = [no for no, category in enumerate(categories) if row[category]==0]
         unc_category_nos = [no for no, category in enumerate(categories) if row[category]==-1]
         records.append((i, path, pos_category_nos, neg_category_nos, unc_category_nos))
 
-    return MLCPLDataset(dataset_path, records, num_categories, transform=transform)
+    return MLCPLDataset(dataset_path, records, num_categories, transform=transform, categories=categories)
 
 def RSNA_2023_2D(dataset_path, train_valid_ratio=0.8, seed=526, transform=transforms.ToTensor()):
     df = pd.read_csv(os.path.join(dataset_path, 'train.csv'))

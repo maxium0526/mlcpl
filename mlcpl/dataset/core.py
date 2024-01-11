@@ -17,9 +17,10 @@ def read_dicom(img_path):
     return pil_img
 
 class MLCPLDataset(Dataset):
-    def __init__(self, dataset_path, records, num_categories, transform, read_func=read_jpg):
+    def __init__(self, dataset_path, records, num_categories, transform, categories=None, read_func=read_jpg):
         self.dataset_path = dataset_path
         self.records = records
+        self.categories = categories
         self.num_categories = num_categories
         self.transform = transform
         self.read_func = read_func
