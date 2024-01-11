@@ -36,6 +36,9 @@ class MLCPLDataset(Dataset):
         target = self.__to_one_hot(pos_category_nos, neg_category_nos, unc_category_nos)
         return img, target
     
+    def getitem(self, idx):
+        return self.__getitem__(idx)
+    
     def __to_one_hot(self, pos_category_nos, neg_category_nos, unc_category_nos):
         one_hot = torch.full((self.num_categories, ), torch.nan, dtype=torch.float32)
         one_hot[np.array(pos_category_nos)] = 1.0
