@@ -48,3 +48,22 @@ class PartialBinaryMetric():
                 score = self.binary_metric(preds, target.to(torch.int32))
 
             return score
+        
+class Open_Images_V3_Group_Metric():
+    def __init__(self, binary_metric, categories_num_labels):
+        self.binary_metric = binary_metric
+
+        _, sorted_indices = torch.sort(torch.tensor(categories_num_labels))
+        self.groups = []
+        for i in range(0, 5000, 1000):
+            self.groups.append(sorted_indices[i: i+1000])
+    
+    def __call__(self, preds, target):
+        
+        group_metric = PartialMultilabelMetric(self.binary_metric)
+        group_scores = []
+        for group in self.groups:
+            score = group_metric(preds[:, group], target[:, group])
+            group_scores.append(score)
+
+        return torch.tensor(group_scores)
