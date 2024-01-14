@@ -47,4 +47,5 @@ class CurriculumLabeling(Dataset):
             print()
 
     def get_pseudo_label_proportion(self):
-        return torch.sum(self.selections) / torch.numel(self.selections)
+        num_pseudo_labels = torch.count_nonzero(self.selections)
+        return num_pseudo_labels / (len(self.dataset) * self.dataset.num_categories)
