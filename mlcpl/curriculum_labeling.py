@@ -37,6 +37,9 @@ class CurriculumLabeling(Dataset):
                 
                 if selection_strategy == 'score':
                     selection = torch.where(torch.abs(logit)>selection_threshold, 1, 0)
+
+                if selection_strategy == 'positive_score':
+                    selection = torch.where(logit>selection_threshold, 1, 0)
                 
                 self.selections[batch*batch_size: (batch+1)*batch_size] = torch.logical_and(selection, torch.isnan(y))
         
