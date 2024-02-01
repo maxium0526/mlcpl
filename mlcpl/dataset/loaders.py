@@ -8,7 +8,6 @@ import glob
 from .core import *
 
 def MSCOCO(dataset_path, year='2014', split='train', partial_ratio=1.0, transform=transforms.ToTensor()):
-    from pathlib import Path
     from pycocotools.coco import COCO
 
     num_categories = 80
