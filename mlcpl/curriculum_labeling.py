@@ -20,6 +20,9 @@ class CurriculumLabeling(Dataset):
 
         return img, target_cl
     
+    def getitem(self, idx):
+        return self.__getitem__(idx)
+    
     def update(self, model, batch_size=32, num_workers=20, selection_strategy='score', selection_threshold=0.5, verbose=False):
         dataloader = DataLoader(self.dataset, batch_size=batch_size, num_workers=num_workers)
 
