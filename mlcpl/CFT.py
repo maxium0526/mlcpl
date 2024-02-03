@@ -273,12 +273,6 @@ def greedy(parameters, data, validation_metric):
     
     return best_weight, best_bias, records
 
-def get_cft_optimizer(config, head, device):
-    if config['METHOD'] == 'GA':
-        return GAOptimizer(head, None, device, **(config['kwargs']))
-    if config['METHOD'] == 'BP':
-        return BPOptimizer(head, None, None, device, **(config['kwargs']))
-
 class HeuristicOptimizer():
     def __init__(self):
         pass
