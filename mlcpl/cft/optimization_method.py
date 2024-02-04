@@ -1,6 +1,6 @@
 import torch
 
-class HeuristicOptimizerForLinear():
+class HeuristicForLinear():
     def __init__(self):
         pass
     
@@ -33,7 +33,7 @@ class HeuristicOptimizerForLinear():
 
         return fitnesses
 
-class GAOptimizerForLinear(HeuristicOptimizerForLinear):
+class GAForLinear(HeuristicForLinear):
     def __init__(
         self,
         head = None,
@@ -118,7 +118,7 @@ class GAOptimizerForLinear(HeuristicOptimizerForLinear):
 
             return log
 
-class BPOptimizer():
+class BP():
     def __init__(
         self, 
         head = None,
