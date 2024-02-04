@@ -75,6 +75,10 @@ class MultiLogger():
             else:
                 self.excellog.add(tag, value)
 
+    def adds(self, tag, values):
+        for value in values:
+            self.add(tag, value)
+
     def flush(self):
         if self.tblog:
             self.tblog.flush()
