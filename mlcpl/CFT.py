@@ -3,6 +3,7 @@ import numpy as np
 from .label_strategy import *
 from .helper import *
 from torch.utils.data import Dataset
+from copy import deepcopy
 
 class FTDataset(Dataset):
     def __init__(self, Z, Y):
@@ -21,8 +22,7 @@ class FTDataset(Dataset):
         return self.__getitem__(0)
 
 def CFT(
-    weight,
-    bias,
+    heads,
     training_data=None,
     validation_data=None,
     optimizer=None,
@@ -35,20 +35,14 @@ def CFT(
     excellog=None,
     ):
 
-    num_categories = weight.shape[0]
+    num_categories = len(heads)
 
     z_train, y_train = training_data
     z_valid, y_valid = validation_data
-    
-    weight, bias = weight.to(device), bias.to(device)
 
-    finetuned_weight = weight.clone().detach()
-    finetuned_bias = bias.clone().detach()
+    finetuned_heads = []
 
     for i in range(num_categories):
-        # prepare head
-        head_weight = torch.nn.Parameter(weight[i:i+1, :].clone().detach())
-        head_bias = torch.nn.Parameter(bias[i:i+1].clone().detach())
 
         # prepare training data            
         head_z_train, head_y_train = z_train, y_train[:, i:i+1]
@@ -77,9 +71,8 @@ def CFT(
         
         print(f'Fine-tuning category {i}/{num_categories}.')
 
-        head_best_weight, head_best_bias, records = finetune_head(
-            head_weight,
-            head_bias,
+        finetuned_head, records = finetune_head(
+            heads[i],
             training_data=(head_z_train, head_y_train),
             validation_data=(head_z_valid, head_y_valid),
             optimizer=optimizer,
@@ -90,8 +83,7 @@ def CFT(
             device=device,
         )
 
-        finetuned_weight[i:i+1, :] = head_best_weight
-        finetuned_bias[i:i+1] = head_best_bias
+        finetuned_heads.append(finetuned_head)
 
         # writing logs to loggers
         if excellog:
@@ -129,11 +121,10 @@ def CFT(
         except:
             print('Failed.')
 
-    return finetuned_weight, finetuned_bias
+    return finetuned_heads
 
 def finetune_head(
-    weight,
-    bias,
+    head,
     training_data=None,
     validation_data=None,
     optimizer=None,
@@ -143,6 +134,8 @@ def finetune_head(
     validation_metric=None,
     device='cuda',
     ):
+
+    head = deepcopy(head).to(device)
 
     z_train, y_train = training_data
     z_valid, y_valid = validation_data
@@ -168,10 +161,6 @@ def finetune_head(
         validation_dataset,
         batch_size = len(training_dataset) if batch_size is None else batch_size,
         )
-    
-    head = torch.nn.Linear(z_train.shape[1], 1).to(device)
-    head.weight = torch.nn.Parameter(weight.clone().detach())
-    head.bias = torch.nn.Parameter(bias.clone().detach())
 
     optimizer.set_head(head)
 
@@ -179,7 +168,7 @@ def finetune_head(
     print(f'Original Vaild Score: {original_validation_score:.4f}')
 
     best_validation_score = original_validation_score
-    best_weight, best_bias = head.weight.clone().detach(), head.bias.clone().detach()
+    best_state_dict = deepcopy(head.state_dict())
     best_at = -1
 
     records = []
@@ -214,7 +203,7 @@ def finetune_head(
         if validation_score > best_validation_score:
             best_validation_score = validation_score
             best_at = epoch
-            best_weight, best_bias = head.weight.clone().detach(), head.bias.clone().detach()
+            best_state_dict = deepcopy(head.state_dict())
 
         records.append(record)
         print_record(record)
@@ -234,7 +223,9 @@ def finetune_head(
     del z_train, z_valid, y_train, y_valid, training_dataloader, training_dataset, validation_dataloader, validation_dataset
     torch.cuda.empty_cache()
 
-    return best_weight, best_bias, records
+    head.load_state_dict(best_state_dict)
+
+    return head, records
 
 def greedy(parameters, data, validation_metric):
     z, y = data
@@ -273,7 +264,7 @@ def greedy(parameters, data, validation_metric):
     
     return best_weight, best_bias, records
 
-class HeuristicOptimizer():
+class HeuristicOptimizerForLinear():
     def __init__(self):
         pass
     
@@ -295,9 +286,6 @@ class HeuristicOptimizer():
 
     @staticmethod
     def batch_fitness(population, x, y, metric):
-        # conv_weight = self.population[:, :-1].unsqueeze(1)
-        # conv_bias = self.population[:, -1].reshape(-1)
-        # preds = torch.nn.functional.conv1d(x.unsqueeze(1), conv_weight, conv_bias).transpose(0, 1)
 
         weight = population[:, :-1]
         bias = population[:, -1]
@@ -306,12 +294,10 @@ class HeuristicOptimizer():
         fitnesses = torch.zeros(preds.shape[0])
         for i in range(fitnesses.shape[0]):
             fitnesses[i] = metric(preds[i], y)
-        # score = [self.metric(pred, y).detach().cpu().numpy() for pred in preds]
-        
-        # fitnesses = torch.tensor(np.array(score).reshape(-1)).to(self.device)
+
         return fitnesses
 
-class GAOptimizer(HeuristicOptimizer):
+class GAOptimizerForLinear(HeuristicOptimizerForLinear):
     def __init__(
         self,
         head = None,
