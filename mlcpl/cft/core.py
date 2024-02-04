@@ -31,8 +31,6 @@ def CFT(
     early_stopping=None,
     validation_metric=None,
     device='cuda',
-    tblog=None,
-    excellog=None,
     ):
 
     num_categories = len(heads)
@@ -40,7 +38,7 @@ def CFT(
     z_train, y_train = training_data
     z_valid, y_valid = validation_data
 
-    finetuned_heads = []
+    finetuned_heads, category_records = [], []
 
     for i in range(num_categories):
 
@@ -84,44 +82,9 @@ def CFT(
         )
 
         finetuned_heads.append(finetuned_head)
+        category_records.append(records)
 
-        # writing logs to loggers
-        if excellog:
-            print('Logging to excel file cache...', end='')
-            try:
-                for record in records:
-                    excellog.add('category_'+str(i), record)
-                print('Done.')
-            except:
-                print('Failed.')
-
-        if tblog:
-            print('Logging to Tensorboard...', end='')
-            try:
-                for record in records:
-                    tblog.add_scalars('category_'+str(i), record, record['Epoch'])
-                tblog.flush()
-                print('Done.')
-            except:
-                print('Failed.')
-    
-    if excellog:
-        print('Saving excel file...', end='')
-        try:
-            excellog.flush()
-            print('Done.')
-        except:
-            print('Failed.')
-
-    if tblog:
-        print('Flushing Tensorboard...', end='')
-        try:
-            tblog.flush()
-            print('Done.')
-        except:
-            print('Failed.')
-
-    return finetuned_heads
+    return finetuned_heads, category_records
 
 def finetune_head(
     head,
