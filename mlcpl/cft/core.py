@@ -41,38 +41,13 @@ def CFT(
     finetuned_heads, category_records = [], []
 
     for i in range(num_categories):
-
-        # prepare training data            
-        head_z_train, head_y_train = z_train, y_train[:, i:i+1]
-        if head_y_train.dtype == torch.int8:
-            head_y_train = head_y_train.to(torch.float32)
-            head_y_train[head_y_train==-1] = torch.nan
-        train_label_map = ~torch.isnan(head_y_train).view(-1)
-        head_z_train, head_y_train = head_z_train[train_label_map, :], head_y_train[train_label_map, :]
-        head_y_train = head_y_train.to(device)
-
-        # prepare validation data
-        head_z_valid, head_y_valid = z_valid, y_valid[:, i:i+1]
-        if head_y_valid.dtype == torch.int8:
-            head_y_valid = head_y_valid.to(torch.float32)
-            head_y_valid[head_y_valid==-1] = torch.nan
-        valid_label_map = ~torch.isnan(head_y_valid).view(-1)
-        head_z_valid, head_y_valid = head_z_valid[valid_label_map, :], head_y_valid[valid_label_map, :]
-        head_y_valid = head_y_valid.to(device)
-
-        if (head_y_train==0).sum() == 0 or (head_y_train==1).sum() == 0:
-            print(f'Category {i} cannot be trained. Skip.')
-            continue
-        if (head_y_valid==0).sum() == 0 or (head_y_valid==1).sum() == 0:
-            print(f'Category {i} cannot be validated. Skip.')
-            continue
         
         print(f'Fine-tuning category {i}/{num_categories}.')
 
         finetuned_head, records = finetune_head(
             heads[i],
-            training_data=(head_z_train, head_y_train),
-            validation_data=(head_z_valid, head_y_valid),
+            training_data=(z_train, y_train[:, i:i+1]),
+            validation_data=(z_valid, y_valid[:, i:i+1]),
             optimizer=optimizer,
             batch_size=batch_size,
             epochs=epochs,
@@ -108,9 +83,27 @@ def finetune_head(
     if y_train.dtype == torch.int8:
         y_train = y_train.to(torch.float32)
         y_train[y_train==-1] = torch.nan
+    train_label_map = ~torch.isnan(y_train).view(-1)
+    z_train, y_train = z_train[train_label_map, :], y_train[train_label_map, :]
+
     if y_valid.dtype == torch.int8:
         y_valid = y_valid.to(torch.float32)
         y_valid[y_valid==-1] = torch.nan
+    valid_label_map = ~torch.isnan(y_valid).view(-1)
+    z_valid, y_valid = z_valid[valid_label_map, :], y_valid[valid_label_map, :]
+
+    if (y_train==0).sum() == 0 :
+        print(f'Negative training samples not found. Skip.')
+        return head
+    if (y_train==1).sum() == 0:
+        print(f'Positive training samples not found. Skip.')
+        return head
+    if (y_valid==0).sum() == 0 :
+        print(f'Negative validation samples not found. Skip.')
+        return head
+    if (y_valid==1).sum() == 0:
+        print(f'Positive validation samples not found. Skip.')
+        return head
 
     training_dataset = FTDataset(z_train, y_train)
     validation_dataset = FTDataset(z_valid, y_valid)
