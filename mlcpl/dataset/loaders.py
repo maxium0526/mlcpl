@@ -23,7 +23,7 @@ def MSCOCO(dataset_path, year='2014', split='train', partial_ratio=1.0, transfor
     records = []
     image_ids = coco.getImgIds()
     for i, img_id in enumerate(image_ids):
-        print(f'Loading row: {i+1} / {len(image_ids)}', end='\r')
+        print(f'Loading MSCOCO {split}: {i+1} / {len(image_ids)}', end='\r')
         img_filename = coco.loadImgs(img_id)[0]['file_name']
         path = os.path.join(subset+year, img_filename)
         pos_category_ids = [coco.loadAnns(annotation_id)[0]['category_id'] for annotation_id in coco.getAnnIds(imgIds=img_id)]
@@ -31,6 +31,7 @@ def MSCOCO(dataset_path, year='2014', split='train', partial_ratio=1.0, transfor
         pos_category_nos = [all_category_ids.index(category_id) for category_id in pos_category_ids]
         pos_category_nos.sort()
         records.append((img_id, path, pos_category_nos, [], []))
+    print()
     
     records = fill_nan_to_negative(records, num_categories)
     records = drop_labels(records, partial_ratio)
@@ -47,7 +48,7 @@ def Pascal_VOC_2007(dataset_path, split='train', partial_ratio=1.0, transform=tr
     all_category_ids = set({})
     paths = glob.glob(os.path.join(dataset_path, 'ImageSets', 'Main', '*.txt'))
     for i, path in enumerate(paths):
-        print(f'Loading row: {i+1} / {len(paths)}', end='\r')
+        print(f'Finding categories of Pascal VOC 2007: {i+1} / {len(paths)}', end='\r')
         basename = os.path.basename(path)
         if '_' in basename:
             all_category_ids.add(basename.split('_')[0])
@@ -58,7 +59,7 @@ def Pascal_VOC_2007(dataset_path, split='train', partial_ratio=1.0, transform=tr
     img_nos = pd.read_csv(os.path.join(dataset_path, 'ImageSets', 'Main', subset+'.txt'), sep=' ', header=None, names=['Id'], dtype=str)
     records = []
     for i, row in img_nos.iterrows():
-        print(f'Loading row: {i+1} / {img_nos.shape[0]}', end='\r')
+        print(f'Loading Pascal VOC 2007 {split}: {i+1} / {img_nos.shape[0]}', end='\r')
         img_no = row['Id']
         path = os.path.join('JPEGImages', img_no+'.jpg')
 
@@ -97,7 +98,7 @@ def LVIS(dataset_path, split='train', transform=transforms.ToTensor()):
     records = []
     imgs = lvis.load_imgs(lvis.get_img_ids())
     for i, img in enumerate(imgs):
-        print(f'Loading row: {i+1} / {len(imgs)}', end='\r')
+        print(f'Loading LVIS {split}: {i+1} / {len(imgs)}', end='\r')
         img_id = img['id']
         path = os.path.join(*img['coco_url'].split('/')[-2:])
         annotation_ids = lvis.get_ann_ids(img_ids=[img_id])
@@ -107,6 +108,7 @@ def LVIS(dataset_path, split='train', transform=transforms.ToTensor()):
         pos_category_nos = [all_category_ids.index(pos_category_id) for pos_category_id in pos_category_ids]
         neg_category_nos = [all_category_ids.index(neg_category_id) for neg_category_id in img['neg_category_ids']]
         records.append((img_id, path, pos_category_nos, neg_category_nos, []))
+    print()
 
     return MLCPLDataset(dataset_path, records, num_categories, transform)
 
@@ -180,7 +182,10 @@ def Open_Images_V3(dataset_path, split='train', transform=transforms.ToTensor(),
     num_categories = len(categories)
 
     if use_cache and os.path.exists(os.path.join(cache_dir, split+'.csv')) and os.path.exists(os.path.join(cache_dir, 'valid.csv')):
+        print('Loading Open Images V3 from cache...')
         return MLCPLDataset(dataset_path, df_to_records(pd.read_csv(os.path.join(cache_dir, split+'.csv'))), num_categories, transform)
+
+    print('Loading Open Images V3...')
 
     df = pd.read_csv(os.path.join(dataset_path, subset, 'annotations-human.csv'))
     df = df.drop('Source', axis=1)
@@ -202,6 +207,8 @@ def Open_Images_V3(dataset_path, split='train', transform=transforms.ToTensor(),
 
     paths = [f'{subset}/{img_id}.jpg' for img_id in df['Id'].tolist()]
     df.insert(loc=1, column='Path', value=paths)
+
+    print('Checking if images exist...')
 
     if check_images:
         # check if the images exists:
