@@ -277,3 +277,55 @@ def CheXpert(dataset_path, split='train', competition_categories=False, transfor
         records.append((i, path, pos_category_nos, neg_category_nos, unc_category_nos))
 
     return MLCPLDataset(dataset_path, records, num_categories, transform=transform, categories=categories)
+
+def VAW(dataset_path, vg_dataset_path, split='train', transform=transforms.ToTensor()):
+    vg_folder_1 = 'VG_100K'
+    vg_folder_2 = 'VG_100K_2'
+    
+    if split == 'train':
+        subsets = ['train_part1', 'train_part2']
+    elif split == 'valid':
+        subsets = ['val']
+    elif split == 'test':
+        subsets = ['test']
+
+    with open(os.path.join(dataset_path, 'data', 'attribute_index.json'), 'r') as f:
+        category_dict = json.load(f)
+        categories = list(category_dict.keys())
+        num_categories = len(categories)
+
+    folder_1 = os.listdir(os.path.join(vg_dataset_path, vg_folder_1))
+    folder_1 = set([int(os.path.splitext(name)[0]) for name in folder_1])
+
+    folder_2 = os.listdir(os.path.join(vg_dataset_path, vg_folder_2))
+    folder_2 = set([int(os.path.splitext(name)[0]) for name in folder_2])
+    
+    records = []
+    for subset in subsets:
+        with open(os.path.join(dataset_path, 'data', subset+'.json'), 'r') as f:
+            samples = json.load(f)
+
+        for i, sample in enumerate(samples):
+            print(f'Loading VAW {split}({subset}): {i+1} / {len(samples)}', end='\r')
+
+            image_id = int(sample['image_id'])
+            positive_attributes = sample['positive_attributes']
+            negative_attributes = sample['negative_attributes']
+
+            if image_id in folder_1:
+                folder = vg_folder_1
+            elif image_id in folder_2:
+                folder = vg_folder_2
+            else:
+                print(f'Image {image_id} not found.')
+
+            img_path = os.path.join(vg_dataset_path, folder, f'{image_id}.jpg')
+
+            positive_category_nos = [categories.index(attribute) for attribute in positive_attributes]
+            negative_category_nos = [categories.index(attribute) for attribute in negative_attributes]
+            uncertain_category_nos = []
+            
+            records.append((image_id, img_path, positive_category_nos, negative_category_nos, uncertain_category_nos))
+        print()
+
+    return MLCPLDataset(dataset_path, records, num_categories, transform=transform, categories=categories)
