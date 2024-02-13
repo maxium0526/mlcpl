@@ -278,7 +278,10 @@ def CheXpert(dataset_path, split='train', competition_categories=False, transfor
 
     return MLCPLDataset(dataset_path, records, num_categories, transform=transform, categories=categories)
 
-def VAW(dataset_path, vg_dataset_path, split='train', transform=transforms.ToTensor()):
+def VAW(dataset_path, vg_dataset_path, split='train', use_cache=True, cache_dir='output/dataset', transform=transforms.ToTensor()):
+    from pathlib import Path
+    from PIL import Image
+
     vg_folder_1 = 'VG_100K'
     vg_folder_2 = 'VG_100K_2'
     
@@ -294,11 +297,17 @@ def VAW(dataset_path, vg_dataset_path, split='train', transform=transforms.ToTen
         categories = list(category_dict.keys())
         num_categories = len(categories)
 
+    if use_cache and os.path.exists(os.path.join(cache_dir, split+'.csv')):
+        print(f'Loading Open VAW {split} from cache...')
+        return MLCPLDataset(cache_dir, df_to_records(pd.read_csv(os.path.join(cache_dir, split+'.csv'))), num_categories, transform)
+
     folder_1 = os.listdir(os.path.join(vg_dataset_path, vg_folder_1))
     folder_1 = set([int(os.path.splitext(name)[0]) for name in folder_1])
 
     folder_2 = os.listdir(os.path.join(vg_dataset_path, vg_folder_2))
     folder_2 = set([int(os.path.splitext(name)[0]) for name in folder_2])
+
+    Path(os.path.join(cache_dir, split)).mkdir(parents=True, exist_ok=True)
     
     records = []
     for subset in subsets:
@@ -309,6 +318,8 @@ def VAW(dataset_path, vg_dataset_path, split='train', transform=transforms.ToTen
             print(f'Loading VAW {split}({subset}): {i+1} / {len(samples)}', end='\r')
 
             image_id = int(sample['image_id'])
+            instance_id = int(sample['instance_id'])
+            x, y, w, h = sample['instance_bbox']
             positive_attributes = sample['positive_attributes']
             negative_attributes = sample['negative_attributes']
 
@@ -320,12 +331,19 @@ def VAW(dataset_path, vg_dataset_path, split='train', transform=transforms.ToTen
                 print(f'Image {image_id} not found.')
 
             img_path = os.path.join(vg_dataset_path, folder, f'{image_id}.jpg')
+            img = Image.open(img_path)
+            instance_img = img.crop((x, y, x+w, y+h))
+
+            instance_img_path = os.path.join(split, f'{instance_id}.jpg')
+            instance_img.save(os.path.join(cache_dir, instance_img_path))
 
             positive_category_nos = [categories.index(attribute) for attribute in positive_attributes]
             negative_category_nos = [categories.index(attribute) for attribute in negative_attributes]
             uncertain_category_nos = []
             
-            records.append((image_id, img_path, positive_category_nos, negative_category_nos, uncertain_category_nos))
+            records.append((instance_id, instance_img_path, positive_category_nos, negative_category_nos, uncertain_category_nos))
         print()
 
-    return MLCPLDataset(dataset_path, records, num_categories, transform=transform, categories=categories)
+    records_to_df(records).to_csv(os.path.join(cache_dir, f'{split}.csv'))
+
+    return MLCPLDataset(cache_dir, records, num_categories, transform=transform, categories=categories)
