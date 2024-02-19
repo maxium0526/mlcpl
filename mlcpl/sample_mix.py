@@ -25,6 +25,7 @@ class SampleMix(torch.utils.data.Dataset):
             num_samples = np.random.randint(*self.mix_num_samples)
 
         indices = np.random.randint(len(self.dataset), size=(num_samples))
+        indices[0] = idx
 
         samples = [self.dataset[i] for i in indices]
 
