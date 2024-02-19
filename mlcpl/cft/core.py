@@ -94,16 +94,16 @@ def finetune_head(
 
     if (y_train==0).sum() == 0 :
         print(f'Negative training samples not found. Skip.')
-        return head
+        return head, []
     if (y_train==1).sum() == 0:
         print(f'Positive training samples not found. Skip.')
-        return head
+        return head, []
     if (y_valid==0).sum() == 0 :
         print(f'Negative validation samples not found. Skip.')
-        return head
+        return head, []
     if (y_valid==1).sum() == 0:
         print(f'Positive validation samples not found. Skip.')
-        return head
+        return head, []
 
     training_dataset = FTDataset(z_train, y_train)
     validation_dataset = FTDataset(z_valid, y_valid)
