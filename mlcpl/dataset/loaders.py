@@ -7,7 +7,7 @@ import json
 import glob
 from .core import *
 
-def MSCOCO(dataset_path, year='2014', split='train', partial_ratio=1.0, transform=transforms.ToTensor()):
+def MSCOCO(dataset_path, year='2014', split='train', transform=transforms.ToTensor()):
     from pycocotools.coco import COCO
 
     num_categories = 80
@@ -34,11 +34,10 @@ def MSCOCO(dataset_path, year='2014', split='train', partial_ratio=1.0, transfor
     print()
     
     records = fill_nan_to_negative(records, num_categories)
-    records = drop_labels(records, partial_ratio)
 
     return MLCPLDataset(dataset_path, records, num_categories, transform)
 
-def Pascal_VOC_2007(dataset_path, split='train', partial_ratio=1.0, transform=transforms.ToTensor()):
+def Pascal_VOC_2007(dataset_path, split='train', transform=transforms.ToTensor()):
 
     if split == 'train':
         subset = 'trainval'
@@ -78,7 +77,6 @@ def Pascal_VOC_2007(dataset_path, split='train', partial_ratio=1.0, transform=tr
         records.append((img_no, path, pos_category_nos, [], []))
 
     records = fill_nan_to_negative(records, num_categories)
-    records = drop_labels(records, partial_ratio)
 
     return MLCPLDataset(dataset_path, records, num_categories, transform)
 
