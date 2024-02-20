@@ -179,7 +179,7 @@ def Open_Images_V3(dataset_path, split='train', transform=transforms.ToTensor(),
     categories = pd.read_csv(os.path.join(dataset_path, 'classes-trainable.txt'), header=None)[0].tolist()
     num_categories = len(categories)
 
-    if use_cache and os.path.exists(os.path.join(cache_dir, split+'.csv')) and os.path.exists(os.path.join(cache_dir, 'valid.csv')):
+    if use_cache and os.path.exists(os.path.join(cache_dir, split+'.csv')):
         print('Loading Open Images V3 from cache...')
         return MLCPLDataset(dataset_path, df_to_records(pd.read_csv(os.path.join(cache_dir, split+'.csv'))), num_categories, transform)
 
