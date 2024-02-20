@@ -36,29 +36,12 @@ class MLCPLDataset(Dataset):
         target = self.__to_one_hot(pos_category_nos, neg_category_nos, unc_category_nos)
         return img, target
     
-    def getitem(self, idx):
-        return self.__getitem__(idx)
-    
     def __to_one_hot(self, pos_category_nos, neg_category_nos, unc_category_nos):
         one_hot = torch.full((self.num_categories, ), torch.nan, dtype=torch.float32)
         one_hot[np.array(pos_category_nos)] = 1.0
         one_hot[np.array(neg_category_nos)] = 0.0
         one_hot[np.array(unc_category_nos)] = -1.0
         return one_hot
-
-    def test(self):
-        return self.__getitem__(0)
-
-    def get_samples(self, indices):
-        samples = []
-        if indices is None:
-            sub_df = self.df
-        else:
-            sub_df = self.df.iloc[indices]
-        for i, row in sub_df.iterrows():
-            print(f'Loading {i+1}/{sub_df.shape[0]}', end='\r')
-            samples.append(self.__getitem__(i))
-        return samples
 
     def get_statistics(self):
         num_categories = self.num_categories
