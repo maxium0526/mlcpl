@@ -103,6 +103,46 @@ class MLCPLDataset(Dataset):
         })
 
         return self.statistics
+    
+    def drop_labels_random(self, target_partial_ratio, seed=526):
+        self.records = drop_labels(self.records, target_partial_ratio, seed=seed)
+        return self
+    
+    def drop_labels_fix_per_category(self, max_num_labels_per_category, seed=526):
+        # https://openaccess.thecvf.com/content/CVPR2022/papers/Ben-Baruch_Multi-Label_Classification_With_Partial_Annotations_Using_Class-Aware_Selective_Loss_CVPR_2022_paper.pdf
+        rng = np.random.Generator(np.random.PCG64(seed=seed))
+
+        per_category_positive_samples = []
+        per_category_negative_samples = []
+        for c in range(self.num_categories):
+            per_category_positive_samples.append([])
+            per_category_negative_samples.append([])
+
+        for i, path, positives, negatives, uncertains in self.records:
+            for positive in positives:
+                per_category_positive_samples[positive].append(i)
+            for negative in negatives:
+                per_category_negative_samples[negative].append(i)
+
+        for c in range(self.num_categories):
+            num_positive = len(per_category_positive_samples[c])
+            num_negative = len(per_category_negative_samples[c])
+            N_s = np.min([num_positive, num_negative, max_num_labels_per_category//2])
+            
+            rng.shuffle(per_category_positive_samples[c])
+            rng.shuffle(per_category_negative_samples[c])
+
+            per_category_positive_samples[c] = per_category_positive_samples[c][:N_s]
+            per_category_negative_samples[c] = per_category_negative_samples[c][:N_s]
+
+        new_records = []
+        for i, path, _, _, _ in self.records:
+            positives = [c for c in range(self.num_categories) if i in per_category_positive_samples[c]]
+            negatives = [c for c in range(self.num_categories) if i in per_category_negative_samples[c]]
+            new_records.append((i, path, positives, negatives, []))
+        
+        self.records = new_records
+        return self
 
 def fill_nan_to_negative(old_records, num_categories):
     new_records = []
