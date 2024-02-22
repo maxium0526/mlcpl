@@ -345,3 +345,39 @@ def VAW(dataset_path, vg_dataset_path, split='train', use_cache=True, cache_dir=
     records_to_df(records).to_csv(os.path.join(cache_dir, f'{split}.csv'))
 
     return MLCPLDataset(cache_dir, records, num_categories, transform=transform, categories=categories)
+
+def NUS_WIDE(dataset_path, split='train', transform=transforms.ToTensor()):
+
+    if split == 'train':
+        subset = 'Train'
+    elif split == 'valid':
+        subset = 'Test'
+
+    categories = pd.read_csv(os.path.join(dataset_path, 'Concepts81.txt'), header=None)[0].to_list()
+    num_categories = len(categories)
+
+    df = pd.read_csv(os.path.join(dataset_path, 'ImageList', f'{subset}Imagelist.txt'), header=None)
+    df = df.rename(columns={0: 'Path'})
+    df['Path'] = df['Path'].apply(lambda x: os.path.join('images', x.split('\\')[1]))
+
+    for i, category in enumerate(categories):
+        labels = pd.read_csv(os.path.join(dataset_path, 'GroundTruth', 'TrainTestLabels', f'Labels_{category}_{subset}.txt'), header=None)[0]
+        df[i] = labels
+
+    records = []
+    for i, row in df.iterrows():
+        print(f'Loading NUS-WIDE {split}: {i+1} / {len(df)}', end='\r')
+
+        positives = []
+        negatives = []
+        for c in range(num_categories):
+            if row[c] == 1:
+                positives.append(c)
+            else:
+                negatives.append(c)
+        
+        records.append((i, row['Path'], positives, negatives, []))
+    
+    print()
+
+    return MLCPLDataset(dataset_path, records, num_categories, transform=transform, categories=categories)
