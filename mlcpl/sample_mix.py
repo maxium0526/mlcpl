@@ -52,6 +52,9 @@ class MixUp(torch.utils.data.Dataset):
         img1, target1 = self.dataset[idx]
         img2, target2 = self.dataset[np.random.randint(0, len(self.dataset))]
 
+        if torch.isnan(target1).any() or torch.isnan(target2).any():
+            raise Exception('Target contains nan.')
+
         lam = np.random.beta(self.alpha, self.alpha)
 
         img = mixup(img1, img2, lam=lam)
