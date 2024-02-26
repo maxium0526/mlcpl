@@ -53,7 +53,7 @@ class MixUp(torch.utils.data.Dataset):
         img1, target1 = self.dataset[idx]
         img2, target2 = self.dataset[np.random.randint(0, len(self.dataset))]
 
-        if self.unknown_as:
+        if self.unknown_as is not None:
             target1 = torch.where(torch.isnan(target1), self.unknown_as, target1)
             target2 = torch.where(torch.isnan(target2), self.unknown_as, target2)
 
@@ -86,7 +86,7 @@ class MultilabelMixUp(torch.utils.data.Dataset):
         img1, target1 = self.dataset[idx]
         img2, target2 = self.dataset[np.random.randint(0, len(self.dataset))]
 
-        if self.unknown_as:
+        if self.unknown_as  is not None:
             target1 = torch.where(torch.isnan(target1), self.unknown_as, target1)
             target2 = torch.where(torch.isnan(target2), self.unknown_as, target2)
 
