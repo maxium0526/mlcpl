@@ -36,9 +36,34 @@ class LogicMix(torch.utils.data.Dataset):
             image = self.transform(image)
 
         return image, target
+    
+class MixUp(torch.utils.data.Dataset):
+    def __init__(self, dataset, alpha=0.2, transform=None):
+        self.dataset = dataset
+        self.alpha = alpha
+        self.transform = transform
+        self.num_categories = self.dataset.num_categories
 
-def mixup(tensor_1, tensor_2, theta=0.5):
-    return theta * tensor_1 + (1 - theta) * tensor_2
+    def __len__(self):
+        return len(self.dataset)
+    
+    def __getitem__(self, idx):
+
+        img1, target1 = self.dataset[idx]
+        img2, target2 = self.dataset[np.random.randint(0, len(self.dataset))]
+
+        lam = np.random.beta(self.alpha, self.alpha)
+
+        img = mixup(img1, img2, lam=lam)
+        target = mixup(target1, target2, lam=lam)
+
+        if self.transform:
+            img = self.transform(img)
+
+        return img, target
+
+def mixup(tensor_1, tensor_2, lam=0.5):
+    return lam * tensor_1 + (1 - lam) * tensor_2
 
 def mix_images(images):
     images = torch.stack(images)
