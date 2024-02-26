@@ -143,6 +143,26 @@ class MLCPLDataset(Dataset):
         
         self.records = new_records
         return self
+    
+    def drop_labels_natural(self, N, alpha=1, beta=5, seed=526):
+        rng = np.random.Generator(np.random.PCG64(seed=seed))
+
+        new_records = []
+        for id, path, positives, negatives, uncertains in self.records:
+            num_positives = len(positives)
+            num_negatives = len(negatives)
+
+            rng.shuffle(positives)
+            rng.shuffle(negatives)
+
+            new_num_positives = np.min([round(rng.beta(alpha, beta) * N), num_positives])
+            new_num_negatives = np.min([round(rng.beta(alpha, beta) * N), num_negatives])
+
+            new_records.append((id, path, positives[:new_num_positives], negatives[:new_num_negatives], uncertains))
+        
+        self.records = new_records
+
+        return self
 
 def fill_nan_to_negative(old_records, num_categories):
     new_records = []
