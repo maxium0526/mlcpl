@@ -6,3 +6,4 @@ output/
 !/mlcpl/loss/*.py
 !/mlcpl/cft/*.py
 *.csv
+*.png
