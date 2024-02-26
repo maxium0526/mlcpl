@@ -3,7 +3,7 @@ import numpy as np
 import torch
 from torchvision import transforms
 
-class SampleMix(torch.utils.data.Dataset):
+class LogicMix(torch.utils.data.Dataset):
     def __init__(self, dataset, probability=1, mix_num_samples=2, strict_negative=False, transform=None):
         self.dataset = dataset
         self.probability = probability
