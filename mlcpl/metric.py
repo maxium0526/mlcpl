@@ -25,6 +25,20 @@ class PartialMultilabelMetric():
                     mean_score = torch.mean(selected_scores[~torch.isnan(selected_scores)])
 
                 return mean_score
+            
+class PartialPerSampleMultilabelMetric():
+    def __init__(self, binary_metric, mask=None, reduction='mean'):
+        self.metric = PartialMultilabelMetric(binary_metric, reduction=reduction)
+        self.mask = mask
+
+    def __call__(self, preds, target, threshold=None):
+        with torch.no_grad():
+            
+            if self.mask:
+                preds = preds[:, self.mask]
+                target = target[:, self.mask]
+
+        return self.metric(preds.transpose(0, 1), target.transpose(0, 1), threshold=threshold)
 
 class PartialOverallMultilabelMetric():
     def __init__(self, binary_metric, mask=None):
