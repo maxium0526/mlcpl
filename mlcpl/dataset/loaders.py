@@ -381,3 +381,45 @@ def NUS_WIDE(dataset_path, split='train', transform=transforms.ToTensor()):
     print()
 
     return MLCPLDataset(dataset_path, records, num_categories, transform=transform, categories=categories)
+
+def VISPR(dataset_path, split='train', transform=transforms.ToTensor()):
+
+    if split == 'train':
+        subset = 'train2017'
+    elif split == 'valid':
+        subset = 'val2017'
+    elif split == 'test':
+        subset = 'test2017'
+
+    categories = set()
+
+    paths = glob.glob(os.path.join(dataset_path, subset, '*.json'))
+    paths.sort()
+
+    records_temp = []
+    for i, path in enumerate(paths):
+        print(f'Loading VISPR {split}: {i+1} / {len(paths)}', end='\r')
+        
+        with open(os.path.join(path), 'r') as f:
+            data = json.load(f)
+
+        id = data['id']
+        img_path = data['image_path']
+        labels = data['labels']
+        records_temp.append((id, img_path.replace('images/', ''), labels))
+        categories.update(labels)
+
+    print()
+
+    categories = list(categories)
+    categories.sort()
+    num_categories = len(categories)
+
+    records = []
+    for id, path, labels in records_temp:
+        positives = [categories.index(label) for label in labels]
+        records.append((id, path, positives, [], []))
+    
+    records = fill_nan_to_negative(records, num_categories=num_categories)
+
+    return MLCPLDataset(dataset_path, records, num_categories, transform=transform, categories=categories)
