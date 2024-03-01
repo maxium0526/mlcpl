@@ -423,3 +423,37 @@ def VISPR(dataset_path, split='train', transform=transforms.ToTensor()):
     records = fill_nan_to_negative(records, num_categories=num_categories)
 
     return MLCPLDataset(dataset_path, records, num_categories, transform=transform, categories=categories)
+
+def Vireo_Food_172(dataset_path, split='train', transform=transforms.ToTensor()):
+
+    if split == 'train':
+        subset = 'TR'
+    elif split == 'valid':
+        subset = 'VAL'
+    elif split == 'test':
+        subset = 'TE'
+
+    images = pd.read_csv(os.path.join(dataset_path, 'SplitAndIngreLabel', f'{subset}.txt'), header=None, sep=' ')[0]
+
+    df = pd.read_csv(os.path.join(dataset_path, 'SplitAndIngreLabel', 'IngreLabel.txt'), header=None, sep=' ', index_col=0).rename(lambda x: x-1, axis=1)
+
+    df = df.loc[images]
+
+    records = []
+    for i, (id, row) in enumerate(df.iterrows()):
+        print(f'Loading Vireo_Food_172 {split}: {i+1} / {len(df)}', end='\r')
+
+        positives = []
+        negatives = []
+        for c in df.columns:
+            if row[c] == 1:
+                positives.append(c)
+            else:
+                negatives.append(c)
+        records.append((i, f'ready_chinese_food{id}', positives, negatives, []))
+
+    print()
+
+    categories = pd.read_csv(os.path.join(dataset_path, 'SplitAndIngreLabel', 'IngredientList.txt'), header=None, sep=',')[0].to_list()
+    
+    return MLCPLDataset(dataset_path, records, len(categories), transform=transform, categories=categories)
