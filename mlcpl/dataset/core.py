@@ -87,7 +87,7 @@ class MLCPLDataset(Dataset):
 
         label_ratio = num_known_labels / num_labels
 
-        self.statistics = dotdict({
+        statistics = dotdict({
             'num_categories': num_categories,
             'num_samples': num_samples,
             'num_labels': num_labels,
@@ -102,7 +102,7 @@ class MLCPLDataset(Dataset):
             'label_distributions': label_distributions,
         })
 
-        return self.statistics
+        return statistics
     
     def drop_labels_random(self, target_partial_ratio, seed=526):
         self.records = drop_labels(self.records, target_partial_ratio, seed=seed)
