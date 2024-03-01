@@ -37,11 +37,7 @@ class MLCPLDataset(Dataset):
         return img, target
     
     def __to_one_hot(self, pos_category_nos, neg_category_nos, unc_category_nos):
-        one_hot = torch.full((self.num_categories, ), torch.nan, dtype=torch.float32)
-        one_hot[np.array(pos_category_nos)] = 1.0
-        one_hot[np.array(neg_category_nos)] = 0.0
-        one_hot[np.array(unc_category_nos)] = -1.0
-        return one_hot
+        return labels_to_one_hot(pos_category_nos, neg_category_nos, unc_category_nos, self.num_categories)
     
     def get_statistics(self):
         return get_statistics(self.records, self.num_categories)
@@ -105,6 +101,13 @@ class MLCPLDataset(Dataset):
         self.records = new_records
 
         return self
+    
+def labels_to_one_hot(positives, negatives, uncertains, num_categories):
+    one_hot = torch.full((num_categories, ), torch.nan, dtype=torch.float32)
+    one_hot[np.array(positives)] = 1.0
+    one_hot[np.array(negatives)] = 0.0
+    one_hot[np.array(uncertains)] = -1.0
+    return one_hot
     
 def get_statistics(records, num_categories):
     num_categories = num_categories
