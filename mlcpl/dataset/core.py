@@ -133,22 +133,29 @@ def get_statistics(records, num_categories):
     num_negative_labels = len(all_negative_labels)
     num_uncertain_labels = len(all_uncertain_labels)
 
-    categories_has_pos = set(all_positive_labels)
-    categories_has_neg = set(all_negative_labels)
-    categories_has_unc = set(all_uncertain_labels)
-
-    label_distributions = pd.DataFrame([(0)]*num_categories, columns=['dummy'])
-    label_distributions['Num Positive'] = all_positive_labels.value_counts()
-    label_distributions['Num Negative'] = all_negative_labels.value_counts()
-    label_distributions['Num Uncertain'] = all_uncertain_labels.value_counts()
-    label_distributions = label_distributions.drop('dummy', axis=1)
-    label_distributions = label_distributions.fillna(0)
-    label_distributions['Total'] = label_distributions.sum(axis=1)
-    
     num_known_labels = num_positive_labels + num_negative_labels + num_uncertain_labels
     num_unknown_labels = num_labels - num_known_labels
 
     label_ratio = num_known_labels / num_labels
+
+    categories_has_pos = set(all_positive_labels)
+    categories_has_neg = set(all_negative_labels)
+    categories_has_unc = set(all_uncertain_labels)
+
+    category_distributions = pd.DataFrame([(0)]*num_categories, columns=['dummy'])
+    category_distributions['Num Positive'] = all_positive_labels.value_counts()
+    category_distributions['Num Negative'] = all_negative_labels.value_counts()
+    category_distributions['Num Uncertain'] = all_uncertain_labels.value_counts()
+    category_distributions = category_distributions.drop('dummy', axis=1)
+    category_distributions = category_distributions.fillna(0)
+    category_distributions['Total'] = category_distributions.sum(axis=1)
+
+    sample_distributions = records_to_df(records)
+    sample_distributions['Num Positive'] = sample_distributions.apply(lambda row: len(row['Positive']), axis=1)
+    sample_distributions['Num Negative'] = sample_distributions.apply(lambda row: len(row['Negative']), axis=1)
+    sample_distributions['Num Uncertain'] = sample_distributions.apply(lambda row: len(row['Uncertain']), axis=1)
+    sample_distributions['Total'] = sample_distributions.apply(lambda row: row['Num Positive']+row['Num Negative'] + row['Num Uncertain'], axis=1)
+    sample_distributions = sample_distributions.drop(columns=['Path', 'Positive', 'Negative', 'Uncertain'])
 
     statistics = dotdict({
         'num_categories': num_categories,
@@ -162,7 +169,8 @@ def get_statistics(records, num_categories):
         'label_ratio': label_ratio,
         'num_trainable_categories': len(categories_has_pos.union(categories_has_neg)),
         'num_evaluatable_categories': len(categories_has_pos.intersection(categories_has_neg)),
-        'label_distributions': label_distributions,
+        'category_distributions': category_distributions,
+        'sample_distributions': sample_distributions,
     })
 
     return statistics
