@@ -2,6 +2,7 @@ from torch.utils.data import Dataset, DataLoader
 import numpy as np
 import torch
 from torchvision import transforms
+from .dataset import *
 
 class LogicMix(torch.utils.data.Dataset):
     def __init__(self, dataset, probability=1, mix_num_samples=2, strict_negative=False, transform=None):
@@ -36,6 +37,14 @@ class LogicMix(torch.utils.data.Dataset):
             image = self.transform(image)
 
         return image, target
+    
+    def estimate_statistics(self):
+        records = []
+        for i, (image, target) in enumerate(self):
+            record = (i, None, *one_hot_to_labels(target))
+            records.append(record)
+
+        return get_statistics(records, self.num_categories)
     
 class MixUp(torch.utils.data.Dataset):
     def __init__(self, dataset, alpha=0.2, transform=None, unknown_as=None):
