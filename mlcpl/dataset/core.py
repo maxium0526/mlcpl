@@ -42,67 +42,9 @@ class MLCPLDataset(Dataset):
         one_hot[np.array(neg_category_nos)] = 0.0
         one_hot[np.array(unc_category_nos)] = -1.0
         return one_hot
-
+    
     def get_statistics(self):
-        num_categories = self.num_categories
-        num_samples = len(self.records)
-        num_labels = num_samples * num_categories
-
-        all_positive_labels = []
-        all_negative_labels = []
-        all_uncertain_labels = []
-
-        for i, (_, _, positive_labels, negative_labels, uncertain_labels) in enumerate(self.records):
-            print(f'Counting Labels: {i+1}/{len(self.records)}.', end='\r')
-            
-
-            all_positive_labels += positive_labels
-            all_negative_labels += negative_labels
-            all_uncertain_labels += uncertain_labels
-        
-        print()
-
-        all_positive_labels = pd.Series(all_positive_labels)
-        all_negative_labels = pd.Series(all_negative_labels)
-        all_uncertain_labels = pd.Series(all_uncertain_labels)
-
-        num_positive_labels = len(all_positive_labels)
-        num_negative_labels = len(all_negative_labels)
-        num_uncertain_labels = len(all_uncertain_labels)
-
-        categories_has_pos = set(all_positive_labels)
-        categories_has_neg = set(all_negative_labels)
-        categories_has_unc = set(all_uncertain_labels)
-
-        label_distributions = pd.DataFrame([(0)]*self.num_categories, columns=['dummy'])
-        label_distributions['Num Positive'] = all_positive_labels.value_counts()
-        label_distributions['Num Negative'] = all_negative_labels.value_counts()
-        label_distributions['Num Uncertain'] = all_uncertain_labels.value_counts()
-        label_distributions = label_distributions.drop('dummy', axis=1)
-        label_distributions = label_distributions.fillna(0)
-        label_distributions['Total'] = label_distributions.sum(axis=1)
-        
-        num_known_labels = num_positive_labels + num_negative_labels + num_uncertain_labels
-        num_unknown_labels = num_labels - num_known_labels
-
-        label_ratio = num_known_labels / num_labels
-
-        statistics = dotdict({
-            'num_categories': num_categories,
-            'num_samples': num_samples,
-            'num_labels': num_labels,
-            'num_positive_labels': num_positive_labels,
-            'num_negative_labels': num_negative_labels,
-            'num_uncertain_labels': num_uncertain_labels,
-            'num_known_labels': num_known_labels,
-            'num_unknown_labels': num_unknown_labels,
-            'label_ratio': label_ratio,
-            'num_trainable_categories': len(categories_has_pos.union(categories_has_neg)),
-            'num_evaluatable_categories': len(categories_has_pos.intersection(categories_has_neg)),
-            'label_distributions': label_distributions,
-        })
-
-        return statistics
+        return get_statistics(self.records, self.num_categories)
     
     def drop_labels_random(self, target_partial_ratio, seed=526):
         self.records = drop_labels(self.records, target_partial_ratio, seed=seed)
@@ -163,6 +105,67 @@ class MLCPLDataset(Dataset):
         self.records = new_records
 
         return self
+    
+def get_statistics(records, num_categories):
+    num_categories = num_categories
+    num_samples = len(records)
+    num_labels = num_samples * num_categories
+
+    all_positive_labels = []
+    all_negative_labels = []
+    all_uncertain_labels = []
+
+    for i, (_, _, positive_labels, negative_labels, uncertain_labels) in enumerate(records):
+        print(f'Counting Labels: {i+1}/{len(records)}.', end='\r')
+        
+
+        all_positive_labels += positive_labels
+        all_negative_labels += negative_labels
+        all_uncertain_labels += uncertain_labels
+    
+    print()
+
+    all_positive_labels = pd.Series(all_positive_labels)
+    all_negative_labels = pd.Series(all_negative_labels)
+    all_uncertain_labels = pd.Series(all_uncertain_labels)
+
+    num_positive_labels = len(all_positive_labels)
+    num_negative_labels = len(all_negative_labels)
+    num_uncertain_labels = len(all_uncertain_labels)
+
+    categories_has_pos = set(all_positive_labels)
+    categories_has_neg = set(all_negative_labels)
+    categories_has_unc = set(all_uncertain_labels)
+
+    label_distributions = pd.DataFrame([(0)]*num_categories, columns=['dummy'])
+    label_distributions['Num Positive'] = all_positive_labels.value_counts()
+    label_distributions['Num Negative'] = all_negative_labels.value_counts()
+    label_distributions['Num Uncertain'] = all_uncertain_labels.value_counts()
+    label_distributions = label_distributions.drop('dummy', axis=1)
+    label_distributions = label_distributions.fillna(0)
+    label_distributions['Total'] = label_distributions.sum(axis=1)
+    
+    num_known_labels = num_positive_labels + num_negative_labels + num_uncertain_labels
+    num_unknown_labels = num_labels - num_known_labels
+
+    label_ratio = num_known_labels / num_labels
+
+    statistics = dotdict({
+        'num_categories': num_categories,
+        'num_samples': num_samples,
+        'num_labels': num_labels,
+        'num_positive_labels': num_positive_labels,
+        'num_negative_labels': num_negative_labels,
+        'num_uncertain_labels': num_uncertain_labels,
+        'num_known_labels': num_known_labels,
+        'num_unknown_labels': num_unknown_labels,
+        'label_ratio': label_ratio,
+        'num_trainable_categories': len(categories_has_pos.union(categories_has_neg)),
+        'num_evaluatable_categories': len(categories_has_pos.intersection(categories_has_neg)),
+        'label_distributions': label_distributions,
+    })
+
+    return statistics
 
 def fill_nan_to_negative(old_records, num_categories):
     new_records = []
