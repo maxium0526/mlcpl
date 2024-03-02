@@ -5,5 +5,6 @@ output/
 !/mlcpl/dataset/*.py
 !/mlcpl/loss/*.py
 !/mlcpl/cft/*.py
+!/mlcpl/sample_mix/*.py
 *.csv
 *.png
