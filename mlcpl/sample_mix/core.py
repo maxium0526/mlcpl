@@ -45,7 +45,7 @@ class MixTargets():
     def __call__(self, targets):
         return mix_targets(targets, strict_negative=self.strict_negative)
 
-def estimate_target_mix_strategy(strategy, partial_dataset, full_dataset, strict_negative):
+def estimate_target_mix_strategy(strategy, partial_dataset, full_dataset):
     if len(partial_dataset) != len(full_dataset):
         raise Exception('The datasets have different sizes.')
     
