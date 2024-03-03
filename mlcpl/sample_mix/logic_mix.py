@@ -30,7 +30,7 @@ class LogicMix(torch.utils.data.Dataset):
         samples = [self.dataset[i] for i in indices]
 
         image = mix_images([image for image, target in samples])
-        target = mix_targets([target for image, target in samples], strict_negative=self.strict_negative)
+        target = logic_mix_targets([target for image, target in samples], strict_negative=self.strict_negative)
 
         if self.transform:
             image = self.transform(image)

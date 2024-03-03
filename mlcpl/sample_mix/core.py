@@ -10,7 +10,7 @@ def mix_images(images):
 
     return new_image
 
-def mix_targets(targets, strict_negative=False):
+def logic_mix_targets(targets, strict_negative=False):
         targets = torch.stack(targets)
 
         #compute must positive
@@ -38,12 +38,12 @@ def mix_targets(targets, strict_negative=False):
 
         return new_target
 
-class MixTargets():
+class LogicMixTargets():
     def __init__(self, strict_negative=False) -> None:
         self.strict_negative = strict_negative
 
     def __call__(self, targets):
-        return mix_targets(targets, strict_negative=self.strict_negative)
+        return logic_mix_targets(targets, strict_negative=self.strict_negative)
 
 def estimate_target_mix_strategy(strategy, partial_dataset, full_dataset):
     if len(partial_dataset) != len(full_dataset):
@@ -65,7 +65,7 @@ def estimate_target_mix_strategy(strategy, partial_dataset, full_dataset):
         full_targets = [labels_to_one_hot(p, n, u, num_categories) for _, _, p, n, u in full_records]
 
         partial_new_target = strategy(partial_targets)
-        full_new_target = mix_targets(full_targets, strict_negative=True)
+        full_new_target = logic_mix_targets(full_targets, strict_negative=True)
 
         tp, tn, fp, fn = 0, 0, 0, 0
         for partial_target, full_target in zip(partial_new_target, full_new_target):
