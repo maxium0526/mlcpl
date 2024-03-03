@@ -102,7 +102,14 @@ def estimate_target_mix_strategy(strategy, partial_dataset, full_dataset, seed=5
 
         record = (tp, tn, fp, fn)
         records.append(record)
-            
-    print()
 
-    pd.DataFrame(records, columns=['TP', 'TN', 'FP', 'FN']).to_csv('false_labels.csv')
+    per_sample_label_distributions = pd.DataFrame(records, columns=['TP', 'TN', 'FP', 'FN'])
+
+    statistics = {
+        'TP': total_tp,
+        'TN': total_tn,
+        'FP': total_fp,
+        'FN': total_fn,
+    }
+
+    return per_sample_label_distributions, statistics
