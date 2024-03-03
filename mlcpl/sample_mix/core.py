@@ -10,8 +10,11 @@ def mix_images(images):
 
     return new_image
 
-def logic_mix_targets(targets, strict_negative=False):
+def logic_mix_targets(targets, strict_negative=False, unknown_as=None):
         targets = torch.stack(targets)
+
+        if unknown_as is not None:
+            targets = torch.where(torch.isnan(targets), unknown_as, targets)
 
         #compute must positive
         t = torch.where(torch.isnan(targets), 0, targets)
@@ -39,11 +42,12 @@ def logic_mix_targets(targets, strict_negative=False):
         return new_target
 
 class LogicMixTargets():
-    def __init__(self, strict_negative=False) -> None:
+    def __init__(self, strict_negative=False, unknown_as=None) -> None:
         self.strict_negative = strict_negative
+        self.unknown_as = unknown_as
 
     def __call__(self, targets):
-        return logic_mix_targets(targets, strict_negative=self.strict_negative)
+        return logic_mix_targets(targets, strict_negative=self.strict_negative, unknown_as=self.unknown_as)
 
 def estimate_target_mix_strategy(strategy, partial_dataset, full_dataset):
     if len(partial_dataset) != len(full_dataset):

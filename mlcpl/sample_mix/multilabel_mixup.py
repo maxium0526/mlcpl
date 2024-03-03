@@ -3,7 +3,7 @@ import numpy as np
 from .core import *
 
 class MultilabelMixUp(torch.utils.data.Dataset):
-    def __init__(self, dataset, alpha=0.2, transform=None, unknown_as=None):
+    def __init__(self, dataset, alpha=0.2, transform=None, unknown_as=0):
         self.dataset = dataset
         self.alpha = alpha
         self.transform = transform
@@ -18,17 +18,10 @@ class MultilabelMixUp(torch.utils.data.Dataset):
         img1, target1 = self.dataset[idx]
         img2, target2 = self.dataset[np.random.randint(0, len(self.dataset))]
 
-        if self.unknown_as  is not None:
-            target1 = torch.where(torch.isnan(target1), self.unknown_as, target1)
-            target2 = torch.where(torch.isnan(target2), self.unknown_as, target2)
-
-        if torch.isnan(target1).any() or torch.isnan(target2).any():
-            raise Exception('Target contains nan.')
-
         lam = np.random.beta(self.alpha, self.alpha)
 
         img = mixup(img1, img2, lam=lam)
-        target = logic_mix_targets([target1, target2], strict_negative=True)
+        target = logic_mix_targets([target1, target2], strict_negative=True, unknown_as=self.unknown_as)
 
         if self.transform:
             img = self.transform(img)
