@@ -28,7 +28,7 @@ class MultilabelMixUp(torch.utils.data.Dataset):
         lam = np.random.beta(self.alpha, self.alpha)
 
         img = mixup(img1, img2, lam=lam)
-        target = mix_targets([target1, target2], strict_negative=True)
+        target = logic_mix_targets([target1, target2], strict_negative=True)
 
         if self.transform:
             img = self.transform(img)
