@@ -49,9 +49,11 @@ class LogicMixTargets():
     def __call__(self, targets):
         return logic_mix_targets(targets, strict_negative=self.strict_negative, unknown_as=self.unknown_as)
 
-def estimate_target_mix_strategy(strategy, partial_dataset, full_dataset):
+def estimate_target_mix_strategy(strategy, partial_dataset, full_dataset, seed=526):
     if len(partial_dataset) != len(full_dataset):
         raise Exception('The datasets have different sizes.')
+    
+    rng = np.random.Generator(np.random.PCG64(seed=seed))
     
     num_samples = len(partial_dataset)
     num_categories = partial_dataset.num_categories
@@ -60,7 +62,7 @@ def estimate_target_mix_strategy(strategy, partial_dataset, full_dataset):
     records = []
     for i in range(num_samples):
         print(f'{i}/{num_samples}; tp={total_tp}, tn={total_tn}, fp={total_fp}, fn={total_fn}', end='\r')
-        random_index = np.random.randint(0, num_samples)
+        random_index = rng.integers(0, num_samples)
 
         partial_records = [partial_dataset.records[a] for a in [i, random_index]]
         partial_targets = [labels_to_one_hot(p, n, u, num_categories) for _, _, p, n, u in partial_records]
