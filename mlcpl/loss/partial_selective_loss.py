@@ -196,15 +196,18 @@ class BCELossTerm(nn.Module):
         return - self.alpha * torch.log(p)
     
 class FocalLossTerm(nn.Module):
-    def __init__(self, alpha=1, gamma=1, shift=0) -> None:
+    def __init__(self, alpha=1, gamma=1, shift=0, discard_focal_grad=True) -> None:
         super(FocalLossTerm, self).__init__()
         self.alpha = alpha
         self.gamma = gamma
         self.shift = shift # negative term of asymmetric loss
+        self.discard_focal_grad = discard_focal_grad
     
     def forward(self, p):
         p = torch.clamp(p + self.shift, max=1)
-        return - self.alpha * torch.pow(1 - p, self.gamma) * torch.log(p)
+        p_focal = p.detach() if self.discard_focal_grad else p
+
+        return - self.alpha * torch.pow(1 - p_focal, self.gamma) * torch.log(p)
 
 # from https://github.com/Alibaba-MIIL/PartialLabelingCSL/blob/main/src/loss_functions/partial_asymmetric_loss.py 
 class PartialLoss(nn.Module):
