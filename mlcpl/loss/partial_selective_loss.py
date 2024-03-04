@@ -61,12 +61,13 @@ def PartialNegativeFocalLoss(
     alpha_pos = 1,
     alpha_neg = 1,
     normalize = False,
+    discard_focal_grad = True,
     reduction = 'mean',
 ):
     return PartialLoss(
-        lossfn_pos = FocalLossTerm(alpha_pos, gamma),
-        lossfn_neg = FocalLossTerm(alpha_neg, gamma),
-        lossfn_unann = FocalLossTerm(alpha_neg, gamma),
+        lossfn_pos = FocalLossTerm(alpha_pos, gamma, discard_focal_grad=discard_focal_grad),
+        lossfn_neg = FocalLossTerm(alpha_neg, gamma, discard_focal_grad=discard_focal_grad),
+        lossfn_unann = FocalLossTerm(alpha_neg, gamma, discard_focal_grad=discard_focal_grad),
 
         partial_loss_mode = 'negative',
         normalize = normalize,
@@ -78,11 +79,12 @@ def PartialFocalLoss(
     alpha_pos = 1,
     alpha_neg = 1,
     normalize = False,
+    discard_focal_grad = True,
     reduction = 'mean',
 ):
     return PartialLoss(
-        lossfn_pos = FocalLossTerm(alpha_pos, gamma),
-        lossfn_neg = FocalLossTerm(alpha_neg, gamma),
+        lossfn_pos = FocalLossTerm(alpha_pos, gamma, discard_focal_grad=discard_focal_grad),
+        lossfn_neg = FocalLossTerm(alpha_neg, gamma, discard_focal_grad=discard_focal_grad),
 
         partial_loss_mode = 'ignore',
         normalize = normalize,
@@ -95,15 +97,16 @@ def PartialSelectiveFocalLoss(
     alpha_neg = 1,
     alpha_unann = 1,
     normalize = False,
+    discard_focal_grad = True,
     reduction = 'mean',
     class_priors = None,
     likelihood_topk = 5,
     prior_threshold = 0.05,
 ):
     return PartialLoss(
-        lossfn_pos = FocalLossTerm(alpha_pos, gamma),
-        lossfn_neg = FocalLossTerm(alpha_neg, gamma),
-        lossfn_unann = FocalLossTerm(alpha_unann, gamma),
+        lossfn_pos = FocalLossTerm(alpha_pos, gamma, discard_focal_grad=discard_focal_grad),
+        lossfn_neg = FocalLossTerm(alpha_neg, gamma, discard_focal_grad=discard_focal_grad),
+        lossfn_unann = FocalLossTerm(alpha_unann, gamma, discard_focal_grad=discard_focal_grad),
 
         partial_loss_mode = 'selective',
         normalize = normalize,
@@ -121,12 +124,13 @@ def PartialNegativeAsymmetricLoss(
     alpha_pos = 1,
     alpha_neg = 1,
     normalize = False,
+    discard_focal_grad = True,
     reduction = 'mean',
 ):
     return PartialLoss(
-        lossfn_pos = FocalLossTerm(alpha_pos, gamma_pos),
-        lossfn_neg = FocalLossTerm(alpha_neg, gamma_neg, clip),
-        lossfn_unann = FocalLossTerm(alpha_neg, gamma_neg, clip),
+        lossfn_pos = FocalLossTerm(alpha_pos, gamma_pos, discard_focal_grad=discard_focal_grad),
+        lossfn_neg = FocalLossTerm(alpha_neg, gamma_neg, clip, discard_focal_grad=discard_focal_grad),
+        lossfn_unann = FocalLossTerm(alpha_neg, gamma_neg, clip, discard_focal_grad=discard_focal_grad),
 
         partial_loss_mode = 'negative',
         normalize = normalize,
@@ -140,11 +144,12 @@ def PartialAsymmetricLoss(
     alpha_pos = 1,
     alpha_neg = 1,
     normalize = False,
+    discard_focal_grad = True,
     reduction = 'mean',
 ):
     return PartialLoss(
-        lossfn_pos = FocalLossTerm(alpha_pos, gamma_pos),
-        lossfn_neg = FocalLossTerm(alpha_neg, gamma_neg, clip),
+        lossfn_pos = FocalLossTerm(alpha_pos, gamma_pos, discard_focal_grad=discard_focal_grad),
+        lossfn_neg = FocalLossTerm(alpha_neg, gamma_neg, clip, discard_focal_grad=discard_focal_grad),
 
         partial_loss_mode = 'ignore',
         normalize = normalize,
@@ -160,15 +165,16 @@ def PartialSelectiveAsymmetricLoss(
     alpha_neg = 1,
     alpha_unann = 1,
     normalize = False,
+    discard_focal_grad = True,
     reduction = 'mean',
     class_priors = None,
     likelihood_topk = 5,
     prior_threshold = 0.05,
 ):
     return PartialLoss(
-        lossfn_pos = FocalLossTerm(alpha_pos, gamma_pos),
-        lossfn_neg = FocalLossTerm(alpha_neg, gamma_neg, clip),
-        lossfn_unann = FocalLossTerm(alpha_unann, gamma_unann, clip),
+        lossfn_pos = FocalLossTerm(alpha_pos, gamma_pos, discard_focal_grad=discard_focal_grad),
+        lossfn_neg = FocalLossTerm(alpha_neg, gamma_neg, clip, discard_focal_grad=discard_focal_grad),
+        lossfn_unann = FocalLossTerm(alpha_unann, gamma_unann, clip, discard_focal_grad=discard_focal_grad),
 
         partial_loss_mode = 'selective',
         normalize = normalize,
