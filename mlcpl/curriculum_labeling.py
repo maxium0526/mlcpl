@@ -5,6 +5,7 @@ import torch
 class CurriculumLabeling(Dataset):
     def __init__(self, dataset):
         self.dataset = dataset
+        self.num_categories = self.dataset.num_categories
         self.selections = torch.zeros((len(self.dataset), self.dataset.num_categories), dtype=torch.bool)
         self.labels = torch.zeros((len(self.dataset), self.dataset.num_categories), dtype=torch.int8)
 
@@ -12,7 +13,7 @@ class CurriculumLabeling(Dataset):
         return len(self.dataset)
     
     def __getitem__(self, idx):
-        img, target = self.dataset.getitem(idx)
+        img, target = self.dataset[idx]
 
         selection = torch.logical_and(self.selections[idx], torch.isnan(target))
 
