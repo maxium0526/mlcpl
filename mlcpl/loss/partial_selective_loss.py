@@ -253,9 +253,9 @@ class PartialLoss(nn.Module):
     def forward(self, logits, targets):
         targets = torch.where(torch.isnan(targets), -1, targets) # adopt to my code
         
-        # Positive, Negative and Un-annotated indexes
-        targets_pos = (targets == 1).float()
-        targets_neg = (targets == 0).float()
+        # Positive, Negative and Un-annotated indexes # as long as weights for soft labels
+        targets_pos = torch.where(targets==-1, 0, targets).float()
+        targets_neg = torch.where(targets==-1, 0, 1-targets).float()
         targets_unann = (targets == -1).float()
 
         if self.fully_labeled_warning_trigger and targets_unann.nonzero().sum() == 0:
