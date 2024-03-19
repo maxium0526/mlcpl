@@ -53,3 +53,68 @@ class CurriculumLabeling(Dataset):
     def get_pseudo_label_proportion(self):
         num_pseudo_labels = torch.count_nonzero(self.selections)
         return num_pseudo_labels / (len(self.dataset) * self.dataset.num_categories)
+
+class GNN(torch.nn.Module):
+    def __init__(self, hidden_dim=128, msg_dim=128, T=3) -> None:
+        super().__init__()
+        self.hidden_dim = hidden_dim
+        self.msg_dim = msg_dim
+        self.T = T
+
+        self.msg_update_fn = torch.nn.Sequential(
+            torch.nn.Linear(hidden_dim, msg_dim),
+            torch.nn.ReLU(),
+        )
+
+        self.hidden_update_fn = torch.nn.GRUCell(msg_dim, hidden_dim)
+
+        self.s = torch.nn.Sequential(
+            torch.nn.Conv1d(hidden_dim*2, out_channels=1, kernel_size=1, stride=1, padding=0),
+            torch.nn.Softmax(dim=-1),
+        )
+
+    def forward(self, x): # x: [B, Z]
+        batch_size, num_categories = x.shape
+
+        # hidden:[B, V, hidden_dim]
+        hidden_0 = torch.unsqueeze(x, -1)
+        pad_left = (self.hidden_dim - 1) //2
+        pad_right = self.hidden_dim - 1 - pad_left
+        hidden_0 = torch.nn.functional.pad(hidden_0, (pad_left, pad_right))
+        
+        hidden = hidden_0
+
+        for t in range(self.T):
+
+            temp = self.msg_update_fn(hidden) #[B, V, msg_dim]
+            temp = temp.unsqueeze(1) #[B, 1, V, msg_dim]
+            temp = temp.expand(batch_size, num_categories, num_categories, self.msg_dim) # [B, V(boardcast), V, msg_dim]
+            temp = temp.permute(0, 3, 1, 2) # [B, msg_dim, V(boardcast), V]
+
+            weights = torch.ones((num_categories, num_categories)) - torch.eye(num_categories)
+            weights = weights.to('cuda')
+
+            msg = temp * weights # [B, msg_dim, V(boardcast), V]
+
+            msg = msg.sum(dim=-1) # [B, msg_dim, V(boardcast)]
+            msg = msg / (num_categories - 1)
+            msg = msg.permute(0, 2, 1) # [B, V(boardcast), msg_dim]
+
+            #reshape to forward the GRUCell
+            hidden = hidden.reshape(-1, self.hidden_dim) # [B*V, hidden_dim]
+            msg = msg.reshape(-1, self.msg_dim) # [B*V, msg_dim]
+
+            hidden = self.hidden_update_fn(msg, hidden)
+
+            hidden = hidden.reshape(batch_size, num_categories, self.hidden_dim) # [B, V, msg_dim]
+
+        hidden_T = hidden
+
+        cat = torch.cat([hidden_0, hidden_T], dim=-1) # [B, V, msg_dim * 2]
+        cat = cat.permute(0, 2, 1) # [B, msg_dim * 2, V]
+
+        y_bar = self.s(cat) # [B, 1, V]
+
+        y_bar = y_bar.squeeze() # [B, V]
+        
+        return y_bar
