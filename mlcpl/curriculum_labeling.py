@@ -55,7 +55,7 @@ class CurriculumLabeling(Dataset):
         return num_pseudo_labels / (len(self.dataset) * self.dataset.num_categories)
 
 class GNN(torch.nn.Module):
-    def __init__(self, hidden_dim=128, msg_dim=128, T=3) -> None:
+    def __init__(self, hidden_dim=1024, msg_dim=1024, T=3) -> None:
         super().__init__()
         self.hidden_dim = hidden_dim
         self.msg_dim = msg_dim
