@@ -68,10 +68,8 @@ class GNN(torch.nn.Module):
 
         self.hidden_update_fn = torch.nn.GRUCell(msg_dim, hidden_dim)
 
-        self.s = torch.nn.Sequential(
-            torch.nn.Conv1d(hidden_dim*2, out_channels=1, kernel_size=1, stride=1, padding=0),
-            torch.nn.Softmax(dim=-1),
-        )
+        self.s = torch.nn.Conv1d(hidden_dim*2, out_channels=1, kernel_size=1, stride=1, padding=0)
+
 
     def forward(self, x): # x: [B, Z]
         batch_size, num_categories = x.shape
