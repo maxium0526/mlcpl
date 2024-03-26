@@ -68,7 +68,7 @@ class GNN(torch.nn.Module):
 
         self.hidden_update_fn = torch.nn.GRUCell(msg_dim, hidden_dim)
 
-        self.s = torch.nn.Conv1d(hidden_dim*2, out_channels=1, kernel_size=1, stride=1, padding=0)
+        self.s = torch.nn.Conv1d(hidden_dim, out_channels=1, kernel_size=1, stride=1, padding=0)
 
 
     def forward(self, x): # x: [B, Z]
@@ -108,11 +108,9 @@ class GNN(torch.nn.Module):
 
         hidden_T = hidden
 
-        cat = torch.cat([hidden_0, hidden_T], dim=-1) # [B, V, msg_dim * 2]
-        cat = cat.permute(0, 2, 1) # [B, msg_dim * 2, V]
+        x_gnn = self.s(hidden_T.permute(0, 2, 1)) # [B, V, 1]
+        x_gnn = x_gnn.squeeze() # [B, V]
 
-        y_bar = self.s(cat) # [B, 1, V]
+        x = (x + x_gnn) / 2
 
-        y_bar = y_bar.squeeze() # [B, V]
-        
-        return y_bar
+        return x
