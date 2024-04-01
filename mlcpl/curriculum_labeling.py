@@ -40,7 +40,16 @@ class CurriculumLabeling(Dataset):
                 self.labels[batch*batch_size: (batch+1)*batch_size] = label
                 
                 if selection_strategy == 'score':
-                    selection = torch.where(torch.abs(logit)>selection_threshold, 1, 0)
+                    if isinstance(selection_threshold, (int, float)):
+                        negative_threshold = -selection_threshold
+                        positive_threshold = selection_threshold
+                    elif isinstance(selection_threshold, tuple):
+                        negative_threshold, positive_threshold = selection_threshold
+
+                    negative_selection = torch.where(logit<negative_threshold, 1, 0)
+                    positive_selection = torch.where(logit>positive_threshold, 1, 0)
+
+                    selection = torch.logical_or(negative_selection, positive_selection)
 
                 if selection_strategy == 'positive_score':
                     selection = torch.where(logit>selection_threshold, 1, 0)
