@@ -457,3 +457,40 @@ def Vireo_Food_172(dataset_path, split='train', transform=transforms.ToTensor())
     categories = pd.read_csv(os.path.join(dataset_path, 'SplitAndIngreLabel', 'IngredientList.txt'), header=None, sep=',')[0].to_list()
     
     return MLCPLDataset(dataset_path, records, len(categories), transform=transform, categories=categories)
+
+def VG_200(dataset_path, label_path, transform=transforms.ToTensor(), seed=526):
+    import random
+
+    num_categories = 200
+
+    folder_paths = ['VG_100K', 'VG_100K_2']
+
+    folders_images = [os.listdir(os.path.join(dataset_path, folder_path)) for folder_path in folder_paths]
+
+    records = []
+    with open(label_path, 'r') as f:
+        samples = json.load(f)
+
+    for f, (folder, folder_path) in enumerate(zip(folders_images, folder_paths)):
+        for i, image_id in enumerate(folder):
+            print(f'Loading VG_200 (folder_{f+1}): {i+1} / {len(folder)}', end='\r')
+            img_path = os.path.join(dataset_path, folder_path, f'{image_id}')
+
+            if os.path.getsize(img_path) == 0: # drop samples with file size 0
+                continue
+
+            if image_id in samples:
+                positives = samples[image_id]
+            else:
+                positives = []
+
+            records.append((image_id, img_path, positives, [], []))
+        print()
+
+    records = fill_nan_to_negative(records, num_categories=num_categories)
+
+    random.Random(seed).shuffle(records)
+    train_records = records[10000:]
+    valid_records = records[:10000]
+
+    return MLCPLDataset(dataset_path, train_records, num_categories, transform=transform), MLCPLDataset(dataset_path, valid_records, num_categories, transform=transform)
