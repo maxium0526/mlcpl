@@ -463,29 +463,32 @@ def VG_200(dataset_path, label_path, transform=transforms.ToTensor(), seed=526):
 
     num_categories = 200
 
-    folder_paths = ['VG_100K', 'VG_100K_2']
+    vg_folder_1 = 'VG_100K'
+    vg_folder_2 = 'VG_100K_2'
 
-    folders_images = [os.listdir(os.path.join(dataset_path, folder_path)) for folder_path in folder_paths]
+    folder_1 = os.listdir(os.path.join(dataset_path, vg_folder_1))
+    folder_2 = os.listdir(os.path.join(dataset_path, vg_folder_2))
 
     records = []
     with open(label_path, 'r') as f:
         samples = json.load(f)
 
-    for f, (folder, folder_path) in enumerate(zip(folders_images, folder_paths)):
-        for i, image_id in enumerate(folder):
-            print(f'Loading VG_200 (folder_{f+1}): {i+1} / {len(folder)}', end='\r')
-            img_path = os.path.join(dataset_path, folder_path, f'{image_id}')
+    for i, sample in enumerate(samples.items()):
+        print(f'Loading VG_200: {i+1} / {len(samples)}', end='\r')
 
-            if os.path.getsize(img_path) == 0: # drop samples with file size 0
-                continue
+        image_id = sample[0]
+        positives = sample[1]
 
-            if image_id in samples:
-                positives = samples[image_id]
-            else:
-                positives = []
+        if image_id in folder_1:
+            folder = vg_folder_1
+        elif image_id in folder_2:
+            folder = vg_folder_2
+        else:
+            raise Exception(f'Image {image_id} not found.')
 
-            records.append((image_id, img_path, positives, [], []))
-        print()
+        img_path = os.path.join(dataset_path, folder, f'{image_id}.jpg')
+        records.append((image_id, img_path, positives, [], []))
+    print()
 
     records = fill_nan_to_negative(records, num_categories=num_categories)
 
