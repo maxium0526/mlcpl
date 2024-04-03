@@ -486,7 +486,7 @@ def VG_200(dataset_path, label_path, transform=transforms.ToTensor(), seed=526):
         else:
             raise Exception(f'Image {image_id} not found.')
 
-        img_path = os.path.join(dataset_path, folder, f'{image_id}.jpg')
+        img_path = os.path.join(dataset_path, folder, f'{image_id}')
         records.append((image_id, img_path, positives, [], []))
     print()
 
