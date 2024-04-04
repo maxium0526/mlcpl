@@ -502,6 +502,4 @@ def VG_200(dataset_path, metadata_path=None, split='train', transform=transforms
 
     records = fill_nan_to_negative(records, num_categories=num_categories)
 
-    print(records[-1])
-
     return MLCPLDataset(dataset_path, records, num_categories, transform=transform)
