@@ -458,8 +458,14 @@ def Vireo_Food_172(dataset_path, split='train', transform=transforms.ToTensor())
     
     return MLCPLDataset(dataset_path, records, len(categories), transform=transform, categories=categories)
 
-def VG_200(dataset_path, label_path, transform=transforms.ToTensor(), seed=526):
-    import random
+def VG_200(dataset_path, metadata_path=None, split='train', transform=transforms.ToTensor()):
+
+    if split == 'train':
+        subset = 'train'
+    elif split == 'valid':
+        subset = 'test'
+
+    metadata_path = dataset_path if metadata_path is None else metadata_path
 
     num_categories = 200
 
@@ -470,14 +476,17 @@ def VG_200(dataset_path, label_path, transform=transforms.ToTensor(), seed=526):
     folder_2 = os.listdir(os.path.join(dataset_path, vg_folder_2))
 
     records = []
-    with open(label_path, 'r') as f:
-        samples = json.load(f)
 
-    for i, sample in enumerate(samples.items()):
-        print(f'Loading VG_200: {i+1} / {len(samples)}', end='\r')
+    image_ids = pd.read_csv(os.path.join(metadata_path, f'{subset}_list_500.txt'), header=None)[0].tolist()
+    print(len(image_ids))
 
-        image_id = sample[0]
-        positives = sample[1]
+    with open(os.path.join(metadata_path, 'vg_category_200_labels_index.json'), 'r') as f:
+        labels = json.load(f)
+
+    for i, image_id in enumerate(image_ids):
+        print(f'Loading VG_200 ({split}): {i+1} / {len(image_ids)}', end='\r')
+
+        positives = labels[image_id]
 
         if image_id in folder_1:
             folder = vg_folder_1
@@ -488,12 +497,11 @@ def VG_200(dataset_path, label_path, transform=transforms.ToTensor(), seed=526):
 
         img_path = os.path.join(dataset_path, folder, f'{image_id}')
         records.append((image_id, img_path, positives, [], []))
+
     print()
 
     records = fill_nan_to_negative(records, num_categories=num_categories)
 
-    random.Random(seed).shuffle(records)
-    train_records = records[10000:]
-    valid_records = records[:10000]
+    print(records[-1])
 
-    return MLCPLDataset(dataset_path, train_records, num_categories, transform=transform), MLCPLDataset(dataset_path, valid_records, num_categories, transform=transform)
+    return MLCPLDataset(dataset_path, records, num_categories, transform=transform)
