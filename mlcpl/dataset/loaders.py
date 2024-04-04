@@ -478,7 +478,6 @@ def VG_200(dataset_path, metadata_path=None, split='train', transform=transforms
     records = []
 
     image_ids = pd.read_csv(os.path.join(metadata_path, f'{subset}_list_500.txt'), header=None)[0].tolist()
-    print(len(image_ids))
 
     with open(os.path.join(metadata_path, 'vg_category_200_labels_index.json'), 'r') as f:
         labels = json.load(f)
