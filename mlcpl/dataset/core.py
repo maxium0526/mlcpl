@@ -112,7 +112,7 @@ def labels_to_one_hot(positives, negatives, uncertains, num_categories):
 def one_hot_to_labels(one_hot):
     positives = (one_hot ==1).nonzero().flatten().tolist()
     negatives = (one_hot ==0).nonzero().flatten().tolist()
-    uncertains = (torch.isnan(one_hot)).nonzero().flatten().tolist()
+    uncertains = (one_hot ==-1).nonzero().flatten().tolist()
     return positives, negatives, uncertains
     
 def get_statistics(records, num_categories):
