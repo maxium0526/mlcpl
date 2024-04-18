@@ -39,7 +39,7 @@ class LogicMix(torch.utils.data.Dataset):
     
     def estimate_statistics(self):
         records = []
-        for i, (image, target) in enumerate(self):
+        for i, (image, target) in enumerate(torch.utils.data.DataLoader(self, batch_size=None, num_workers=20)):
             record = (i, None, *one_hot_to_labels(target))
             records.append(record)
 
