@@ -294,11 +294,11 @@ class PartialLoss(nn.Module):
 
         elif self.partial_loss_mode == 'ignore':
             # remove all unsure targets (targets_weights=0)
-            targets_weights = torch.ones(targets.shape, device=torch.device('cuda'))
+            targets_weights = torch.ones(targets.shape, device=targets.device)
             targets_weights[targets == -1] = 0
 
         elif self.partial_loss_mode == 'selective':
-            targets_weights = torch.ones(targets.shape, device=torch.device('cuda'))
+            targets_weights = torch.ones(targets.shape, device=targets.device)
 
             if self.class_priors is not None:
                 if self.prior_threshold:

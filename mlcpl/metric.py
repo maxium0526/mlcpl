@@ -1,5 +1,6 @@
 import torch
 import numpy as np
+import torchmetrics
 
 class PartialMultilabelMetric():
     def __init__(self, binary_metric, mask=None, reduction='mean'):
@@ -132,4 +133,175 @@ class SearchThreshold():
 
         return max(self.records, key=lambda x: x[1])[1]
             
+class PartialMultilabelPairwiseCosineSimilarity():
+    def __init__(self, reduction='mean', batch_size=512):
+        self.reduction = reduction
+        self.batch_size = batch_size
+    
+    def __call__(self, preds, targets):
+        num_categories = targets.shape[1]
+
+        dataloader = torch.utils.data.DataLoader(torch.utils.data.TensorDataset(preds, targets), batch_size=self.batch_size)
+
+        with torch.no_grad():
+
+            positive_category_similarities = torch.zeros((len(dataloader), num_categories))
+            negative_category_similarities = torch.zeros((len(dataloader), num_categories))
+            for batch, (pred, target) in enumerate(dataloader):
+                similarity_matrix = torch.matmul(pred, pred.T)
+
+                for c in range(num_categories):
+
+                    labels = target[:, c].view(-1, 1)
+                    mask = torch.matmul(labels, labels.T)
+
+                    positive_mask = mask == 1
+                    negative_mask = mask == 0
+
+                    positive_similarity = (similarity_matrix * positive_mask).sum() / positive_mask.sum()
+                    negative_similarity = (similarity_matrix * negative_mask).sum() / negative_mask.sum()
+
+                    positive_category_similarities[batch, c] = positive_similarity
+                    negative_category_similarities[batch, c] = negative_similarity
+
+            if self.reduction == 'mean':
+                return positive_category_similarities.nanmean(), negative_category_similarities.nanmean()
             
+            return positive_category_similarities.nanmean(dim=0), negative_category_similarities.nanmean(dim=0)
+
+class PartialMLCalibrationError():
+    def __init__(self, n_bins=15, mode='l1'):
+        self.n_bins = n_bins
+        self.mode = mode
+
+        self.bin_boundaries = torch.linspace(0, 1, self.n_bins + 1)
+
+    def __call__(self, preds, target):
+        preds = torch.nn.functional.sigmoid(preds.flatten())
+        target = target.flatten()
+
+        if target.dtype == torch.int8:
+            labeled_map = (target != -1)
+        else:
+            labeled_map = ~torch.isnan(target)
+        preds, target = preds[labeled_map], target[labeled_map]
+
+        confidences, accuracies = preds, target
+
+        with torch.no_grad():
+            acc_bin, conf_bin, prop_bin = self._binning_bucketize(confidences, accuracies, self.bin_boundaries)
+            
+        if self.mode == "l1":
+            return torch.sum(torch.abs(acc_bin - conf_bin) * prop_bin)
+        if self.mode == "max":
+            return torch.max(torch.abs(acc_bin - conf_bin))
+        if self.mode == "l2":
+            return torch.sum(torch.pow(acc_bin - conf_bin, 2) * prop_bin)
+            return torch.sqrt(ce) if ce > 0 else torch.tensor(0)
+        
+        if self.mode == 'ECE':
+            return torch.sum(torch.abs(acc_bin - conf_bin) * prop_bin)
+        if self.mode == 'ACE':
+            return torch.mean(torch.abs(acc_bin - conf_bin))
+        if self.mode == 'MCE':
+            return torch.max(torch.abs(acc_bin - conf_bin))
+
+        return None
+
+    def _binning_bucketize(self, confidences, accuracies, bin_boundaries):
+        """Compute calibration bins using ``torch.bucketize``. Use for ``pytorch >=1.6``.
+
+        Args:
+            confidences: The confidence (i.e. predicted prob) of the top1 prediction.
+            accuracies: 1.0 if the top-1 prediction was correct, 0.0 otherwise.
+            bin_boundaries: Bin boundaries separating the ``linspace`` from 0 to 1.
+
+        Returns:
+            tuple with binned accuracy, binned confidence and binned probabilities
+
+        """
+        accuracies = accuracies.to(dtype=confidences.dtype)
+        acc_bin = torch.zeros(len(bin_boundaries), device=confidences.device, dtype=confidences.dtype)
+        conf_bin = torch.zeros(len(bin_boundaries), device=confidences.device, dtype=confidences.dtype)
+        count_bin = torch.zeros(len(bin_boundaries), device=confidences.device, dtype=confidences.dtype)
+
+        indices = torch.bucketize(confidences, bin_boundaries, right=True) - 1
+
+        count_bin.scatter_add_(dim=0, index=indices, src=torch.ones_like(confidences))
+
+        conf_bin.scatter_add_(dim=0, index=indices, src=confidences)
+        conf_bin = torch.nan_to_num(conf_bin / count_bin)
+
+        acc_bin.scatter_add_(dim=0, index=indices, src=accuracies)
+        acc_bin = torch.nan_to_num(acc_bin / count_bin)
+
+        prop_bin = count_bin / count_bin.sum()
+        return acc_bin, conf_bin, prop_bin
+
+class CalibrationError():
+    def __init__(self, n_bins=15, mode='l1'):
+        self.n_bins = n_bins
+        self.mode = mode
+
+        self.bin_boundaries = torch.linspace(0, 1, self.n_bins + 1)
+
+    def __call__(self, preds, target):
+        preds = torch.nn.functional.sigmoid(preds)
+        target = target.flatten()
+
+        confidences, accuracies = preds, target
+
+        with torch.no_grad():
+            acc_bin, conf_bin, prop_bin = self._binning_bucketize(confidences, accuracies, self.bin_boundaries)
+
+        if self.mode == "l1":
+            return torch.sum(torch.abs(acc_bin - conf_bin) * prop_bin)
+        if self.mode == "max":
+            return torch.max(torch.abs(acc_bin - conf_bin))
+        if self.mode == "l2":
+            return torch.sum(torch.pow(acc_bin - conf_bin, 2) * prop_bin)
+            return torch.sqrt(ce) if ce > 0 else torch.tensor(0)
+        
+        if self.mode == 'ECE':
+            return torch.sum(torch.abs(acc_bin - conf_bin) * prop_bin)
+        if self.mode == 'ACE':
+            return torch.mean(torch.abs(acc_bin - conf_bin))
+        if self.mode == 'MCE':
+            return torch.max(torch.abs(acc_bin - conf_bin))
+
+        return None
+
+    def _binning_bucketize(self, confidences, accuracies, bin_boundaries):
+        """Compute calibration bins using ``torch.bucketize``. Use for ``pytorch >=1.6``.
+
+        Args:
+            confidences: The confidence (i.e. predicted prob) of the top1 prediction.
+            accuracies: 1.0 if the top-1 prediction was correct, 0.0 otherwise.
+            bin_boundaries: Bin boundaries separating the ``linspace`` from 0 to 1.
+
+        Returns:
+            tuple with binned accuracy, binned confidence and binned probabilities
+
+        """
+        accuracies = accuracies.to(dtype=confidences.dtype)
+        acc_bin = torch.zeros(len(bin_boundaries), device=confidences.device, dtype=confidences.dtype)
+        conf_bin = torch.zeros(len(bin_boundaries), device=confidences.device, dtype=confidences.dtype)
+        count_bin = torch.zeros(len(bin_boundaries), device=confidences.device, dtype=confidences.dtype)
+
+        indices = torch.bucketize(confidences, bin_boundaries, right=True) - 1
+
+        count_bin.scatter_add_(dim=0, index=indices, src=torch.ones_like(confidences))
+
+        conf_bin.scatter_add_(dim=0, index=indices, src=confidences)
+        conf_bin = torch.nan_to_num(conf_bin / count_bin)
+
+        acc_bin.scatter_add_(dim=0, index=indices, src=accuracies)
+        acc_bin = torch.nan_to_num(acc_bin / count_bin)
+
+        prop_bin = count_bin / count_bin.sum()
+        return acc_bin, conf_bin, prop_bin
+
+# metric = PartialMLCalibrationError()
+# preds = torch.tensor([[0.01, 0.25, 0.25, 0.55, 0.75, 0.75]])
+# target = torch.tensor([[0, 0, 0, 1, 1, 1]])
+# metric(preds, target)

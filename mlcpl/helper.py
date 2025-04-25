@@ -6,6 +6,7 @@ import numpy as np
 from copy import deepcopy
 from PIL import ImageDraw
 import random
+from pathlib import Path
 
 def print_record(log, end='\r'):
     str = ''
@@ -32,9 +33,29 @@ class ExcelLogger():
                 else:
                     pd.DataFrame(sheet, columns=[tag]).to_excel(writer, sheet_name=tag)
 
+class CSVLogger():
+    def __init__(self, path):
+        self.sheets = {}
+        self.path = path
+    
+    def add(self, tag, scalar):
+        if tag not in self.sheets.keys():
+            self.sheets[tag] = []
+        sheet = self.sheets[tag]
+        sheet.append(scalar)
+
+    def flush(self):
+        Path(self.path).mkdir(parents=True, exist_ok=True)
+        for tag, sheet in self.sheets.items():
+            if type(sheet[0]) == dict:
+                pd.DataFrame.from_records(sheet).to_csv(os.path.join(self.path, f'{tag}.csv'))
+            else:
+                pd.DataFrame(sheet, columns=[tag]).to_csv(os.path.join(self.path, f'{tag}.csv'))
+
 class MultiLogger():
-    def __init__(self, path, excellog = True, tblog = True) -> None:
+    def __init__(self, path, excellog = True, csvlog = True, tblog = True) -> None:
         self.excellog = ExcelLogger(os.path.join(path, 'excel_log.xlsx')) if excellog is True else None
+        self.csvlog = CSVLogger(os.path.join(path, 'csv_log')) if csvlog is True else None
         self.tblog = SummaryWriter(log_dir=path) if tblog is True else None
         
         self.tag_counts = {}
@@ -75,6 +96,19 @@ class MultiLogger():
             else:
                 self.excellog.add(tag, value)
 
+        if self.csvlog:
+            if type(value) == dict:
+                self.csvlog.add(tag, value)
+            elif torch.is_tensor or isinstance(value, np.ndarray):
+                if len(value.shape) == 0:
+                    # scalar
+                    self.csvlog.add(tag, value)
+                else:
+                    #vector
+                    self.csvlog.add(tag, {str(i): v for i, v in enumerate(value)})
+            else:
+                self.csvlog.add(tag, value)
+
     def adds(self, tag, values):
         for value in values:
             self.add(tag, value)
@@ -84,6 +118,8 @@ class MultiLogger():
             self.tblog.flush()
         if self.excellog:
             self.excellog.flush()
+        if self.csvlog:
+            self.csvlog.flush()
 
 class dotdict(dict):
     """dot.notation access to dictionary attributes"""

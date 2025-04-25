@@ -7,6 +7,7 @@ from PIL import Image
 import json
 import pydicom as dicom
 from ..helper import dotdict
+import copy
 
 def read_jpg(img_path):
     return Image.open(img_path).convert('RGB')
@@ -101,7 +102,7 @@ class MLCPLDataset(Dataset):
         self.records = new_records
 
         return self
-    
+
 def labels_to_one_hot(positives, negatives, uncertains, num_categories):
     one_hot = torch.full((num_categories, ), torch.nan, dtype=torch.float32)
     one_hot[np.array(positives)] = 1.0
@@ -217,3 +218,19 @@ def df_to_records(df):
         records.append((id, path, pos_category_nos, neg_category_nos, unc_category_nos))
     
     return records
+
+def divide(dataset, divide_ratio=0.5, shuffle=True, seed=526):
+    rng = np.random.Generator(np.random.PCG64(seed=seed))
+    records = copy.deepcopy(dataset.records)
+    rng.shuffle(records)
+    split_at = round(len(records)*divide_ratio)
+    records_1 = records[:split_at]
+    records_2 = records[split_at:]
+
+    dataset_1 = copy.deepcopy(dataset)
+    dataset_1.records = records_1
+
+    dataset_2 = copy.deepcopy(dataset)
+    dataset_2.records = records_2
+
+    return dataset_1, dataset_2

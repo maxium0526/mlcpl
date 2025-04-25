@@ -23,7 +23,7 @@ def MSCOCO(dataset_path, year='2014', split='train', transform=transforms.ToTens
     records = []
     image_ids = coco.getImgIds()
     for i, img_id in enumerate(image_ids):
-        print(f'Loading MSCOCO {split}: {i+1} / {len(image_ids)}', end='\r')
+        # print(f'Loading MSCOCO {split}: {i+1} / {len(image_ids)}', end='\r')
         img_filename = coco.loadImgs(img_id)[0]['file_name']
         path = os.path.join(subset+year, img_filename)
         pos_category_ids = [coco.loadAnns(annotation_id)[0]['category_id'] for annotation_id in coco.getAnnIds(imgIds=img_id)]
