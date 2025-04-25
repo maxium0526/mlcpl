@@ -197,3 +197,60 @@ class GNN(torch.nn.Module):
         x_gnn = x_gnn.squeeze() # [B, V]
 
         return x_gnn
+
+class CalibrationAwareThresholdingFreePseudoLabeling(Dataset):
+    def __init__(self, dataset):
+        self.dataset = dataset
+        self.num_categories = self.dataset.num_categories
+        self.selections = torch.zeros((len(self.dataset), self.dataset.num_categories), dtype=torch.bool)
+        self.labels = torch.zeros((len(self.dataset), self.dataset.num_categories), dtype=torch.int8)
+
+        self.calibrator = GNNCalibrator()
+    def __len__(self):
+        return len(self.dataset)
+    
+    def __getitem__(self, idx):
+        img, target = self.dataset[idx]
+
+        selection = torch.logical_and(self.selections[idx], torch.isnan(target))
+
+        target_cl = torch.where(selection, self.labels[idx], (target + self.labels[idx]) / 2)
+
+        return img, target_cl
+    
+    def getitem(self, idx):
+        return self.__getitem__(idx)
+    
+    def update(self, model, batch_size=256, num_workers=20, verbose=False, logger=None):
+        dataloader = DataLoader(self.dataset, batch_size=batch_size, num_workers=num_workers)
+
+        preds = torch.zeros((len(self.dataset), self.dataset.num_categories))
+        target = torch.zeros((len(self.dataset), self.dataset.num_categories))
+
+        model.eval()
+
+        for batch, (x, y) in enumerate(dataloader):
+            if not verbose:
+                print(f'Updating Labels: {batch+1}/{len(dataloader)}', end='\r')
+
+            with torch.no_grad():
+                x, y = x.to('cuda'), y.to('cuda')
+                preds[batch*batch_size: (batch+1)*batch_size] = model(x)
+                target[batch*batch_size: (batch+1)*batch_size] = y
+        
+        if not verbose:
+            print()
+            
+        losses = self.calibrator.fit(preds.to('cuda'), target.to('cuda'), epochs=10, lr=0.001, batch_size=256)
+        if logger is not None:
+            logger.add('train_calibrator_loss', losses.mean().numpy())
+
+        prob = self.calibrator(preds.to('cuda')).to('cpu')
+
+        with torch.no_grad():
+            self.labels = prob.detach()
+            self.selections = torch.isnan(target)
+
+    def get_pseudo_label_proportion(self):
+        num_pseudo_labels = torch.count_nonzero(self.selections)
+        return num_pseudo_labels / (len(self.dataset) * self.dataset.num_categories)
