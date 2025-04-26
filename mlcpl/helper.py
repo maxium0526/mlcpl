@@ -14,25 +14,6 @@ def print_record(log, end='\r'):
         str += f'{key}: {value:.4f}; '
     print(str, end=end)
 
-class ExcelLogger():
-    def __init__(self, path):
-        self.sheets = {}
-        self.path = path
-    
-    def add(self, tag, scalar):
-        if tag not in self.sheets.keys():
-            self.sheets[tag] = []
-        sheet = self.sheets[tag]
-        sheet.append(scalar)
-
-    def flush(self):
-        with pd.ExcelWriter(self.path) as writer:
-            for tag, sheet in self.sheets.items():
-                if type(sheet[0]) == dict:
-                    pd.DataFrame.from_records(sheet).to_excel(writer, sheet_name=tag)
-                else:
-                    pd.DataFrame(sheet, columns=[tag]).to_excel(writer, sheet_name=tag)
-
 class CSVLogger():
     def __init__(self, path):
         self.sheets = {}
@@ -53,8 +34,7 @@ class CSVLogger():
                 pd.DataFrame(sheet, columns=[tag]).to_csv(os.path.join(self.path, f'{tag}.csv'))
 
 class MultiLogger():
-    def __init__(self, path, excellog = True, csvlog = True, tblog = True) -> None:
-        self.excellog = ExcelLogger(os.path.join(path, 'excel_log.xlsx')) if excellog is True else None
+    def __init__(self, path, csvlog = True, tblog = True) -> None:
         self.csvlog = CSVLogger(os.path.join(path, 'csv_log')) if csvlog is True else None
         self.tblog = SummaryWriter(log_dir=path) if tblog is True else None
         
