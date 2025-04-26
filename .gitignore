@@ -8,3 +8,4 @@ output/
 !/mlcpl/sample_mix/*.py
 *.csv
 *.png
+*.pt
