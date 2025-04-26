@@ -5,17 +5,11 @@ import os
 import pandas as pd
 from PIL import Image
 import json
-import pydicom as dicom
 from ..helper import dotdict
 import copy
 
 def read_jpg(img_path):
     return Image.open(img_path).convert('RGB')
-
-def read_dicom(img_path):
-    numpy_img = dicom.dcmread(img_path).pixel_array
-    pil_img = Image.fromarray(numpy_img).convert('RGB')
-    return pil_img
 
 class MLCPLDataset(Dataset):
     def __init__(self, dataset_path, records, num_categories, transform, categories=None, read_func=read_jpg):

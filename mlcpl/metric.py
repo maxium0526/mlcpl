@@ -1,6 +1,5 @@
 import torch
 import numpy as np
-import torchmetrics
 
 class PartialMultilabelMetric():
     def __init__(self, binary_metric, mask=None, reduction='mean'):

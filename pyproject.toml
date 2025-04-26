@@ -1,0 +1,16 @@
+[project]
+name = "mlcpl"
+version = "0.1.0"
+description = "Add your description here"
+readme = "README.md"
+requires-python = ">=3.8"
+dependencies = [
+    "Cython==0.29.33",
+    "pandas==1.5.2",
+    "protobuf==3.20.1",
+    "pycocotools>=2.0.7",
+    "tensorboard==2.9.0",
+    "torch==1.13.1",
+    "torchvision==0.14.1",
+    "xmltodict==0.13.0",
+]
