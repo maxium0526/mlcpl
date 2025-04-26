@@ -9,3 +9,5 @@ output/
 *.csv
 *.png
 *.pt
+.DS_Store
+uv.lock
