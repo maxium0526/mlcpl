@@ -1,11 +1,11 @@
 __pycache__/
 output/
 *.py
-!/mlcpl/*.py
-!/mlcpl/dataset/*.py
-!/mlcpl/loss/*.py
-!/mlcpl/cft/*.py
-!/mlcpl/sample_mix/*.py
+!/src/mlcpl/*.py
+!/src/mlcpl/dataset/*.py
+!/src/mlcpl/loss/*.py
+!/src/mlcpl/cft/*.py
+!/src/mlcpl/sample_mix/*.py
 *.csv
 *.png
 *.pt
