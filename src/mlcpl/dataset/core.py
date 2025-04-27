@@ -7,12 +7,33 @@ from PIL import Image
 import json
 from ..helper import dotdict
 import copy
+from typing import List, Callable
 
 def read_jpg(img_path):
     return Image.open(img_path).convert('RGB')
 
 class MLCPLDataset(Dataset):
-    def __init__(self, dataset_path, records, num_categories, transform, categories=None, read_func=read_jpg):
+    def __init__(self,
+                 name: str,
+                 dataset_path: str,
+                 records: List[tuple],
+                 num_categories: int,
+                 transform: Callable,
+                 categories: List[str] = None,
+                 read_func: Callable = read_jpg,
+                 ):
+        """Construct a MLCPLDataset object
+
+        Args:
+            name (str): Dataset name
+            dataset_path (str): The absolute/relative path of the dataset folder
+            records (List[tuple]): In consists of information of samples. Each tuple store a sample's (id, img_path, list of positive categories, list of negative categories)
+            num_categories (int): The total number of categories.
+            transform (Callable): The transform function applied to images.
+            categories (List[str], optional): Categories's name. Defaults to None.
+            read_func (Callable, optional): The function to read an image into a PILLOW Image instance. Defaults to read_jpg.
+        """
+        self.name = name
         self.dataset_path = dataset_path
         self.records = records
         self.categories = categories
@@ -22,6 +43,24 @@ class MLCPLDataset(Dataset):
 
     def __len__(self):
         return len(self.records)
+    
+    def summary(self):
+        """
+        print general infromation of the dataset
+        """
+        statistics = self.get_statistics()
+
+        info = f'{"-"*40}\n' \
+            f'# Name: {self.name}\n' \
+            f'# Dataset Path: {self.dataset_path}\n' \
+            f'# # of Samples: {len(self)}\n' \
+            f'# # of Categories: {self.num_categories}\n' \
+            f'# Label Proportion: {statistics["label_ratio"]*100:.2f}%\n' \
+            f'# Positive-Negative Imbalance: {statistics["num_positive_labels"] / (statistics["num_positive_labels"] + statistics["num_negative_labels"])*100:.2f}%\n' \
+            f'{"-"*40}\n'
+        
+        print(info)
+
 
     def __getitem__(self, idx):
         id, path, pos_category_nos, neg_category_nos = self.records[idx]
@@ -117,8 +156,6 @@ def get_statistics(records, num_categories):
     all_negative_labels = []
 
     for i, (_, _, positive_labels, negative_labels) in enumerate(records):
-        print(f'Counting Labels: {i+1}/{len(records)}.', end='\r')
-        
         all_positive_labels += positive_labels
         all_negative_labels += negative_labels
     

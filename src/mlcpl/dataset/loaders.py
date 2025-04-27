@@ -35,7 +35,7 @@ def MSCOCO(dataset_path, year='2014', split='train', transform=transforms.ToTens
     
     records = fill_nan_to_negative(records, num_categories)
 
-    return MLCPLDataset(dataset_path, records, num_categories, transform)
+    return MLCPLDataset(f'MS-COCO ({split})', dataset_path, records, num_categories, transform)
 
 def Pascal_VOC_2007(dataset_path, split='train', transform=transforms.ToTensor()):
 
@@ -78,7 +78,7 @@ def Pascal_VOC_2007(dataset_path, split='train', transform=transforms.ToTensor()
 
     records = fill_nan_to_negative(records, num_categories)
 
-    return MLCPLDataset(dataset_path, records, num_categories, transform)
+    return MLCPLDataset(f'Pascal VOC 2007 ({split})', dataset_path, records, num_categories, transform)
 
 def LVIS(dataset_path, split='train', transform=transforms.ToTensor()):
     from lvis import LVIS
@@ -108,15 +108,15 @@ def LVIS(dataset_path, split='train', transform=transforms.ToTensor()):
         records.append((img_id, path, pos_category_nos, neg_category_nos))
     print()
 
-    return MLCPLDataset(dataset_path, records, num_categories, transform)
+    return MLCPLDataset(f'LVIS ({split})', dataset_path, records, num_categories, transform)
 
 def Open_Images(dataset_path, split=None, transform=transforms.ToTensor(), use_cache=True, cache_dir='output/dataset'):
     from pathlib import Path
     num_categories = 9605
 
     if use_cache and os.path.exists(os.path.join(cache_dir, 'train.csv')) and os.path.exists(os.path.join(cache_dir, 'valid.csv')):
-        train_dataset = MLCPLDataset(dataset_path, df_to_records(pd.read_csv(os.path.join(cache_dir, 'train.csv'))), num_categories, transform)
-        valid_dataset = MLCPLDataset(dataset_path, df_to_records(pd.read_csv(os.path.join(cache_dir, 'valid.csv'))), num_categories, transform)
+        train_dataset = MLCPLDataset(f'Open Images v6 (train)', dataset_path, df_to_records(pd.read_csv(os.path.join(cache_dir, 'train.csv'))), num_categories, transform)
+        valid_dataset = MLCPLDataset(f'Open Images v6 (valid)', df_to_records(pd.read_csv(os.path.join(cache_dir, 'valid.csv'))), num_categories, transform)
     else:
         raw_data = pd.read_csv(os.path.join(dataset_path, 'data.csv'))
 
@@ -152,8 +152,8 @@ def Open_Images(dataset_path, split=None, transform=transforms.ToTensor(), use_c
             else:
                 valid_records.append(record)
 
-        train_dataset = MLCPLDataset(dataset_path, train_records, num_categories, transform)
-        valid_dataset = MLCPLDataset(dataset_path, valid_records, num_categories, transform)
+        train_dataset = MLCPLDataset(f'Open Images v6 (train)', dataset_path, train_records, num_categories, transform)
+        valid_dataset = MLCPLDataset(f'Open Images v6 (valid)', dataset_path, valid_records, num_categories, transform)
 
         Path(cache_dir).mkdir(parents=True, exist_ok=True)
         records_to_df(train_records).to_csv(os.path.join(cache_dir, 'train.csv'))
@@ -181,7 +181,7 @@ def Open_Images_V3(dataset_path, split='train', transform=transforms.ToTensor(),
 
     if use_cache and os.path.exists(os.path.join(cache_dir, split+'.csv')):
         print('Loading Open Images V3 from cache...')
-        return MLCPLDataset(dataset_path, df_to_records(pd.read_csv(os.path.join(cache_dir, split+'.csv'))), num_categories, transform)
+        return MLCPLDataset(f'Open Images v3 ({split})', dataset_path, df_to_records(pd.read_csv(os.path.join(cache_dir, split+'.csv'))), num_categories, transform)
 
     print('Loading Open Images V3...')
 
@@ -224,7 +224,7 @@ def Open_Images_V3(dataset_path, split='train', transform=transforms.ToTensor(),
     Path(cache_dir).mkdir(parents=True, exist_ok=True)
     df.to_csv(os.path.join(cache_dir, split+'.csv'))
 
-    return MLCPLDataset(dataset_path, df_to_records(df), num_categories, transform)
+    return MLCPLDataset(f'Open Images v3 ({split})', dataset_path, df_to_records(df), num_categories, transform)
 
 def CheXpert(dataset_path, split='train', competition_categories=False, transform=transforms.ToTensor()):
 
@@ -273,7 +273,7 @@ def CheXpert(dataset_path, split='train', competition_categories=False, transfor
         # records.append((i, path, pos_category_nos, neg_category_nos, unc_category_nos))
         records.append((i, path, pos_category_nos, neg_category_nos))
 
-    return MLCPLDataset(dataset_path, records, num_categories, transform=transform, categories=categories)
+    return MLCPLDataset(f'CheXpert ({split})', dataset_path, records, num_categories, transform=transform, categories=categories)
 
 def VAW(dataset_path, vg_dataset_path, split='train', use_cache=True, cache_dir='output/dataset', transform=transforms.ToTensor()):
     from pathlib import Path
@@ -296,7 +296,7 @@ def VAW(dataset_path, vg_dataset_path, split='train', use_cache=True, cache_dir=
 
     if use_cache and os.path.exists(os.path.join(cache_dir, split+'.csv')):
         print(f'Loading Open VAW {split} from cache...')
-        return MLCPLDataset(cache_dir, df_to_records(pd.read_csv(os.path.join(cache_dir, split+'.csv'))), num_categories, transform)
+        return MLCPLDataset(f'VAW ({split})', cache_dir, df_to_records(pd.read_csv(os.path.join(cache_dir, split+'.csv'))), num_categories, transform)
 
     folder_1 = os.listdir(os.path.join(vg_dataset_path, vg_folder_1))
     folder_1 = set([int(os.path.splitext(name)[0]) for name in folder_1])
@@ -342,7 +342,7 @@ def VAW(dataset_path, vg_dataset_path, split='train', use_cache=True, cache_dir=
 
     records_to_df(records).to_csv(os.path.join(cache_dir, f'{split}.csv'))
 
-    return MLCPLDataset(cache_dir, records, num_categories, transform=transform, categories=categories)
+    return MLCPLDataset(f'VAW ({split})', cache_dir, records, num_categories, transform=transform, categories=categories)
 
 def NUS_WIDE(dataset_path, split='train', transform=transforms.ToTensor()):
 
@@ -378,7 +378,7 @@ def NUS_WIDE(dataset_path, split='train', transform=transforms.ToTensor()):
     
     print()
 
-    return MLCPLDataset(dataset_path, records, num_categories, transform=transform, categories=categories)
+    return MLCPLDataset(f'NUS-WIDE ({split})', dataset_path, records, num_categories, transform=transform, categories=categories)
 
 def VISPR(dataset_path, split='train', transform=transforms.ToTensor()):
 
@@ -420,7 +420,7 @@ def VISPR(dataset_path, split='train', transform=transforms.ToTensor()):
     
     records = fill_nan_to_negative(records, num_categories=num_categories)
 
-    return MLCPLDataset(dataset_path, records, num_categories, transform=transform, categories=categories)
+    return MLCPLDataset(f'VISPR ({split})', dataset_path, records, num_categories, transform=transform, categories=categories)
 
 def Vireo_Food_172(dataset_path, split='train', transform=transforms.ToTensor()):
 
@@ -454,7 +454,7 @@ def Vireo_Food_172(dataset_path, split='train', transform=transforms.ToTensor())
 
     categories = pd.read_csv(os.path.join(dataset_path, 'SplitAndIngreLabel', 'IngredientList.txt'), header=None, sep=',')[0].to_list()
     
-    return MLCPLDataset(dataset_path, records, len(categories), transform=transform, categories=categories)
+    return MLCPLDataset(f'Vireo Food 172 ({split})', dataset_path, records, len(categories), transform=transform, categories=categories)
 
 def VG_200(dataset_path, metadata_path=None, split='train', transform=transforms.ToTensor()):
 
@@ -499,4 +499,4 @@ def VG_200(dataset_path, metadata_path=None, split='train', transform=transforms
 
     records = fill_nan_to_negative(records, num_categories=num_categories)
 
-    return MLCPLDataset(dataset_path, records, num_categories, transform=transform)
+    return MLCPLDataset(f'Visual Genome-200 ({split})', dataset_path, records, num_categories, transform=transform)
