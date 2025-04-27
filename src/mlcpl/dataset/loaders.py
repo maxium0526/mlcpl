@@ -30,7 +30,7 @@ def MSCOCO(dataset_path, year='2014', split='train', transform=transforms.ToTens
         pos_category_ids = list(set(pos_category_ids))
         pos_category_nos = [all_category_ids.index(category_id) for category_id in pos_category_ids]
         pos_category_nos.sort()
-        records.append((img_id, path, pos_category_nos, [], []))
+        records.append((img_id, path, pos_category_nos, []))
     print()
     
     records = fill_nan_to_negative(records, num_categories)
@@ -74,7 +74,7 @@ def Pascal_VOC_2007(dataset_path, split='train', transform=transforms.ToTensor()
             pos_category_ids = [detections['name']]
         
         pos_category_nos = [all_category_ids.index(i) for i in pos_category_ids]
-        records.append((img_no, path, pos_category_nos, [], []))
+        records.append((img_no, path, pos_category_nos, []))
 
     records = fill_nan_to_negative(records, num_categories)
 
@@ -105,7 +105,7 @@ def LVIS(dataset_path, split='train', transform=transforms.ToTensor()):
         pos_category_ids.sort()
         pos_category_nos = [all_category_ids.index(pos_category_id) for pos_category_id in pos_category_ids]
         neg_category_nos = [all_category_ids.index(neg_category_id) for neg_category_id in img['neg_category_ids']]
-        records.append((img_id, path, pos_category_nos, neg_category_nos, []))
+        records.append((img_id, path, pos_category_nos, neg_category_nos))
     print()
 
     return MLCPLDataset(dataset_path, records, num_categories, transform)
@@ -146,7 +146,7 @@ def Open_Images(dataset_path, split=None, transform=transforms.ToTensor(), use_c
             pos_category_nos = list(map(lambda x: category_map[x], pos_category_ids))
             neg_category_nos = list(map(lambda x: category_map[x], neg_category_ids))
 
-            record = (i, raw['filepath'], pos_category_nos, neg_category_nos, [])
+            record = (i, raw['filepath'], pos_category_nos, neg_category_nos)
             if raw['split_name'] == 'train':
                 train_records.append(record)
             else:
@@ -198,10 +198,8 @@ def Open_Images_V3(dataset_path, split='train', transform=transforms.ToTensor(),
     df = df.reset_index()
     df = df.rename(columns={'ImageID': 'Id'})
 
-    df['Uncertain'] = np.nan
     df['Positive'] = df['Positive'].fillna("").apply(list).apply(lambda x: json.dumps(x))
     df['Negative'] = df['Negative'].fillna("").apply(list).apply(lambda x: json.dumps(x))
-    df['Uncertain'] = df['Uncertain'].fillna("").apply(list).apply(lambda x: json.dumps(x))
 
     paths = [f'{subset}/{img_id}.jpg' for img_id in df['Id'].tolist()]
     df.insert(loc=1, column='Path', value=paths)
@@ -272,7 +270,8 @@ def CheXpert(dataset_path, split='train', competition_categories=False, transfor
         pos_category_nos = [no for no, category in enumerate(categories) if row[category]==1]
         neg_category_nos = [no for no, category in enumerate(categories) if row[category]==0]
         unc_category_nos = [no for no, category in enumerate(categories) if row[category]==-1]
-        records.append((i, path, pos_category_nos, neg_category_nos, unc_category_nos))
+        # records.append((i, path, pos_category_nos, neg_category_nos, unc_category_nos))
+        records.append((i, path, pos_category_nos, neg_category_nos))
 
     return MLCPLDataset(dataset_path, records, num_categories, transform=transform, categories=categories)
 
@@ -337,9 +336,8 @@ def VAW(dataset_path, vg_dataset_path, split='train', use_cache=True, cache_dir=
 
             positive_category_nos = [categories.index(attribute) for attribute in positive_attributes]
             negative_category_nos = [categories.index(attribute) for attribute in negative_attributes]
-            uncertain_category_nos = []
             
-            records.append((instance_id, instance_img_path, positive_category_nos, negative_category_nos, uncertain_category_nos))
+            records.append((instance_id, instance_img_path, positive_category_nos, negative_category_nos))
         print()
 
     records_to_df(records).to_csv(os.path.join(cache_dir, f'{split}.csv'))
@@ -376,7 +374,7 @@ def NUS_WIDE(dataset_path, split='train', transform=transforms.ToTensor()):
             else:
                 negatives.append(c)
         
-        records.append((i, row['Path'], positives, negatives, []))
+        records.append((i, row['Path'], positives, negatives))
     
     print()
 
@@ -418,7 +416,7 @@ def VISPR(dataset_path, split='train', transform=transforms.ToTensor()):
     records = []
     for id, path, labels in records_temp:
         positives = [categories.index(label) for label in labels]
-        records.append((id, path, positives, [], []))
+        records.append((id, path, positives, [],))
     
     records = fill_nan_to_negative(records, num_categories=num_categories)
 
@@ -450,7 +448,7 @@ def Vireo_Food_172(dataset_path, split='train', transform=transforms.ToTensor())
                 positives.append(c)
             else:
                 negatives.append(c)
-        records.append((i, f'ready_chinese_food{id}', positives, negatives, []))
+        records.append((i, f'ready_chinese_food{id}', positives, negatives))
 
     print()
 
@@ -495,7 +493,7 @@ def VG_200(dataset_path, metadata_path=None, split='train', transform=transforms
             raise Exception(f'Image {image_id} not found.')
 
         img_path = os.path.join(dataset_path, folder, f'{image_id}')
-        records.append((image_id, img_path, positives, [], []))
+        records.append((image_id, img_path, positives, []))
 
     print()
 
