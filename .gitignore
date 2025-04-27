@@ -11,3 +11,4 @@ output/
 *.pt
 .DS_Store
 uv.lock
+*.egg-info
