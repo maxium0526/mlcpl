@@ -1,6 +1,6 @@
 import torch
 import numpy as np
-from ..label_strategy import *
+from ..label_strategies import *
 from ..helper import *
 from torch.utils.data import Dataset
 from copy import deepcopy

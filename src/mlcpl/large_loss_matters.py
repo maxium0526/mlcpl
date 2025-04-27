@@ -1,8 +1,8 @@
 import torch
 from torch import nn
 from torch.utils.data import Dataset, DataLoader
-from mlcpl.label_strategy import *
-from .loss import PartialNegativeBCELoss
+from mlcpl.label_strategies import *
+from .losses import PartialNegativeBCELoss
 
 class LargeLossRejection(nn.Module):
     def __init__(self, loss_fn=PartialNegativeBCELoss(reduction=None), delta_rel=0.1):

@@ -1,7 +1,7 @@
 import torch
 from torch import nn
 import math
-from .loss import PartialBCELoss
+from .losses import PartialBCELoss
 
 class HistogramBinning():
     def __init__(self, n_bins=10):
