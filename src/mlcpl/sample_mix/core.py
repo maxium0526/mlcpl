@@ -1,4 +1,5 @@
 import torch
+import numpy as np
 from ..dataset import *
 
 def mixup(tensor_1, tensor_2, lam=0.5):
