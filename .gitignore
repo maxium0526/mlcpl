@@ -2,8 +2,8 @@ __pycache__/
 output/
 *.py
 !/src/mlcpl/*.py
-!/src/mlcpl/dataset/*.py
-!/src/mlcpl/loss/*.py
+!/src/mlcpl/datasets/*.py
+!/src/mlcpl/losses/*.py
 !/src/mlcpl/cft/*.py
 !/src/mlcpl/sample_mix/*.py
 *.csv
