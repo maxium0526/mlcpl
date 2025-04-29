@@ -3,7 +3,7 @@ from torch import Tensor
 from torch import nn as nn
 from typing import Literal, Callable
 
-def PartialNegativeBCELoss(
+def PartialNegativeBCEWithLogitLoss(
     alpha_pos: float = 1,
     alpha_neg: float = 1,
     normalize: bool = False,
@@ -18,7 +18,7 @@ def PartialNegativeBCELoss(
         reduction = reduction,
     )
 
-def PartialBCELoss(
+def PartialBCEWithLogitLoss(
     alpha_pos: float = 1,
     alpha_neg: float = 1,
     normalize: bool = False,
@@ -33,7 +33,7 @@ def PartialBCELoss(
         reduction = reduction,
     )
 
-def PartialSelectiveBCELoss(
+def PartialSelectiveBCEWithLogitLoss(
     alpha_pos: float = 1,
     alpha_neg: float = 1,
     normalize: bool = False,
@@ -55,7 +55,7 @@ def PartialSelectiveBCELoss(
         prior_threshold = prior_threshold,
     )
 
-def PartialNegativeFocalLoss(
+def PartialNegativeFocalWithLogitLoss(
     gamma: float = 1,
     alpha_pos: float = 1,
     alpha_neg: float = 1,
@@ -72,7 +72,7 @@ def PartialNegativeFocalLoss(
         reduction = reduction,
     )
 
-def PartialFocalLoss(
+def PartialFocalWithLogitLoss(
     gamma: float = 1,
     alpha_pos: float = 1,
     alpha_neg: float = 1,
@@ -89,7 +89,7 @@ def PartialFocalLoss(
         reduction = reduction,
     )
 
-def PartialSelectiveFocalLoss(
+def PartialSelectiveFocalWithLogitLoss(
     gamma: float = 1,
     alpha_pos: float = 1,
     alpha_neg: float = 1,
@@ -113,7 +113,7 @@ def PartialSelectiveFocalLoss(
         prior_threshold = prior_threshold,
     )
 
-def PartialNegativeAsymmetricLoss(
+def PartialNegativeAsymmetricWithLogitLoss(
     clip: float = 0,
     gamma_pos: float = 0,
     gamma_neg: float = 1,
@@ -132,7 +132,7 @@ def PartialNegativeAsymmetricLoss(
         reduction = reduction,
     )
 
-def PartialAsymmetricLoss(
+def PartialAsymmetricWithLogitLoss(
     clip: float = 0,
     gamma_pos: float = 0,
     gamma_neg: float = 1,
@@ -151,7 +151,7 @@ def PartialAsymmetricLoss(
         reduction = reduction,
     )
 
-def PartialSelectiveAsymmetricLoss(
+def PartialSelectiveAsymmetricWithLogitLoss(
     clip: float = 0,
     gamma_pos: float = 0,
     gamma_neg: float = 1,

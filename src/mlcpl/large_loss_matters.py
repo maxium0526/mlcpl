@@ -2,10 +2,10 @@ import torch
 from torch import nn
 from torch.utils.data import Dataset, DataLoader
 from mlcpl.label_strategies import *
-from .losses import PartialNegativeBCELoss
+from .losses import PartialNegativeBCEWithLogitLoss
 
 class LargeLossRejection(nn.Module):
-    def __init__(self, loss_fn=PartialNegativeBCELoss(reduction=None), delta_rel=0.1):
+    def __init__(self, loss_fn=PartialNegativeBCEWithLogitLoss(reduction=None), delta_rel=0.1):
         super(LargeLossRejection, self).__init__()
         self.delta_rel = delta_rel
         self.loss_fn = loss_fn
@@ -29,7 +29,7 @@ class LargeLossRejection(nn.Module):
         return final_loss
 
 class LargeLossCorrectionTemporary(nn.Module):
-    def __init__(self, loss_fn=PartialNegativeBCELoss(reduction=None), delta_rel=0.1):
+    def __init__(self, loss_fn=PartialNegativeBCEWithLogitLoss(reduction=None), delta_rel=0.1):
         super(LargeLossCorrectionTemporary, self).__init__()
         self.delta_rel = delta_rel
         self.loss_fn = loss_fn

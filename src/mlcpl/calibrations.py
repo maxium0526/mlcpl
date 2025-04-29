@@ -1,7 +1,7 @@
 import torch
 from torch import nn
 import math
-from .losses import PartialBCELoss
+from .losses import PartialBCEWithLogitLoss
 
 class HistogramBinning():
     def __init__(self, n_bins=10):
@@ -52,7 +52,7 @@ class PlattScaling():
         self.a = nn.Parameter(torch.ones(num_categories, device=device))
         self.b = nn.Parameter(torch.zeros(num_categories, device=device))
     
-    def fit(self, preds, target, loss_fn=PartialBCELoss(reduction='mean'), optimizer=torch.optim.Adam, lr=0.001, batch_size=256, epochs=10000):
+    def fit(self, preds, target, loss_fn=PartialBCEWithLogitLoss(reduction='mean'), optimizer=torch.optim.Adam, lr=0.001, batch_size=256, epochs=10000):
         num_samples, num_categories = preds.shape
 
         dataloader = torch.utils.data.DataLoader(list(zip(preds.detach(), target.detach())), batch_size=batch_size)
@@ -75,7 +75,7 @@ class GNNCalibrator():
     def __init__(self):
         self.gnn = GNN(hidden_dim=8, msg_dim=8, T=25)
     
-    def fit(self, preds, target, loss_fn=PartialBCELoss(reduction='mean'), optimizer=torch.optim.Adam, lr=0.001, batch_size=256, epochs=10000):
+    def fit(self, preds, target, loss_fn=PartialBCEWithLogitLoss(reduction='mean'), optimizer=torch.optim.Adam, lr=0.001, batch_size=256, epochs=10000):
         num_samples, num_categories = preds.shape
 
         dataloader = torch.utils.data.DataLoader(list(zip(preds.detach(), target.detach())), batch_size=batch_size)

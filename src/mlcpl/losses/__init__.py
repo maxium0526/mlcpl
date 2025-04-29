@@ -1,13 +1,13 @@
 from .focal_losses import (
-    PartialNegativeBCELoss,
-    PartialBCELoss,
-    PartialSelectiveBCELoss,
-    PartialNegativeFocalLoss,
-    PartialFocalLoss,
-    PartialSelectiveFocalLoss,
-    PartialNegativeAsymmetricLoss,
-    PartialAsymmetricLoss,
-    PartialSelectiveAsymmetricLoss,
+    PartialNegativeBCEWithLogitLoss,
+    PartialBCEWithLogitLoss,
+    PartialSelectiveBCEWithLogitLoss,
+    PartialNegativeFocalWithLogitLoss,
+    PartialFocalWithLogitLoss,
+    PartialSelectiveFocalWithLogitLoss,
+    PartialNegativeAsymmetricWithLogitLoss,
+    PartialAsymmetricWithLogitLoss,
+    PartialSelectiveAsymmetricWithLogitLoss,
     )
 from .large_loss_matters import LargeLossRejection
 from .strictly_proper_asymmetric_loss import StrictlyProperAsymmetricLoss
