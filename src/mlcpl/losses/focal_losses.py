@@ -1,16 +1,17 @@
 import torch
+from torch import Tensor
 from torch import nn as nn
+from typing import Literal, Callable
 
 def PartialNegativeBCELoss(
-    alpha_pos = 1,
-    alpha_neg = 1,
-    normalize = False,
-    reduction = 'mean',
+    alpha_pos: float = 1,
+    alpha_neg: float = 1,
+    normalize: bool = False,
+    reduction: Literal['mean', 'sum', 'none'] = 'mean',
 ):
     return PartialLoss(
-        lossfn_pos = BCELossTerm(alpha_pos),
-        lossfn_neg = BCELossTerm(alpha_neg),
-        lossfn_unann = BCELossTerm(alpha_neg),
+        lossfn_pos = FocalLossTerm(alpha_pos),
+        lossfn_neg = FocalLossTerm(alpha_neg),
 
         partial_loss_mode = 'negative',
         normalize = normalize,
@@ -18,10 +19,10 @@ def PartialNegativeBCELoss(
     )
 
 def PartialBCELoss(
-    alpha_pos = 1,
-    alpha_neg = 1,
-    normalize = False,
-    reduction = 'mean',
+    alpha_pos: float = 1,
+    alpha_neg: float = 1,
+    normalize: bool = False,
+    reduction: Literal['mean', 'sum', 'none'] = 'mean',
 ):
     return PartialLoss(
         lossfn_pos = FocalLossTerm(alpha_pos),
@@ -33,19 +34,17 @@ def PartialBCELoss(
     )
 
 def PartialSelectiveBCELoss(
-    alpha_pos = 1,
-    alpha_neg = 1,
-    alpha_unann = 1,
-    normalize = False,
-    reduction = 'mean',
-    class_priors = None,
-    likelihood_topk = 5,
-    prior_threshold = 0.05,
+    alpha_pos: float = 1,
+    alpha_neg: float = 1,
+    normalize: bool = False,
+    reduction: Literal['mean', 'sum', 'none'] = 'mean',
+    class_priors: Tensor = None,
+    likelihood_topk: int = 5,
+    prior_threshold: float = 0.05,
 ):
     return PartialLoss(
-        lossfn_pos = BCELossTerm(alpha_pos),
-        lossfn_neg = BCELossTerm(alpha_neg),
-        lossfn_unann = BCELossTerm(alpha_unann),
+        lossfn_pos = FocalLossTerm(alpha_pos),
+        lossfn_neg = FocalLossTerm(alpha_neg),
 
         partial_loss_mode = 'selective',
         normalize = normalize,
@@ -57,17 +56,16 @@ def PartialSelectiveBCELoss(
     )
 
 def PartialNegativeFocalLoss(
-    gamma = 1,
-    alpha_pos = 1,
-    alpha_neg = 1,
-    normalize = False,
-    discard_focal_grad = True,
-    reduction = 'mean',
+    gamma: float = 1,
+    alpha_pos: float = 1,
+    alpha_neg: float = 1,
+    normalize: bool = False,
+    discard_focal_grad: bool = True,
+    reduction: Literal['mean', 'sum', 'none'] = 'mean',
 ):
     return PartialLoss(
         lossfn_pos = FocalLossTerm(alpha_pos, gamma, discard_focal_grad=discard_focal_grad),
         lossfn_neg = FocalLossTerm(alpha_neg, gamma, discard_focal_grad=discard_focal_grad),
-        lossfn_unann = FocalLossTerm(alpha_neg, gamma, discard_focal_grad=discard_focal_grad),
 
         partial_loss_mode = 'negative',
         normalize = normalize,
@@ -75,12 +73,12 @@ def PartialNegativeFocalLoss(
     )
 
 def PartialFocalLoss(
-    gamma = 1,
-    alpha_pos = 1,
-    alpha_neg = 1,
-    normalize = False,
-    discard_focal_grad = True,
-    reduction = 'mean',
+    gamma: float = 1,
+    alpha_pos: float = 1,
+    alpha_neg: float = 1,
+    normalize: bool = False,
+    discard_focal_grad: bool = True,
+    reduction: Literal['mean', 'sum', 'none'] = 'mean',
 ):
     return PartialLoss(
         lossfn_pos = FocalLossTerm(alpha_pos, gamma, discard_focal_grad=discard_focal_grad),
@@ -92,21 +90,19 @@ def PartialFocalLoss(
     )
 
 def PartialSelectiveFocalLoss(
-    gamma = 1,
-    alpha_pos = 1,
-    alpha_neg = 1,
-    alpha_unann = 1,
-    normalize = False,
-    discard_focal_grad = True,
-    reduction = 'mean',
-    class_priors = None,
-    likelihood_topk = 5,
-    prior_threshold = 0.05,
+    gamma: float = 1,
+    alpha_pos: float = 1,
+    alpha_neg: float = 1,
+    normalize: bool = False,
+    discard_focal_grad: bool = True,
+    reduction: Literal['mean', 'sum', 'none'] = 'mean',
+    class_priors: Tensor = None,
+    likelihood_topk: int = 5,
+    prior_threshold: float = 0.05,
 ):
     return PartialLoss(
         lossfn_pos = FocalLossTerm(alpha_pos, gamma, discard_focal_grad=discard_focal_grad),
         lossfn_neg = FocalLossTerm(alpha_neg, gamma, discard_focal_grad=discard_focal_grad),
-        lossfn_unann = FocalLossTerm(alpha_unann, gamma, discard_focal_grad=discard_focal_grad),
 
         partial_loss_mode = 'selective',
         normalize = normalize,
@@ -118,34 +114,33 @@ def PartialSelectiveFocalLoss(
     )
 
 def PartialNegativeAsymmetricLoss(
-    clip = 0,
-    gamma_pos = 0,
-    gamma_neg = 1,
-    alpha_pos = 1,
-    alpha_neg = 1,
-    normalize = False,
-    discard_focal_grad = True,
-    reduction = 'mean',
+    clip: float = 0,
+    gamma_pos: float = 0,
+    gamma_neg: float = 1,
+    alpha_pos: float = 1,
+    alpha_neg: float = 1,
+    normalize: bool = False,
+    discard_focal_grad: bool = True,
+    reduction: Literal['mean', 'sum', 'none'] = 'mean',
 ):
     return PartialLoss(
         lossfn_pos = FocalLossTerm(alpha_pos, gamma_pos, discard_focal_grad=discard_focal_grad),
         lossfn_neg = FocalLossTerm(alpha_neg, gamma_neg, clip, discard_focal_grad=discard_focal_grad),
-        lossfn_unann = FocalLossTerm(alpha_neg, gamma_neg, clip, discard_focal_grad=discard_focal_grad),
-
+        
         partial_loss_mode = 'negative',
         normalize = normalize,
         reduction = reduction,
     )
 
 def PartialAsymmetricLoss(
-    clip = 0,
-    gamma_pos = 0,
-    gamma_neg = 1,
-    alpha_pos = 1,
-    alpha_neg = 1,
-    normalize = False,
-    discard_focal_grad = True,
-    reduction = 'mean',
+    clip: float = 0,
+    gamma_pos: float = 0,
+    gamma_neg: float = 1,
+    alpha_pos: float = 1,
+    alpha_neg: float = 1,
+    normalize: bool = False,
+    discard_focal_grad: bool = True,
+    reduction: Literal['mean', 'sum', 'none'] = 'mean',
 ):
     return PartialLoss(
         lossfn_pos = FocalLossTerm(alpha_pos, gamma_pos, discard_focal_grad=discard_focal_grad),
@@ -157,25 +152,22 @@ def PartialAsymmetricLoss(
     )
 
 def PartialSelectiveAsymmetricLoss(
-    clip = 0,
-    gamma_pos = 0,
-    gamma_neg = 1,
-    gamma_unann = 2,
-    alpha_pos = 1,
-    alpha_neg = 1,
-    alpha_unann = 1,
-    normalize = False,
-    discard_focal_grad = True,
-    reduction = 'mean',
-    class_priors = None,
-    likelihood_topk = 5,
-    prior_threshold = 0.05,
+    clip: float = 0,
+    gamma_pos: float = 0,
+    gamma_neg: float = 1,
+    alpha_pos: float = 1,
+    alpha_neg: float = 1,
+    normalize: bool = False,
+    discard_focal_grad: bool = True,
+    reduction: Literal['mean', 'sum', 'none'] = 'mean',
+    class_priors: Tensor = None,
+    likelihood_topk: int = 5,
+    prior_threshold: float = 0.05,
 ):
     return PartialLoss(
         lossfn_pos = FocalLossTerm(alpha_pos, gamma_pos, discard_focal_grad=discard_focal_grad),
         lossfn_neg = FocalLossTerm(alpha_neg, gamma_neg, clip, discard_focal_grad=discard_focal_grad),
-        lossfn_unann = FocalLossTerm(alpha_unann, gamma_unann, clip, discard_focal_grad=discard_focal_grad),
-
+        
         partial_loss_mode = 'selective',
         normalize = normalize,
         reduction = reduction,
@@ -193,16 +185,21 @@ class NoneLossTerm(nn.Module):
     def forward(self, p):
         return 0 * p
     
-class BCELossTerm(nn.Module):
-    def __init__(self, alpha=1) -> None:
-        super(BCELossTerm, self).__init__()
-        self.alpha = alpha
+# class BCELossTerm(nn.Module):
+#     def __init__(self, alpha=1) -> None:
+#         super(BCELossTerm, self).__init__()
+#         self.alpha = alpha
     
-    def forward(self, z):
-        return self.alpha * torch.binary_cross_entropy_with_logits(z, torch.ones_like(z), None, None, 0)
+#     def forward(self, z):
+#         return self.alpha * torch.binary_cross_entropy_with_logits(z, torch.ones_like(z), None, None, 0)
     
 class FocalLossTerm(nn.Module):
-    def __init__(self, alpha=1, gamma=1, shift=0, discard_focal_grad=True) -> None:
+    def __init__(self,
+                 alpha: float = 1, 
+                 gamma: float = 1, 
+                 shift: float = 0, 
+                 discard_focal_grad: bool = True
+                 ) -> None:
         super(FocalLossTerm, self).__init__()
         self.alpha = alpha
         self.gamma = gamma
@@ -219,30 +216,26 @@ class FocalLossTerm(nn.Module):
 
         return self.alpha * torch.pow(1 - p_focal, self.gamma) * torch.binary_cross_entropy_with_logits(z, torch.ones_like(z), None, None, 0)
 
-# from https://github.com/Alibaba-MIIL/PartialLabelingCSL/blob/main/src/loss_functions/partial_asymmetric_loss.py 
 class PartialLoss(nn.Module):
     def __init__(
             self,
-            lossfn_pos = NoneLossTerm(),
-            lossfn_neg = NoneLossTerm(),
-            lossfn_unann = NoneLossTerm(),
+            lossfn_pos: Callable = NoneLossTerm(),
+            lossfn_neg: Callable = NoneLossTerm(),
 
-            partial_loss_mode = 'ignore',
-            normalize = False,
-            reduction = 'mean',
+            partial_loss_mode: Literal['ignore', 'negative', 'selective'] = 'ignore',
+            normalize: bool = False,
+            reduction: Literal['mean', 'sum', 'none'] = 'mean',
 
-            # arguments for selective mode
-            class_priors = None,
-            likelihood_topk = 5,
-            prior_threshold = 0.05,
+            class_priors: Tensor = None,
+            likelihood_topk: int = 5,
+            prior_threshold: float = 0.05,
 
-            fully_labeled_warning = True # print the warning if the labels seems fully-labeled
+            fully_labeled_warning: bool = True # print the warning if the labels seems fully-labeled
             ):
         super(PartialLoss, self).__init__()
 
         self.lossfn_pos = lossfn_pos
         self.lossfn_neg = lossfn_neg
-        self.lossfn_unann = lossfn_unann
 
         self.class_priors = class_priors
         self.partial_loss_mode = partial_loss_mode
@@ -261,81 +254,42 @@ class PartialLoss(nn.Module):
         elif self.partial_loss_mode == 'negative':
             pseudo_target = torch.where(torch.isnan(targets), 0, targets)
         elif self.partial_loss_mode == 'selective':
-            pseudo_target = targets
+            selective_target = torch.zeros_like(targets)
+            if self.class_priors is not None and self.prior_threshold:
+                idx_ignore = torch.where(self.class_priors > self.prior_threshold)[0]
+                selective_target[:, idx_ignore] = torch.nan
+            # ignore top-k
+            with torch.no_grad():
+                num_top_k = self.likelihood_topk * targets.shape[0]
+
+                targets_flatten = targets.flatten()
+                cond_flatten = torch.where(torch.isnan(targets_flatten))[0]
+                selective_target_flatten = selective_target.flatten()
+                xs_neg_flatten = (-logits).flatten()
+                ind_class_sort = torch.argsort(xs_neg_flatten[cond_flatten])
+                selective_target_flatten[cond_flatten[ind_class_sort[:num_top_k]]] = torch.nan
+                selective_target = selective_target_flatten.view(*selective_target.shape)
+
+                pseudo_target = torch.where(torch.isnan(targets), selective_target, targets)
 
         # Positive, Negative and Unknown labels # as long as weights for soft labels
         weights_pos = torch.where(torch.isnan(pseudo_target), 0, pseudo_target)
         weights_neg = torch.where(torch.isnan(pseudo_target), 0, 1-pseudo_target)
 
-        # if self.fully_labeled_warning_trigger and targets_unann.nonzero().sum() == 0:
-        #     print('The input batch data seems to be fully-labeled. This warning is only logged once.')
-        #     self.fully_labeled_warning_trigger = False
-
-        # Activation
-        # xs_pos = torch.sigmoid(logits)
-        # xs_neg = 1.0 - xs_pos
-
-        # targets_weights = self.__compute_targets_weights(xs_neg, targets)
-
         # Loss calculation
-        loss_pos = weights_pos * self.lossfn_pos(logits)
-        loss_neg = weights_neg * self.lossfn_neg(-logits)
-        # loss_unann = targets_unann * self.lossfn_unann(-logits)
+        loss_pos = self.lossfn_pos(logits)
+        loss_neg = self.lossfn_neg(-logits)
 
-        total_loss = loss_pos + loss_neg
-
-        # partial labels weights
-        # total_loss *= targets_weights
-
-        if self.reduction == 'mean':
-            return total_loss.mean()
-        if self.reduction == 'sum':
-            return total_loss.sum()
-        return total_loss
-    
-    def __compute_targets_weights(self, xs_neg, targets):
-
-        targets_weights = 1.0
-
-        if self.partial_loss_mode == 'negative':
-            # set all unsure targets as negative
-            targets_weights = 1.0
-
-        elif self.partial_loss_mode == 'ignore':
-            # remove all unsure targets (targets_weights=0)
-            targets_weights = torch.ones(targets.shape, device=targets.device)
-            targets_weights[targets == -1] = 0
-
-        elif self.partial_loss_mode == 'selective':
-            targets_weights = torch.ones(targets.shape, device=targets.device)
-
-            if self.class_priors is not None:
-                if self.prior_threshold:
-                    idx_ignore = torch.where(self.class_priors > self.prior_threshold)[0]
-                    targets_weights[:, idx_ignore] = 0
-                    targets_weights += (targets != -1).float()
-                    targets_weights = targets_weights.bool()
-
-            # ignore top-k
-            with torch.no_grad():
-                num_top_k = self.likelihood_topk * targets_weights.shape[0]
-
-                targets_flatten = targets.flatten()
-                cond_flatten = torch.where(targets_flatten == -1)[0]
-                targets_weights_flatten = targets_weights.flatten()
-                xs_neg_flatten = xs_neg.flatten()
-                ind_class_sort = torch.argsort(xs_neg_flatten[cond_flatten])
-                targets_weights_flatten[
-                    cond_flatten[ind_class_sort[:num_top_k]]] = 0
-                targets_weights
+        total_loss = loss_pos * weights_pos + loss_neg * weights_neg
 
         if self.normalize: # https://arxiv.org/pdf/1902.09720.pdfs
             alpha_norm, beta_norm = 1, 1
-            n_annotated = 1 + torch.sum(targets_weights == 1, axis=1)    # Add 1 to avoid dividing by zero
-            g_norm = alpha_norm * (1 / n_annotated) + beta_norm
-            n_classes = targets_weights.shape[1]
-            targets_weights *= g_norm.repeat([n_classes, 1]).T
+            num_known_labels = 1 + torch.sum(~torch.isnan(pseudo_target), axis=1)    # Add 1 to avoid dividing by zero
+            g_norm = alpha_norm * (1 / num_known_labels) + beta_norm
+            total_loss *= g_norm.repeat([pseudo_target.shape[1], 1]).T
 
-        return targets_weights
-
-
+        if self.reduction == 'mean':
+            return total_loss.sum() / torch.sum(~torch.isnan(pseudo_target)).detach()
+        if self.reduction == 'sum':
+            return total_loss.sum()
+        return total_loss
