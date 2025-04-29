@@ -203,7 +203,7 @@ class FocalLossTerm(nn.Module):
         super(FocalLossTerm, self).__init__()
         self.alpha = alpha
         self.gamma = gamma
-        self.shift = shift # negative term of asymmetric loss
+        self.shift = torch.tensor(shift) # negative term of asymmetric loss
         self.discard_focal_grad = discard_focal_grad
     
     def forward(self, z):
