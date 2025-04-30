@@ -45,8 +45,22 @@ def partial_multilabel_wrapper(binary_metric, preds, target, average: Literal['m
 
 def partial_multilabel_average_precision(
         preds, target, 
-        average: Literal['macro', 'micro', 'weighted', 'none'] = 'macro', thresholds=None, ignore_index=None, validate_args=True
+        average: Literal['macro', 'micro', 'weighted', 'none'] = 'macro',
+        thresholds=None,
+        ignore_index=None,
+        validate_args=True,
         ):
     binary_metric = torchmetrics.functional.classification.binary_average_precision
 
-    return partial_multilabel_wrapper(binary_metric, preds, target, average, thresholds=None, ignore_index=None, validate_args=True)
+    return partial_multilabel_wrapper(binary_metric, preds, target, average, thresholds=thresholds, ignore_index=ignore_index, validate_args=validate_args)
+
+def partial_multilabel_auroc(
+        preds, target, 
+        average: Literal['macro', 'micro', 'weighted', 'none'] = 'macro',
+        thresholds=None,
+        ignore_index=None,
+        validate_args=True
+        ):
+    binary_metric = torchmetrics.functional.classification.binary_auroc
+
+    return partial_multilabel_wrapper(binary_metric, preds, target, average, thresholds=thresholds, ignore_index=ignore_index, validate_args=validate_args)
