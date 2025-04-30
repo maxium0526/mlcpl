@@ -4,6 +4,7 @@ output/
 !/src/mlcpl/*.py
 !/src/mlcpl/datasets/*.py
 !/src/mlcpl/losses/*.py
+!/src/mlcpl/metrics/*.py
 !/src/mlcpl/cft/*.py
 !/src/mlcpl/augs/*.py
 *.csv
