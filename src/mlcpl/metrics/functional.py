@@ -55,8 +55,6 @@ def partial_multilabel_average_precision(
         preds, target, 
         average: Literal['macro', 'micro', 'weighted', 'none'] = 'macro',
         thresholds=None,
-        ignore_index=None,
-        validate_args=True,
         ):
     
     binary_metric = torchmetrics.functional.classification.binary_average_precision
@@ -68,15 +66,13 @@ def partial_multilabel_average_precision(
         check_labels=check_labels,
         average=average,
         thresholds=thresholds, 
-        ignore_index=ignore_index, 
-        validate_args=validate_args)
+        ignore_index=None, 
+        validate_args=False)
 
 def partial_multilabel_auroc(
         preds, target, 
         average: Literal['macro', 'micro', 'weighted', 'none'] = 'macro',
         thresholds=None,
-        ignore_index=None,
-        validate_args=True
         ):
     
     binary_metric = torchmetrics.functional.classification.binary_auroc
@@ -88,16 +84,14 @@ def partial_multilabel_auroc(
         check_labels=check_labels,
         average=average,
         thresholds=thresholds, 
-        ignore_index=ignore_index, 
-        validate_args=validate_args)
+        ignore_index=None, 
+        validate_args=False)
 
 def partial_multilabel_fbeta_score(
         preds, target,
         beta: float = 1.0,
         threshold: float = 0.5,
         average: Literal['macro', 'micro', 'weighted', 'none'] = 'macro',
-        ignore_index=None,
-        validate_args=True
         ):
     
     binary_metric = torchmetrics.functional.classification.binary_fbeta_score
@@ -110,15 +104,14 @@ def partial_multilabel_fbeta_score(
         average=average,
         beta=beta,
         threshold=threshold, 
-        ignore_index=ignore_index, 
-        validate_args=validate_args)
+        ignore_index=None, 
+        validate_args=False)
 
 def partial_multilabel_f1_score(
         preds, target,
         threshold: float = 0.5,
         average: Literal['macro', 'micro', 'weighted', 'none'] = 'macro',
         ignore_index=None,
-        validate_args=True
         ):
     
     binary_metric = torchmetrics.functional.classification.binary_f1_score
@@ -130,15 +123,13 @@ def partial_multilabel_f1_score(
         check_labels=check_labels,
         average=average,
         threshold=threshold, 
-        ignore_index=ignore_index, 
-        validate_args=validate_args)
+        ignore_index=None, 
+        validate_args=False)
 
 def partial_multilabel_precision(
         preds, target,
         threshold: float = 0.5,
         average: Literal['macro', 'micro', 'weighted', 'none'] = 'macro',
-        ignore_index=None,
-        validate_args=True,
         ):
     
     binary_metric = torchmetrics.functional.classification.binary_precision
@@ -150,15 +141,13 @@ def partial_multilabel_precision(
         check_labels=check_labels,
         average=average,
         threshold=threshold, 
-        ignore_index=ignore_index, 
-        validate_args=validate_args)
+        ignore_index=None, 
+        validate_args=False)
 
 def partial_multilabel_recall(
         preds, target,
         threshold: float = 0.5,
         average: Literal['macro', 'micro', 'weighted', 'none'] = 'macro',
-        ignore_index=None,
-        validate_args=True,
         ):
     
     binary_metric = torchmetrics.functional.classification.binary_recall
@@ -170,5 +159,55 @@ def partial_multilabel_recall(
         check_labels=check_labels,
         average=average,
         threshold=threshold, 
-        ignore_index=ignore_index, 
-        validate_args=validate_args)
+        ignore_index=None, 
+        validate_args=False)
+
+def partial_multilabel_sensitivity(
+        preds, target,
+        threshold: float = 0.5,
+        average: Literal['macro', 'micro', 'weighted', 'none'] = 'macro',
+        ):
+    
+    return partial_multilabel_recall(
+        preds, target,
+        threshold=threshold,
+        average=average,
+        ignore_index=None, 
+        validate_args=False)
+
+def partial_multilabel_specificity(
+        preds, target,
+        threshold: float = 0.5,
+        average: Literal['macro', 'micro', 'weighted', 'none'] = 'macro',
+        ):
+    
+    binary_metric = torchmetrics.functional.classification.binary_specificity
+    check_labels = 'n'
+
+    return partial_multilabel_wrapper(
+        binary_metric, 
+        preds, target, 
+        check_labels=check_labels,
+        average=average,
+        threshold=threshold, 
+        ignore_index=None, 
+        validate_args=False)
+
+def partial_multilabel_precision_at_fixed_recall(
+        preds, target,
+        min_recall: float = 0.5,
+        thresholds = None,
+        ):
+    
+    binary_metric = torchmetrics.functional.classification.binary_precision_at_fixed_recall
+    check_labels = 'n'
+
+    return partial_multilabel_wrapper(
+        binary_metric, 
+        preds, target, 
+        check_labels=check_labels,
+        average='none',
+        min_recall=min_recall,
+        thresholds=thresholds, 
+        ignore_index=None,
+        validate_args=False)

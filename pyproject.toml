@@ -12,6 +12,7 @@ dependencies = [
     "pycocotools>=2.0.7",
     "tensorboard>=2.14.0",
     "torch==1.13.1",
+    "torchmetrics>=1.5.2",
     "torchvision==0.14.1",
     "xmltodict==0.13.0",
 ]
@@ -39,7 +40,6 @@ explicit = true
 [dependency-groups]
 dev = [
     "pytest>=8.3.5",
-    "torchmetrics==0.11",
 ]
 [tool.pytest.ini_options]
 testpaths = ["tests"]
