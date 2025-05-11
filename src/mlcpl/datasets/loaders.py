@@ -110,7 +110,7 @@ def LVIS(dataset_path, split='train', transform=transforms.ToTensor()):
 
     return MLCPLDataset(f'LVIS ({split})', dataset_path, records, num_categories, transform)
 
-def Open_Images(dataset_path, split=None, transform=transforms.ToTensor(), use_cache=True, cache_dir='output/dataset'):
+def Open_Images_V6(dataset_path, split=None, transform=transforms.ToTensor(), use_cache=True, cache_dir='output/dataset'):
     from pathlib import Path
     num_categories = 9605
 
