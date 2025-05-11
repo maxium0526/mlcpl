@@ -3,7 +3,7 @@ from .loaders import (
     MSCOCO,
     Pascal_VOC_2007,
     LVIS,
-    Open_Images,
+    Open_Images_V6,
     Open_Images_V3,
     CheXpert,
     VAW,

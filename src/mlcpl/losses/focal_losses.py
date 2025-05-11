@@ -207,7 +207,7 @@ class FocalLossTerm(nn.Module):
         self.discard_focal_grad = discard_focal_grad
     
     def forward(self, z):
-        z = z if self.shift == 0 else torch.where(z > torch.log(-1/self.shift), torch.inf, z)
+        z = z if self.shift == 0 else torch.where(z > torch.log((1-self.shift)/self.shift), torch.inf, z)
 
         if self.gamma == 1:
             return self.alpha * torch.binary_cross_entropy_with_logits(z, torch.ones_like(z), None, None, 0)
@@ -289,7 +289,7 @@ class PartialLoss(nn.Module):
             total_loss *= g_norm.repeat([pseudo_target.shape[1], 1]).T
 
         if self.reduction == 'mean':
-            return total_loss.sum() / torch.sum(~torch.isnan(pseudo_target)).detach()
+            return total_loss.nansum() / torch.sum(~torch.isnan(pseudo_target)).detach()
         if self.reduction == 'sum':
-            return total_loss.sum()
+            return total_loss.nansum()
         return total_loss
