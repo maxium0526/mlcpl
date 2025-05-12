@@ -196,7 +196,7 @@ class NoneLossTerm(nn.Module):
 class FocalLossTerm(nn.Module):
     def __init__(self,
                  alpha: float = 1, 
-                 gamma: float = 1, 
+                 gamma: float = 0, 
                  shift: float = 0, 
                  discard_focal_grad: bool = True
                  ) -> None:
@@ -206,15 +206,17 @@ class FocalLossTerm(nn.Module):
         self.shift = torch.tensor(shift) # negative term of asymmetric loss
         self.discard_focal_grad = discard_focal_grad
     
-    def forward(self, z):
-        z = z if self.shift == 0 else torch.where(z > torch.log((1-self.shift)/self.shift), torch.inf, z)
+    def forward(self, p):
 
-        if self.gamma == 1:
-            return self.alpha * torch.binary_cross_entropy_with_logits(z, torch.ones_like(z), None, None, 0)
+        print(p)
+        p = torch.clamp(p + self.shift, max=1)
 
-        p_focal = torch.sigmoid(z.detach() if self.discard_focal_grad else z)
+        if self.gamma == 0:
+            return - self.alpha * torch.log(p)
 
-        return self.alpha * torch.pow(1 - p_focal, self.gamma) * torch.binary_cross_entropy_with_logits(z, torch.ones_like(z), None, None, 0)
+        p_focal = p.detach() if self.discard_focal_grad else p
+
+        return - self.alpha * torch.pow(1 - p_focal, self.gamma) * torch.log(p)
 
 class PartialLoss(nn.Module):
     def __init__(
@@ -249,6 +251,8 @@ class PartialLoss(nn.Module):
 
     def forward(self, logits, targets):
 
+        preds = torch.sigmoid(logits)
+
         if self.partial_loss_mode == 'ignore':
             pseudo_target = targets
         elif self.partial_loss_mode == 'negative':
@@ -265,7 +269,7 @@ class PartialLoss(nn.Module):
                 targets_flatten = targets.flatten()
                 cond_flatten = torch.where(torch.isnan(targets_flatten))[0]
                 selective_target_flatten = selective_target.flatten()
-                xs_neg_flatten = (-logits).flatten()
+                xs_neg_flatten = (1-preds).flatten()
                 ind_class_sort = torch.argsort(xs_neg_flatten[cond_flatten])
                 selective_target_flatten[cond_flatten[ind_class_sort[:num_top_k]]] = torch.nan
                 selective_target = selective_target_flatten.view(*selective_target.shape)
@@ -277,8 +281,8 @@ class PartialLoss(nn.Module):
         weights_neg = torch.where(torch.isnan(pseudo_target), 0, 1-pseudo_target)
 
         # Loss calculation
-        loss_pos = self.lossfn_pos(logits)
-        loss_neg = self.lossfn_neg(-logits)
+        loss_pos = self.lossfn_pos(preds)
+        loss_neg = self.lossfn_neg(1-preds)
 
         total_loss = loss_pos * weights_pos + loss_neg * weights_neg
 
