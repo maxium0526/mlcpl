@@ -208,7 +208,6 @@ class FocalLossTerm(nn.Module):
     
     def forward(self, p):
 
-        print(p)
         p = torch.clamp(p + self.shift, max=1)
 
         if self.gamma == 0:
