@@ -38,7 +38,7 @@ def PartialSelectiveBCEWithLogitLoss(
     alpha_neg: float = 1,
     normalize: bool = False,
     reduction: Literal['mean', 'sum', 'none'] = 'mean',
-    class_priors: Tensor = None,
+    label_priors: Tensor = None,
     likelihood_topk: int = 5,
     prior_threshold: float = 0.05,
 ):
@@ -50,7 +50,7 @@ def PartialSelectiveBCEWithLogitLoss(
         normalize = normalize,
         reduction = reduction,
         
-        class_priors = class_priors,
+        label_priors = label_priors,
         likelihood_topk = likelihood_topk,
         prior_threshold = prior_threshold,
     )
@@ -96,7 +96,7 @@ def PartialSelectiveFocalWithLogitLoss(
     normalize: bool = False,
     discard_focal_grad: bool = True,
     reduction: Literal['mean', 'sum', 'none'] = 'mean',
-    class_priors: Tensor = None,
+    label_priors: Tensor = None,
     likelihood_topk: int = 5,
     prior_threshold: float = 0.05,
 ):
@@ -108,7 +108,7 @@ def PartialSelectiveFocalWithLogitLoss(
         normalize = normalize,
         reduction = reduction,
         
-        class_priors = class_priors,
+        label_priors = label_priors,
         likelihood_topk = likelihood_topk,
         prior_threshold = prior_threshold,
     )
@@ -160,7 +160,7 @@ def PartialSelectiveAsymmetricWithLogitLoss(
     normalize: bool = False,
     discard_focal_grad: bool = True,
     reduction: Literal['mean', 'sum', 'none'] = 'mean',
-    class_priors: Tensor = None,
+    label_priors: Tensor = None,
     likelihood_topk: int = 5,
     prior_threshold: float = 0.05,
 ):
@@ -172,7 +172,7 @@ def PartialSelectiveAsymmetricWithLogitLoss(
         normalize = normalize,
         reduction = reduction,
         
-        class_priors = class_priors,
+        label_priors = label_priors,
         likelihood_topk = likelihood_topk,
         prior_threshold = prior_threshold,
     )
@@ -227,7 +227,7 @@ class PartialLoss(nn.Module):
             normalize: bool = False,
             reduction: Literal['mean', 'sum', 'none'] = 'mean',
 
-            class_priors: Tensor = None,
+            label_priors: Tensor = None,
             likelihood_topk: int = 5,
             prior_threshold: float = 0.05,
 
@@ -238,7 +238,7 @@ class PartialLoss(nn.Module):
         self.lossfn_pos = lossfn_pos
         self.lossfn_neg = lossfn_neg
 
-        self.class_priors = class_priors
+        self.label_priors = label_priors
         self.partial_loss_mode = partial_loss_mode
         self.likelihood_topk = likelihood_topk
         self.prior_threshold = prior_threshold
@@ -258,13 +258,12 @@ class PartialLoss(nn.Module):
             pseudo_target = torch.where(torch.isnan(targets), 0, targets)
         elif self.partial_loss_mode == 'selective':
             selective_target = torch.zeros_like(targets)
-            if self.class_priors is not None and self.prior_threshold:
-                idx_ignore = torch.where(self.class_priors > self.prior_threshold)[0]
+            if self.label_priors is not None and self.prior_threshold:
+                idx_ignore = torch.where(self.label_priors > self.prior_threshold)[0]
                 selective_target[:, idx_ignore] = torch.nan
             # ignore top-k
             with torch.no_grad():
                 num_top_k = self.likelihood_topk * targets.shape[0]
-
                 targets_flatten = targets.flatten()
                 cond_flatten = torch.where(torch.isnan(targets_flatten))[0]
                 selective_target_flatten = selective_target.flatten()
@@ -272,7 +271,6 @@ class PartialLoss(nn.Module):
                 ind_class_sort = torch.argsort(xs_neg_flatten[cond_flatten])
                 selective_target_flatten[cond_flatten[ind_class_sort[:num_top_k]]] = torch.nan
                 selective_target = selective_target_flatten.view(*selective_target.shape)
-
                 pseudo_target = torch.where(torch.isnan(targets), selective_target, targets)
 
         # Positive, Negative and Unknown labels # as long as weights for soft labels
