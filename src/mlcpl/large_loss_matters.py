@@ -5,10 +5,11 @@ from mlcpl.label_strategies import *
 from .losses import PartialNegativeBCEWithLogitLoss
 
 class LargeLossRejection(nn.Module):
-    def __init__(self, loss_fn=PartialNegativeBCEWithLogitLoss(reduction=None), delta_rel=0.1):
+    def __init__(self, loss_fn=PartialNegativeBCEWithLogitLoss(reduction=None), delta_rel=0.1, reduction='mean'):
         super(LargeLossRejection, self).__init__()
         self.delta_rel = delta_rel
         self.loss_fn = loss_fn
+        self.reduction = reduction
 
     def forward(self, logits, targets, epoch):
         losses = self.loss_fn(logits, targets)
@@ -24,7 +25,12 @@ class LargeLossRejection(nn.Module):
 
         lambdas = torch.where(unknown_label_losses > loss_threshold, 0, 1)
 
-        final_loss = torch.sum(losses * lambdas)
+        final_loss = losses * lambdas
+
+        if self.reduction == 'sum':
+            return torch.sum(final_loss)
+        elif self.reduction == 'mean':
+            final_loss = torch.mean(final_loss)
 
         return final_loss
 

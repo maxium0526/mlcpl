@@ -3,7 +3,7 @@ from torch import nn as nn
 from torch.nn.functional import sigmoid as sigmoid
 
 class StrictlyProperAsymmetricLoss(nn.Module):
-    def __init__(self, zeta_p=1, k_p=1, b_p=0, zeta_n=5, k_n=3, b_n=1, reduction='sum'):
+    def __init__(self, zeta_p=1, k_p=1, b_p=0, zeta_n=5, k_n=3, b_n=1, reduction='mean'):
         super(StrictlyProperAsymmetricLoss, self).__init__()
         self.zeta_p = zeta_p
         self.k_p = k_p
@@ -30,7 +30,7 @@ class StrictlyProperAsymmetricLoss(nn.Module):
         return loss
 
 class PartialStrictlyProperAsymmetricLoss(nn.Module):
-    def __init__(self, zeta_p=1, k_p=1, b_p=0, zeta_n=5, k_n=3, b_n=1, reduction='sum'):
+    def __init__(self, zeta_p=1, k_p=1, b_p=0, zeta_n=5, k_n=3, b_n=1, reduction='mean'):
         super(PartialStrictlyProperAsymmetricLoss, self).__init__()
         self.loss_fn = StrictlyProperAsymmetricLoss(zeta_p=zeta_p, k_p=k_p, b_p=b_p, zeta_n=zeta_n, k_n=k_n, b_n=b_n, reduction=reduction)
 

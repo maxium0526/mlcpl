@@ -386,6 +386,33 @@ def partial_multilabel_calibration_error(
         average=average,
         norm=norm)
 
+def partial_multilabel_expected_calibration_error(
+        preds, target,
+        average: Literal['macro', 'micro', 'weighted', 'none'] = 'macro',
+        ):
+    
+    return partial_multilabel_calibration_error(
+        preds, target, average=average, norm='ECE',
+    )
+
+def partial_multilabel_average_calibration_error(
+        preds, target,
+        average: Literal['macro', 'micro', 'weighted', 'none'] = 'macro',
+        ):
+    
+    return partial_multilabel_calibration_error(
+        preds, target, average=average, norm='ACE',
+    )
+
+def partial_multilabel_maximum_calibration_error(
+        preds, target,
+        average: Literal['macro', 'micro', 'weighted', 'none'] = 'macro',
+        ):
+    
+    return partial_multilabel_calibration_error(
+        preds, target, average=average, norm='MCE',
+    )
+
 def partial_multilabel_cohen_kappa(
         preds, target,
         threshold: float = 0.5,
@@ -482,7 +509,6 @@ def partial_multilabel_dice(
 def partial_multilabel_exact_match(
         preds, target,
         threshold: float = 0.5,
-        average: Literal['macro', 'micro', 'weighted', 'none'] = 'macro',
         ):
     
     preds = torch.sigmoid(preds)
