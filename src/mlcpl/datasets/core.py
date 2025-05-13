@@ -56,6 +56,7 @@ class MLCPLDataset(Dataset):
             f'# Dataset Path: {self.dataset_path}\n' \
             f'# # of Samples: {len(self)}\n' \
             f'# # of Categories: {self.num_categories}\n' \
+            f'# Categories: {self.categories}\n' \
             f'# Label Proportion: {statistics["label_ratio"]*100:.2f}%\n' \
             f'# Positive-Negative Balance: {statistics["num_positive_labels"] / statistics["num_known_labels"]*100:.2f} : {statistics["num_negative_labels"] / statistics["num_known_labels"]*100:.2f}%\n' \
             f'{"-"*40}\n'
