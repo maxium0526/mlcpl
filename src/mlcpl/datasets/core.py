@@ -1,5 +1,6 @@
 import torch
 from torch import Tensor
+from torchvision import transforms
 from torch.utils.data import Dataset
 import numpy as np
 import os
@@ -19,7 +20,7 @@ class MLCPLDataset(Dataset):
                  dataset_path: str,
                  records: List[Tuple],
                  num_categories: int,
-                 transform: Callable,
+                 transform: Callable = transforms.ToTensor(),
                  categories: List[str] = None,
                  read_func: Callable = read_jpg,
                  ):
