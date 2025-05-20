@@ -52,6 +52,8 @@ class MLCPLDataset(Dataset):
         """
         statistics = self.get_statistics()
 
+        print(statistics)
+
         info = f'{"-"*40}\n' \
             f'# Name: {self.name}\n' \
             f'# Dataset Path: {self.dataset_path}\n' \
@@ -102,6 +104,25 @@ class MLCPLDataset(Dataset):
     
     def drop_labels_uniform(self, target_label_proportion: float, seed: int = 526):
         self.records = drop_labels_uniform(self.records, target_label_proportion, seed=seed)
+        return self
+    
+    def drop_labels_single_positive(self, seed: int = 526) -> List[Tuple]:
+        """ Only one positive label is retained and all other labels are dropped for each sample.
+
+        Args:
+            seed (int, optional): The random seed. Defaults to 526.
+
+        Returns:
+            Self: self
+        """
+
+        rng = np.random.Generator(np.random.PCG64(seed=seed))
+
+        new_records = []
+        for (i, path, pos_categories, neg_categories) in self.records:
+            new_pos_categories = rng.choice(pos_categories, 1).tolist() if len(pos_categories)> 0 else []
+            new_records.append((i, path, new_pos_categories, []))
+        self.records = new_records
         return self
     
     def drop_labels_fix_per_category(self, max_num_labels_per_category: int, seed: int = 526):
