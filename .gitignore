@@ -13,3 +13,4 @@ output/
 .DS_Store
 uv.lock
 *.egg-info
+notebook_examples_bak/
