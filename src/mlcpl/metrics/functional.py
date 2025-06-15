@@ -125,9 +125,7 @@ def partial_multilabel_sensitivity(
     return partial_multilabel_recall(
         preds, target,
         threshold=threshold,
-        average=average,
-        ignore_index=None, 
-        validate_args=False)
+        average=average)
 
 def partial_multilabel_specificity(
         preds, target,
