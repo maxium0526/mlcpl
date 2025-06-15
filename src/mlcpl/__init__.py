@@ -5,4 +5,4 @@ from . import augs
 from . import pseudo_labeling
 from . import helper
 from . import label_strategies
-from .metrics import core
+from . import metrics
