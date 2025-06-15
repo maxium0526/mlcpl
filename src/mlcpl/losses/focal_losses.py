@@ -230,8 +230,6 @@ class PartialLoss(nn.Module):
             label_priors: Tensor = None,
             likelihood_topk: int = 5,
             prior_threshold: float = 0.05,
-
-            fully_labeled_warning: bool = True # print the warning if the labels seems fully-labeled
             ):
         super(PartialLoss, self).__init__()
 
@@ -244,9 +242,6 @@ class PartialLoss(nn.Module):
         self.prior_threshold = prior_threshold
         self.normalize = normalize
         self.reduction = reduction
-
-        self.fully_labeled_warning = fully_labeled_warning
-        self.fully_labeled_warning_trigger = True if self.fully_labeled_warning else False
 
     def forward(self, logits, targets):
 
