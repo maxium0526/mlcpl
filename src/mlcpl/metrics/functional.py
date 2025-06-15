@@ -283,7 +283,7 @@ def partial_multilabel_accuracy(
 
 def binary_calibration_error(preds, target, n_bins=15, norm='l1'):
 
-    preds = torch.nn.functional.sigmoid(preds)
+    preds = torch.sigmoid(preds)
 
     bin_boundaries = torch.linspace(0, 1, n_bins + 1)
 
