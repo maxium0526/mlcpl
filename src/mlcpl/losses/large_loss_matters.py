@@ -3,7 +3,17 @@ from torch import nn
 from . import PartialNegativeBCEWithLogitLoss
 
 class LargeLossRejection(nn.Module):
+    """The Large Loss-Reject in https://arxiv.org/abs/2206.03740.
+
+    Args:
+        loss_fn (Callable, optional): The base loss function. Defaults to PartialNegativeBCEWithLogitLoss(reduction=None).
+
+        delta_rel (float, optional): The delta_rel hyperparameter. Defaults to 0.1.
+
+        reduction (str, optional): reduction (str, optional): Specifies the reduction to apply to the output: ``'none'`` | ``'mean'`` | ``'sum'``. ``'none'``: no reduction will be applied, ``'mean'``: the sum of the output will be divided by the number of elements in the output, ``'sum'``: the output will be summed. Defaults to ``'mean'``.
+    """
     def __init__(self, loss_fn=PartialNegativeBCEWithLogitLoss(reduction=None), delta_rel=0.1, reduction='mean'):
+        
         super(LargeLossRejection, self).__init__()
         self.delta_rel = delta_rel
         self.loss_fn = loss_fn
@@ -33,7 +43,17 @@ class LargeLossRejection(nn.Module):
         return final_loss
     
 class LargeLossCorrectionTemporary(nn.Module):
+    """The Large Loss-Correct (temporary) in https://arxiv.org/abs/2206.03740.
+
+    Args:
+        loss_fn (Callable, optional): The base loss function. Defaults to PartialNegativeBCEWithLogitLoss(reduction=None).
+
+        delta_rel (float, optional): The delta_rel hyperparameter. Defaults to 0.1.
+        
+        reduction (str, optional): reduction (str, optional): Specifies the reduction to apply to the output: ``'none'`` | ``'mean'`` | ``'sum'``. ``'none'``: no reduction will be applied, ``'mean'``: the sum of the output will be divided by the number of elements in the output, ``'sum'``: the output will be summed. Defaults to ``'mean'``.
+    """
     def __init__(self, loss_fn=PartialNegativeBCEWithLogitLoss(reduction=None), delta_rel=0.1, reduction='mean'):
+        
         super(LargeLossCorrectionTemporary, self).__init__()
         self.delta_rel = delta_rel
         self.loss_fn = loss_fn

@@ -2,7 +2,18 @@ from torch.utils.data import Dataset, DataLoader
 import torch
 
 class CurriculumLabeling(Dataset):
+    """An implementation of curriculum labeling.
+
+    """
+
     def __init__(self, dataset):
+        """
+
+        Args:
+            dataset: The ``'MLCPLDataset`` that is applied to.
+
+        """
+
         self.dataset = dataset
         self.num_categories = self.dataset.num_categories
         self.selections = torch.zeros((len(self.dataset), self.dataset.num_categories), dtype=torch.bool)
@@ -24,8 +35,25 @@ class CurriculumLabeling(Dataset):
         return self.__getitem__(idx)
     
     def update(self, model, batch_size=32, num_workers=20, selection_strategy='score', selection_threshold=0.5, verbose=False):
-        dataloader = DataLoader(self.dataset, batch_size=batch_size, num_workers=num_workers)
+        """Update pseudo-labels.
 
+        Args:
+            model:
+                the model that produces predictions.
+            
+            batch_size: size of mini-batches.
+
+            num_workers: the number of data loader workers.
+
+            selection_strategy: The method to select predictions to generate pseudo-labels.
+
+            selection_threshold: The thresholds for generating pseudo-labels.
+
+            verbose: Whether showing the process of generation.
+        """
+        
+        dataloader = DataLoader(self.dataset, batch_size=batch_size, num_workers=num_workers)
+        
         model.eval()
 
         with torch.no_grad():

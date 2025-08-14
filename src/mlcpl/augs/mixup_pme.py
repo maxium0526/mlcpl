@@ -5,7 +5,22 @@ def interpolate(tensor_1, tensor_2, lam=0.5):
     return lam * tensor_1 + (1 - lam) * tensor_2
 
 class MixUpPME(torch.utils.data.Dataset):
+    """Implementation of MixUpPME.
+
+    """
     def __init__(self, dataset, alpha=0.75, transform=None):
+        """Initialization
+
+        Args:
+            dataset:
+                The ``'MLCPLDataset'`` to be applied.
+
+            alpha:
+                A hyperparameter. Defaults to 0.75.
+
+            transform: 
+                Optional transformation applied to augment images. Defaults to None.
+        """
         self.dataset = dataset
         self.alpha = alpha
         self.transform = transform

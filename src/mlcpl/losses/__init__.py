@@ -10,6 +10,6 @@ from .focal_losses import (
     PartialSelectiveAsymmetricWithLogitLoss,
     )
 from .large_loss_matters import LargeLossRejection, LargeLossCorrectionTemporary
-from .strictly_proper_asymmetric_loss import StrictlyProperAsymmetricLoss, PartialStrictlyProperAsymmetricLoss
+from .strictly_proper_asymmetric_loss import PartialStrictlyProperAsymmetricWithLogitLoss
 
 del focal_losses, large_loss_matters, strictly_proper_asymmetric_loss

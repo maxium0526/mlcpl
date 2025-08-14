@@ -8,6 +8,25 @@ import glob
 from .core import *
 
 def MSCOCO(dataset_path, year='2014', split='train', transform=transforms.ToTensor()):
+    """Load the MS-COCO dataset.
+
+    Args:
+        dataset_path: 
+            Path to the dataset folder.
+
+        year:
+            The year of split. Defaults to '2014'.
+
+        split: 
+            The sub-split of the dataset. Defaults to 'train'.
+
+        transform: 
+            Transformation applied to images. Defaults to transforms.ToTensor().
+
+    Returns:
+        A ``MLCPLDataset`` object.
+
+    """
     from pycocotools.coco import COCO
 
     num_categories = 80
@@ -38,6 +57,23 @@ def MSCOCO(dataset_path, year='2014', split='train', transform=transforms.ToTens
     return MLCPLDataset(f'MS-COCO ({split})', dataset_path, records, num_categories, transform)
 
 def Pascal_VOC_2007(dataset_path, split='train', transform=transforms.ToTensor()):
+
+    """Load the Pascal VOC 2007 dataset.
+
+    Args:
+        dataset_path: 
+            Path to the dataset folder.
+
+        split: 
+            The sub-split of the dataset. Defaults to 'train'.
+
+        transform: 
+            Transformation applied to images. Defaults to transforms.ToTensor().
+
+    Returns:
+        A ``MLCPLDataset`` object.
+
+    """
 
     if split == 'train':
         subset = 'trainval'
@@ -81,6 +117,22 @@ def Pascal_VOC_2007(dataset_path, split='train', transform=transforms.ToTensor()
     return MLCPLDataset(f'Pascal VOC 2007 ({split})', dataset_path, records, num_categories, transform)
 
 def LVIS(dataset_path, split='train', transform=transforms.ToTensor()):
+    """Load the LVIS dataset.
+
+    Args:
+        dataset_path: 
+            Path to the dataset folder.
+
+        split: 
+            The sub-split of the dataset. Defaults to 'train'.
+
+        transform: 
+            Transformation applied to images. Defaults to transforms.ToTensor().
+
+    Returns:
+        A ``MLCPLDataset`` object.
+
+    """
     from lvis import LVIS
 
     if split == 'train':
@@ -111,6 +163,28 @@ def LVIS(dataset_path, split='train', transform=transforms.ToTensor()):
     return MLCPLDataset(f'LVIS ({split})', dataset_path, records, num_categories, transform)
 
 def Open_Images_V6(dataset_path, split=None, transform=transforms.ToTensor(), use_cache=True, cache_dir='output/dataset'):
+    """Load the Open Images v6 dataset.
+
+    Args:
+        dataset_path: 
+            Path to the dataset folder.
+
+        split: 
+            The sub-split of the dataset. Defaults to 'train'.
+
+        transform: 
+            Transformation applied to images. Defaults to transforms.ToTensor().
+
+        use_cache:
+            Whether saving the loaded metadata to cache. Defaults to True.
+        
+        cache_dir:
+            The path to the cache. Defaults to 'output/dataset'.
+
+    Returns:
+        A ``MLCPLDataset`` object.
+
+    """
     from pathlib import Path
     num_categories = 9605
 
@@ -167,6 +241,32 @@ def Open_Images_V6(dataset_path, split=None, transform=transforms.ToTensor(), us
         return train_dataset, valid_dataset
     
 def Open_Images_V3(dataset_path, split='train', transform=transforms.ToTensor(), use_cache=True, cache_dir='output/dataset', check_images=True):
+    """Load the Open Images v3 dataset.
+
+    Args:
+        dataset_path: 
+            Path to the dataset folder.
+
+        split: 
+            The sub-split of the dataset. Defaults to 'train'.
+
+        transform: 
+            Transformation applied to images. Defaults to transforms.ToTensor().
+
+        use_cache:
+            Whether saving the loaded metadata to cache. Defaults to True.
+        
+        cache_dir:
+            The path to the cache. Defaults to 'output/dataset'.
+
+        check_images:
+            Whether perform a check to detect if each image file in the metadata exists. Defaults to True.
+
+    Returns:
+        A ``MLCPLDataset`` object.
+
+    """
+    
     from pathlib import Path
 
     if split == 'train':
@@ -227,6 +327,25 @@ def Open_Images_V3(dataset_path, split='train', transform=transforms.ToTensor(),
     return MLCPLDataset(f'Open Images v3 ({split})', dataset_path, df_to_records(df), num_categories, transform)
 
 def CheXpert(dataset_path, split='train', competition_categories=False, transform=transforms.ToTensor()):
+    """Load the CheXpert dataset.
+
+    Args:
+        dataset_path: 
+            Path to the dataset folder.
+
+        split: 
+            The sub-split of the dataset. Defaults to 'train'.
+
+        competition_categories:
+            If True, the returned dataset only consists of 5 categories of the CheXpert competition: Atelectasis, Cardiomegaly, Consolidation, Edema, and Pleural Effusion. Defaults to False.
+
+        transform: 
+            Transformation applied to images. Defaults to transforms.ToTensor().
+
+    Returns:
+        A ``MLCPLDataset`` object.
+
+    """
 
     if split == 'train':
         subset = 'train'
@@ -276,6 +395,32 @@ def CheXpert(dataset_path, split='train', competition_categories=False, transfor
     return MLCPLDataset(f'CheXpert ({split})', dataset_path, records, num_categories, transform=transform, categories=categories)
 
 def VAW(dataset_path, vg_dataset_path, split='train', use_cache=True, cache_dir='output/dataset', transform=transforms.ToTensor()):
+    """Load the VAW dataset.
+
+    Args:
+        dataset_path: 
+            Path to the dataset folder.
+
+        vg_dataset_path: 
+            Path to the Visual Gerome dataset folder.
+
+        split: 
+            The sub-split of the dataset. Defaults to 'train'.
+
+        transform: 
+            Transformation applied to images. Defaults to transforms.ToTensor().
+
+        use_cache:
+            Whether saving the loaded metadata to cache. Defaults to True.
+        
+        cache_dir:
+            The path to the cache. Defaults to 'output/dataset'.
+
+    Returns:
+        A ``MLCPLDataset`` object.
+
+    """
+    
     from pathlib import Path
     from PIL import Image
 
@@ -345,6 +490,22 @@ def VAW(dataset_path, vg_dataset_path, split='train', use_cache=True, cache_dir=
     return MLCPLDataset(f'VAW ({split})', cache_dir, records, num_categories, transform=transform, categories=categories)
 
 def NUS_WIDE(dataset_path, split='train', transform=transforms.ToTensor()):
+    """Load the NUS-WIDE dataset.
+
+    Args:
+        dataset_path: 
+            Path to the dataset folder.
+
+        split: 
+            The sub-split of the dataset. Defaults to 'train'.
+
+        transform: 
+            Transformation applied to images. Defaults to transforms.ToTensor().
+
+    Returns:
+        A ``MLCPLDataset`` object.
+
+    """
 
     if split == 'train':
         subset = 'Train'
@@ -381,6 +542,22 @@ def NUS_WIDE(dataset_path, split='train', transform=transforms.ToTensor()):
     return MLCPLDataset(f'NUS-WIDE ({split})', dataset_path, records, num_categories, transform=transform, categories=categories)
 
 def VISPR(dataset_path, split='train', transform=transforms.ToTensor()):
+    """Load the VISPR dataset.
+
+    Args:
+        dataset_path: 
+            Path to the dataset folder.
+
+        split: 
+            The sub-split of the dataset. Defaults to 'train'.
+
+        transform: 
+            Transformation applied to images. Defaults to transforms.ToTensor().
+
+    Returns:
+        A ``MLCPLDataset`` object.
+
+    """
 
     if split == 'train':
         subset = 'train2017'
@@ -423,6 +600,22 @@ def VISPR(dataset_path, split='train', transform=transforms.ToTensor()):
     return MLCPLDataset(f'VISPR ({split})', dataset_path, records, num_categories, transform=transform, categories=categories)
 
 def Vireo_Food_172(dataset_path, split='train', transform=transforms.ToTensor()):
+    """Load the Vireo Food 172 dataset.
+
+    Args:
+        dataset_path: 
+            Path to the dataset folder.
+
+        split: 
+            The sub-split of the dataset. Defaults to 'train'.
+
+        transform: 
+            Transformation applied to images. Defaults to transforms.ToTensor().
+
+    Returns:
+        A ``MLCPLDataset`` object.
+
+    """
 
     if split == 'train':
         subset = 'TR'
@@ -457,6 +650,25 @@ def Vireo_Food_172(dataset_path, split='train', transform=transforms.ToTensor())
     return MLCPLDataset(f'Vireo Food 172 ({split})', dataset_path, records, len(categories), transform=transform, categories=categories)
 
 def VG_200(dataset_path, metadata_path=None, split='train', transform=transforms.ToTensor()):
+    """Load the VG-200 dataset.
+
+    Args:
+        dataset_path: 
+            Path to the dataset folder.
+
+        metadata_path:
+            Path to the folder of the metadata file.
+
+        split: 
+            The sub-split of the dataset. Defaults to 'train'.
+
+        transform: 
+            Transformation applied to images. Defaults to transforms.ToTensor().
+
+    Returns:
+        A ``MLCPLDataset`` object.
+
+    """
 
     if split == 'train':
         subset = 'train'

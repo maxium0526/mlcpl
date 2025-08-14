@@ -15,6 +15,9 @@ def read_jpg(img_path):
     return Image.open(img_path).convert('RGB')
 
 class MLCPLDataset(Dataset):
+    """ A subclass of the torch Dataset for partially labeled multi-label datasets.
+    """
+
     def __init__(self,
                  name: str,
                  dataset_path: str,
@@ -28,11 +31,17 @@ class MLCPLDataset(Dataset):
 
         Args:
             name (str): Dataset name
-            dataset_path (str): The absolute/relative path of the dataset folder
+
+            dataset_path (str): The absolute/relative path of the dataset folder.
+
             records (List[tuple]): In consists of information of samples. Each tuple store a sample's (id, img_path, list of positive categories, list of negative categories)
+            
             num_categories (int): The total number of categories.
+            
             transform (Callable): The transform function applied to images.
+            
             categories (List[str], optional): Categories's name. Defaults to None.
+            
             read_func (Callable, optional): The function to read an image into a PILLOW Image instance. Defaults to read_jpg.
         """
         self.name = name
@@ -83,6 +92,7 @@ class MLCPLDataset(Dataset):
 
         Args:
             pos_categories (List[int]): Positive categories
+            
             neg_categories (List[int]): Negative categories
 
         Returns:
@@ -95,6 +105,7 @@ class MLCPLDataset(Dataset):
 
         Args:
             records (List[Tuple]): In consists of information of samples. Each tuple store a sample's (id, img_path, list of positive categories, list of negative categories)
+            
             num_categories (int): The total number of categories
 
         Returns:
@@ -130,6 +141,7 @@ class MLCPLDataset(Dataset):
 
         Args:
             max_num_labels_per_category (int): The maximum number of labels for each category
+            
             seed (int, optional): The random seed. Defaults to 526.
 
         Returns:

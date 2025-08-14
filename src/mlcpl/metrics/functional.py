@@ -11,6 +11,34 @@ def partial_multilabel_average_precision(
         average: Literal['macro', 'micro', 'weighted', 'none'] = 'macro',
         thresholds=None,
         ):
+    """Compute the average precision (AP) score.
+
+    Args:
+        preds:
+            Tensor with predictions
+
+        target:
+            Tensor with true labels
+
+        average:
+            Defines the reduction that is applied over labels. Should be one of the following:
+
+            - ``micro``: Sum score over all labels
+            - ``macro``: Calculate score for each label and average them
+            - ``weighted``: calculates score for each label and computes weighted average using their support
+            - ``"none"`` or ``None``: calculates score for each label and applies no reduction
+
+        thresholds:
+            Can be one of:
+
+            - If set to `None`, will use a non-binned approach where thresholds are dynamically calculated from
+              all the data. Most accurate but also most memory consuming approach.
+            - If set to an `int` (larger than 1), will use that number of thresholds linearly spaced from
+              0 to 1 as bins for the calculation.
+            - If set to an `list` of floats, will use the indicated thresholds in the list as bins for the calculation
+            - If set to an 1d `tensor` of floats, will use the indicated thresholds in the tensor as
+              bins for the calculation.
+    """
     
     binary_metric = torchmetrics.functional.classification.binary_average_precision
     check_labels = 'p+n'
@@ -29,6 +57,33 @@ def partial_multilabel_auroc(
         average: Literal['macro', 'micro', 'weighted', 'none'] = 'macro',
         thresholds=None,
         ):
+    """Compute Area Under the Receiver Operating Characteristic Curve.
+
+    Args:
+        preds: Tensor with predictions
+
+        target: Tensor with true labels
+
+        average:
+            Defines the reduction that is applied over labels. Should be one of the following:
+
+            - ``micro``: Sum score over all labels
+            - ``macro``: Calculate score for each label and average them
+            - ``weighted``: calculates score for each label and computes weighted average using their support
+            - ``"none"`` or ``None``: calculates score for each label and applies no reduction
+
+        thresholds:
+            Can be one of:
+
+            - If set to `None`, will use a non-binned approach where thresholds are dynamically calculated from
+              all the data. Most accurate but also most memory consuming approach.
+            - If set to an `int` (larger than 1), will use that number of thresholds linearly spaced from
+              0 to 1 as bins for the calculation.
+            - If set to an `list` of floats, will use the indicated thresholds in the list as bins for the calculation
+            - If set to an 1d `tensor` of floats, will use the indicated thresholds in the tensor as
+              bins for the calculation.
+
+    """
     
     binary_metric = torchmetrics.functional.classification.binary_auroc
     check_labels = 'p+n'
@@ -48,6 +103,25 @@ def partial_multilabel_fbeta_score(
         threshold: float = 0.5,
         average: Literal['macro', 'micro', 'weighted', 'none'] = 'macro',
         ):
+    """Compute F_Beta score.
+
+    Args:
+        preds: Tensor with predictions
+
+        target: Tensor with true labels
+
+        beta: Weighting between precision and recall in calculation. Setting to 1 corresponds to equal weight
+
+        threshold: Threshold for transforming probability to binary (0,1) predictions
+
+        average:
+            Defines the reduction that is applied over labels. Should be one of the following:
+
+            - ``micro``: Sum statistics over all labels
+            - ``macro``: Calculate statistics for each label and average them
+            - ``weighted``: calculates statistics for each label and computes weighted average using their support
+            - ``"none"`` or ``None``: calculates statistic for each label and applies no reduction
+    """
     
     binary_metric = torchmetrics.functional.classification.binary_fbeta_score
     check_labels = 'p+n'
@@ -67,6 +141,24 @@ def partial_multilabel_f1_score(
         threshold: float = 0.5,
         average: Literal['macro', 'micro', 'weighted', 'none'] = 'macro',
         ):
+    """Compute F-1 score.
+
+    Args:
+        preds: Tensor with predictions
+
+        target: Tensor with true labels
+
+        threshold: Threshold for transforming probability to binary (0,1) predictions
+
+        average:
+            Defines the reduction that is applied over labels. Should be one of the following:
+
+            - ``micro``: Sum statistics over all labels
+            - ``macro``: Calculate statistics for each label and average them
+            - ``weighted``: calculates statistics for each label and computes weighted average using their support
+            - ``"none"`` or ``None``: calculates statistic for each label and applies no reduction
+
+    """
     
     binary_metric = torchmetrics.functional.classification.binary_f1_score
     check_labels = 'p+n'
@@ -85,6 +177,24 @@ def partial_multilabel_precision(
         threshold: float = 0.5,
         average: Literal['macro', 'micro', 'weighted', 'none'] = 'macro',
         ):
+    """Compute precision.
+
+    Args:
+        preds: Tensor with predictions
+
+        target: Tensor with true labels
+
+        threshold: Threshold for transforming probability to binary (0,1) predictions
+
+        average:
+            Defines the reduction that is applied over labels. Should be one of the following:
+
+            - ``micro``: Sum statistics over all labels
+            - ``macro``: Calculate statistics for each label and average them
+            - ``weighted``: calculates statistics for each label and computes weighted average using their support
+            - ``"none"`` or ``None``: calculates statistic for each label and applies no reduction
+
+    """
     
     binary_metric = torchmetrics.functional.classification.binary_precision
     check_labels = 'p+n'
@@ -103,6 +213,25 @@ def partial_multilabel_recall(
         threshold: float = 0.5,
         average: Literal['macro', 'micro', 'weighted', 'none'] = 'macro',
         ):
+
+    """Compute recall.
+
+
+    Args:
+        preds: Tensor with predictions
+
+        target: Tensor with true labels
+        
+        threshold: Threshold for transforming probability to binary (0,1) predictions
+
+        average:
+            Defines the reduction that is applied over labels. Should be one of the following:
+
+            - ``micro``: Sum statistics over all labels
+            - ``macro``: Calculate statistics for each label and average them
+            - ``weighted``: calculates statistics for each label and computes weighted average using their support
+            - ``"none"`` or ``None``: calculates statistic for each label and applies no reduction
+    """
     
     binary_metric = torchmetrics.functional.classification.binary_recall
     check_labels = 'p'
@@ -121,6 +250,23 @@ def partial_multilabel_sensitivity(
         threshold: float = 0.5,
         average: Literal['macro', 'micro', 'weighted', 'none'] = 'macro',
         ):
+    """Compute sensitivity.
+
+    Args:
+        preds: Tensor with predictions
+
+        target: Tensor with true labels
+        
+        threshold: Threshold for transforming probability to binary (0,1) predictions
+        
+        average:
+            Defines the reduction that is applied over labels. Should be one of the following:
+
+            - ``micro``: Sum statistics over all labels
+            - ``macro``: Calculate statistics for each label and average them
+            - ``weighted``: calculates statistics for each label and computes weighted average using their support
+            - ``"none"`` or ``None``: calculates statistic for each label and applies no reduction
+    """
     
     return partial_multilabel_recall(
         preds, target,
@@ -132,6 +278,23 @@ def partial_multilabel_specificity(
         threshold: float = 0.5,
         average: Literal['macro', 'micro', 'weighted', 'none'] = 'macro',
         ):
+    """Compute specificity.
+
+    Args:
+        preds: Tensor with predictions
+
+        target: Tensor with true labels
+        
+        threshold: Threshold for transforming probability to binary (0,1) predictions
+        
+        average:
+            Defines the reduction that is applied over labels. Should be one of the following:
+
+            - ``micro``: Sum statistics over all labels
+            - ``macro``: Calculate statistics for each label and average them
+            - ``weighted``: calculates statistics for each label and computes weighted average using their support
+            - ``"none"`` or ``None``: calculates statistic for each label and applies no reduction
+    """
     
     binary_metric = torchmetrics.functional.classification.binary_specificity
     check_labels = 'n'
@@ -150,6 +313,27 @@ def partial_multilabel_precision_at_fixed_recall(
         min_recall: float,
         thresholds = None,
         ):
+    """Compute the highest possible precision value given the minimum recall thresholds.
+
+    Args:
+        preds: Tensor with predictions
+
+        target: Tensor with true labels
+
+        min_recall: float value specifying minimum recall threshold.
+
+        thresholds:
+            Can be one of:
+
+            - If set to ``None``, will use a non-binned approach where thresholds are dynamically calculated from
+              all the data. Most accurate but also most memory consuming approach.
+            - If set to an ``int`` (larger than 1), will use that number of thresholds linearly spaced from
+              0 to 1 as bins for the calculation.
+            - If set to an ``list`` of floats, will use the indicated thresholds in the list as bins for the calculation
+            - If set to an 1d :class:`~torch.Tensor` of floats, will use the indicated thresholds in the tensor as
+              bins for the calculation.
+
+    """
     
     binary_metric = torchmetrics.functional.classification.binary_precision_at_fixed_recall
     check_labels = 'p+n'
@@ -170,6 +354,27 @@ def partial_multilabel_recall_at_fixed_precision(
         min_precision: float,
         thresholds = None,
         ):
+    """Compute the highest possible recall value given the minimum precision thresholds.
+
+    Args:
+        preds: Tensor with predictions
+
+        target: Tensor with true labels
+
+        min_precision: float value specifying minimum precision threshold.
+
+        thresholds:
+            Can be one of:
+
+            - If set to ``None``, will use a non-binned approach where thresholds are dynamically calculated from
+              all the data. Most accurate but also most memory consuming approach.
+            - If set to an ``int`` (larger than 1), will use that number of thresholds linearly spaced from
+              0 to 1 as bins for the calculation.
+            - If set to an ``list`` of floats, will use the indicated thresholds in the list as bins for the calculation
+            - If set to an 1d :class:`~torch.Tensor` of floats, will use the indicated thresholds in the tensor as
+              bins for the calculation.
+
+    """
     
     binary_metric = torchmetrics.functional.classification.binary_recall_at_fixed_precision
     check_labels = 'p+n'
@@ -190,6 +395,27 @@ def partial_multilabel_sensitivity_at_specificity(
         min_specificity: float,
         thresholds = None,
         ):
+    """Compute the highest possible sensitivity value given the minimum specificity thresholds.
+
+    Args:
+        preds: Tensor with predictions
+
+        target: Tensor with true labels
+
+        min_specificity: float value specifying minimum specificity threshold.
+
+        thresholds:
+            Can be one of:
+
+            - If set to ``None``, will use a non-binned approach where thresholds are dynamically calculated from
+              all the data. Most accurate but also most memory consuming approach.
+            - If set to an ``int`` (larger than 1), will use that number of thresholds linearly spaced from
+              0 to 1 as bins for the calculation.
+            - If set to an ``list`` of floats, will use the indicated thresholds in the list as bins for the calculation
+            - If set to an 1d :class:`~torch.Tensor` of floats, will use the indicated thresholds in the tensor as
+              bins for the calculation.
+
+    """
     
     binary_metric = torchmetrics.functional.classification.binary_sensitivity_at_specificity
     check_labels = 'p+n'
@@ -210,6 +436,27 @@ def partial_multilabel_specificity_at_sensitivity(
         min_sensitivity: float,
         thresholds = None,
         ):
+    """Compute the highest possible specificity value given the minimum sensitivity thresholds.
+
+    Args:
+        preds: Tensor with predictions
+
+        target: Tensor with true labels
+
+        min_sensitivity: float value specifying minimum sensitivity threshold.
+
+        thresholds:
+            Can be one of:
+
+            - If set to ``None``, will use a non-binned approach where thresholds are dynamically calculated from
+              all the data. Most accurate but also most memory consuming approach.
+            - If set to an ``int`` (larger than 1), will use that number of thresholds linearly spaced from
+              0 to 1 as bins for the calculation.
+            - If set to an ``list`` of floats, will use the indicated thresholds in the list as bins for the calculation
+            - If set to an 1d :class:`~torch.Tensor` of floats, will use the indicated thresholds in the tensor as
+              bins for the calculation.
+
+    """
     
     binary_metric = torchmetrics.functional.classification.binary_specificity_at_sensitivity
     check_labels = 'p+n'
@@ -229,6 +476,25 @@ def partial_multilabel_roc(
         preds, target,
         thresholds = None, # not tested yet
         ):
+    """Compute the Receiver Operating Characteristic Curves.
+
+    Args:
+        preds: Tensor with predictions
+
+        target: Tensor with true labels
+
+        thresholds:
+            Can be one of:
+
+            - If set to `None`, will use a non-binned approach where thresholds are dynamically calculated from
+              all the data. Most accurate but also most memory consuming approach.
+            - If set to an `int` (larger than 1), will use that number of thresholds linearly spaced from
+              0 to 1 as bins for the calculation.
+            - If set to an `list` of floats, will use the indicated thresholds in the list as bins for the calculation
+            - If set to an 1d `tensor` of floats, will use the indicated thresholds in the tensor as
+              bins for the calculation.
+
+    """
     
     binary_metric = torchmetrics.functional.classification.binary_roc
     check_labels = 'p+n'
@@ -248,6 +514,25 @@ def partial_multilabel_precision_recall_curve(
         preds, target,
         thresholds = None, # not tested yet
         ):
+    """Compute the Precision Recall Curves.
+
+    Args:
+        preds: Tensor with predictions
+
+        target: Tensor with true labels
+
+        thresholds:
+            Can be one of:
+
+            - If set to `None`, will use a non-binned approach where thresholds are dynamically calculated from
+              all the data. Most accurate but also most memory consuming approach.
+            - If set to an `int` (larger than 1), will use that number of thresholds linearly spaced from
+              0 to 1 as bins for the calculation.
+            - If set to an `list` of floats, will use the indicated thresholds in the list as bins for the calculation
+            - If set to an 1d `tensor` of floats, will use the indicated thresholds in the tensor as
+              bins for the calculation.
+
+    """
     
     binary_metric = torchmetrics.functional.classification.binary_precision_recall_curve
     check_labels = 'p+n'
@@ -268,6 +553,24 @@ def partial_multilabel_accuracy(
         threshold: float = 0.5,
         average: Literal['macro', 'micro', 'weighted', 'none'] = 'macro',
         ):
+    """Compute accuracy.
+
+
+    Args:
+        preds: Tensor with predictions
+
+        target: Tensor with true labels
+        
+        threshold: Threshold for transforming probability to binary (0,1) predictions
+        
+        average:
+            Defines the reduction that is applied over labels. Should be one of the following:
+
+            - ``micro``: Sum statistics over all labels
+            - ``macro``: Calculate statistics for each label and average them
+            - ``weighted``: calculates statistics for each label and computes weighted average using their support
+            - ``"none"`` or ``None``: calculates statistic for each label and applies no reduction
+    """
     
     binary_metric = torchmetrics.functional.classification.binary_accuracy
     check_labels = 'p/n'
@@ -310,9 +613,30 @@ def binary_calibration_error(preds, target, n_bins=15, norm='l1'):
 
 def partial_multilabel_calibration_error(
         preds, target,
+        n_bins=15,
         average: Literal['macro', 'micro', 'weighted', 'none'] = 'macro',
         norm: Literal['l1', 'l2', 'max', 'ECE', 'ACE', 'MCE'] = 'l1'
         ):
+    """Compute calibration error.
+
+    Args:
+        preds: Tensor with predictions
+
+        target: Tensor with true labels
+
+        n_bins: Number of bins to use when computing the metric.
+
+        average:
+            Defines the reduction that is applied over labels. Should be one of the following:
+
+            - ``micro``: Sum statistics over all labels
+            - ``macro``: Calculate statistics for each label and average them
+            - ``weighted``: calculates statistics for each label and computes weighted average using their support
+            - ``"none"`` or ``None``: calculates statistic for each label and applies no reduction
+
+        norm: Norm used to compare empirical and expected probability bins.
+
+    """
     
     binary_metric = binary_calibration_error
     check_labels = 'p/n'
@@ -322,33 +646,91 @@ def partial_multilabel_calibration_error(
         preds, target, 
         check_labels=check_labels,
         average=average,
+        n_bins=n_bins,
         norm=norm)
 
 def partial_multilabel_expected_calibration_error(
         preds, target,
+        n_bins=15,
         average: Literal['macro', 'micro', 'weighted', 'none'] = 'macro',
         ):
+    """Compute expected calibration error.
+
+    Args:
+        preds: Tensor with predictions
+
+        target: Tensor with true labels
+
+        n_bins: Number of bins to use when computing the metric.
+
+        average:
+            Defines the reduction that is applied over labels. Should be one of the following:
+
+            - ``micro``: Sum statistics over all labels
+            - ``macro``: Calculate statistics for each label and average them
+            - ``weighted``: calculates statistics for each label and computes weighted average using their support
+            - ``"none"`` or ``None``: calculates statistic for each label and applies no reduction
+
+    """
     
     return partial_multilabel_calibration_error(
-        preds, target, average=average, norm='ECE',
+        preds, target, average=average, norm='ECE', n_bins=n_bins,
     )
 
 def partial_multilabel_average_calibration_error(
         preds, target,
+        n_bins=15,
         average: Literal['macro', 'micro', 'weighted', 'none'] = 'macro',
         ):
+    """Compute average calibration error.
+
+    Args:
+        preds: Tensor with predictions
+
+        target: Tensor with true labels
+
+        n_bins: Number of bins to use when computing the metric.
+
+        average:
+            Defines the reduction that is applied over labels. Should be one of the following:
+
+            - ``micro``: Sum statistics over all labels
+            - ``macro``: Calculate statistics for each label and average them
+            - ``weighted``: calculates statistics for each label and computes weighted average using their support
+            - ``"none"`` or ``None``: calculates statistic for each label and applies no reduction
+
+    """
     
     return partial_multilabel_calibration_error(
-        preds, target, average=average, norm='ACE',
+        preds, target, average=average, norm='ACE', n_bins=n_bins,
     )
 
 def partial_multilabel_maximum_calibration_error(
         preds, target,
+        n_bins=15,
         average: Literal['macro', 'micro', 'weighted', 'none'] = 'macro',
         ):
+    """Compute maximum calibration error.
+
+    Args:
+        preds: Tensor with predictions
+
+        target: Tensor with true labels
+
+        n_bins: Number of bins to use when computing the metric.
+
+        average:
+            Defines the reduction that is applied over labels. Should be one of the following:
+
+            - ``micro``: Sum statistics over all labels
+            - ``macro``: Calculate statistics for each label and average them
+            - ``weighted``: calculates statistics for each label and computes weighted average using their support
+            - ``"none"`` or ``None``: calculates statistic for each label and applies no reduction
+
+    """
     
     return partial_multilabel_calibration_error(
-        preds, target, average=average, norm='MCE',
+        preds, target, average=average, norm='MCE', n_bins=n_bins,
     )
 
 def partial_multilabel_cohen_kappa(
@@ -357,6 +739,31 @@ def partial_multilabel_cohen_kappa(
         average: Literal['macro', 'micro', 'weighted', 'none'] = 'macro',
         weights: Literal['linear', 'quadratic', 'none'] = 'none',
         ):
+    """Calculate Cohen's kappa score.
+
+
+    Args:
+        preds: Tensor with predictions
+
+        target: Tensor with true labels
+
+        threshold: Threshold for transforming probability to binary (0,1) predictions
+
+        average:
+            Defines the reduction that is applied over labels. Should be one of the following:
+
+            - ``micro``: Sum statistics over all labels
+            - ``macro``: Calculate statistics for each label and average them
+            - ``weighted``: calculates statistics for each label and computes weighted average using their support
+            - ``"none"`` or ``None``: calculates statistic for each label and applies no reduction
+
+        weights: Weighting type to calculate the score. Choose from:
+
+            - ``None`` or ``'none'``: no weighting
+            - ``'linear'``: linear weighting
+            - ``'quadratic'``: quadratic weighting
+
+    """
     
     binary_metric = torchmetrics.functional.classification.binary_cohen_kappa
     check_labels = 'p+n'
@@ -376,6 +783,26 @@ def partial_multilabel_confusion_matrix(
         threshold: float = 0.5,
         normalize: Literal['none', 'true', 'pred', 'all'] = 'none',
         ):
+    """Compute the `confusion matrix`.
+
+    Args:
+        preds: Tensor with predictions
+
+        target: Tensor with true labels
+
+        threshold: Threshold for transforming probability to binary (0,1) predictions
+
+        normalize: Normalization mode for confusion matrix. Choose from:
+
+            - ``None`` or ``'none'``: no normalization (default)
+            - ``'true'``: normalization over the targets (most commonly used)
+            - ``'pred'``: normalization over the predictions
+            - ``'all'``: normalization over the whole matrix
+
+    Returns:
+        A ``[num_labels, 2, 2]`` tensor
+
+    """
     
     num_categories = preds.shape[1]
     
@@ -422,6 +849,30 @@ def partial_multilabel_dice(
         threshold: float = 0.5,
         average: Literal['macro', 'micro', 'weighted', 'samples', 'none'] = 'micro',
         ):
+    """Compute Dice.
+
+    Args:
+        preds: Predictions from model (probabilities, logits or labels)
+
+        target: Ground truth values
+        
+        zero_division: The value to use for the score if denominator equals zero
+
+        average:
+            Defines the reduction that is applied. Should be one of the following:
+
+            - ``'micro'`` [default]: Calculate the metric globally, across all samples and classes.
+            - ``'macro'``: Calculate the metric for each class separately, and average the
+              metrics across classes (with equal weights for each class).
+            - ``'weighted'``: Calculate the metric for each class separately, and average the
+              metrics across classes, weighting each class by its support (``tp + fn``).
+            - ``'none'`` or ``None``: Calculate the metric for each class separately, and return
+              the metric for every class.
+            - ``'samples'``: Calculate the metric for each sample, and average the metrics
+              across samples (with equal weights for each sample).
+
+
+    """
     
     binary_metric = torchmetrics.functional.classification.dice
     check_labels = 'p+n'
@@ -448,6 +899,17 @@ def partial_multilabel_exact_match(
         preds, target,
         threshold: float = 0.5,
         ):
+    """Compute Exact match (also known as subset accuracy).
+
+
+    Args:
+        preds: Tensor with predictions
+
+        target: Tensor with true labels
+
+        threshold: Threshold for transforming probability to binary (0,1) predictions
+
+    """
     
     preds = torch.sigmoid(preds)
 
@@ -474,6 +936,25 @@ def partial_multilabel_hamming_distance(
         average: Literal['macro', 'micro', 'weighted', 'none'] = 'macro',
         ):
     
+    """Compute hamming distance.
+
+
+    Args:
+        preds: Tensor with predictions
+
+        target: Tensor with true labels
+        
+        threshold: Threshold for transforming probability to binary (0,1) predictions
+        
+        average:
+            Defines the reduction that is applied over labels. Should be one of the following:
+
+            - ``micro``: Sum statistics over all labels
+            - ``macro``: Calculate statistics for each label and average them
+            - ``weighted``: calculates statistics for each label and computes weighted average using their support
+            - ``"none"`` or ``None``: calculates statistic for each label and applies no reduction
+    """
+    
     binary_metric = torchmetrics.functional.classification.binary_hamming_distance
     check_labels = 'p/n'
 
@@ -491,6 +972,25 @@ def partial_multilabel_hinge_loss(
         squared: bool = False,
         average: Literal['macro', 'micro', 'weighted', 'none'] = 'macro',
         ):
+    """Compute the mean Hinge loss typically used for Support Vector Machines.
+
+    Args:
+        preds: Tensor with predictions
+
+        target: Tensor with true labels
+
+        squared:
+            If True, this will compute the squared hinge loss. Otherwise, computes the regular hinge loss.
+
+        average:
+            Defines the reduction that is applied over labels. Should be one of the following:
+
+            - ``micro``: Sum statistics over all labels
+            - ``macro``: Calculate statistics for each label and average them
+            - ``weighted``: calculates statistics for each label and computes weighted average using their support
+            - ``"none"`` or ``None``: calculates statistic for each label and applies no reduction
+
+    """
     
     binary_metric = torchmetrics.functional.classification.binary_hinge_loss
     check_labels = 'p/n'
@@ -509,6 +1009,23 @@ def partial_multilabel_jaccard_index(
         threshold: float = 0.5,
         average: Literal['macro', 'micro', 'weighted', 'none'] = 'macro',
         ):
+    """Compute jaccard index score.
+
+    Args:
+        preds: Tensor with predictions
+
+        target: Tensor with true labels
+        
+        threshold: Threshold for transforming probability to binary (0,1) predictions
+        
+        average:
+            Defines the reduction that is applied over labels. Should be one of the following:
+
+            - ``micro``: Sum statistics over all labels
+            - ``macro``: Calculate statistics for each label and average them
+            - ``weighted``: calculates statistics for each label and computes weighted average using their support
+            - ``"none"`` or ``None``: calculates statistic for each label and applies no reduction
+    """
     
     binary_metric = torchmetrics.functional.classification.binary_jaccard_index
     check_labels = 'p/n'
@@ -525,6 +1042,14 @@ def partial_multilabel_jaccard_index(
 def partial_multilabel_ranking_average_precision(
         preds, target,
         ):
+    """Compute ranking average precision.
+
+    Args:
+        preds: Tensor with predictions
+
+        target: Tensor with true labels
+        
+    """
     return torchmetrics.functional.classification.multilabel_ranking_average_precision(
         preds, target,
         num_labels=preds.shape[1],
@@ -534,6 +1059,14 @@ def partial_multilabel_ranking_average_precision(
 def partial_multilabel_ranking_loss(
         preds, target,
         ):
+    """Compute multilabel ranking loss.
+
+
+    Args:
+        preds: Tensor with predictions
+
+        target: Tensor with true labels
+    """
     
     scores = torch.zeros(preds.shape[0])
     for i, (pred, label) in enumerate(zip(preds, target)):
@@ -551,6 +1084,17 @@ def partial_multilabel_matthews_corrcoef(
         preds, target,
         threshold: float = 0.5,
         ):
+    
+    """Compute mattews correlation coefficient.
+
+    Args:
+        preds: Tensor with predictions
+
+        target: Tensor with true labels
+        
+        threshold: Threshold for transforming probability to binary (0,1) predictions
+        
+    """
     
     check_labels = 'p/n'
 

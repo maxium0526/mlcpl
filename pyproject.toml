@@ -40,6 +40,8 @@ explicit = true
 [dependency-groups]
 dev = [
     "pytest>=8.3.5",
+    "sphinx>=7.1.2",
+    "sphinx-press-theme",
 ]
 [tool.pytest.ini_options]
 testpaths = ["tests"]

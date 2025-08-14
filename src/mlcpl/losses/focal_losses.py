@@ -9,6 +9,18 @@ def PartialNegativeBCEWithLogitLoss(
     normalize: bool = False,
     reduction: Literal['mean', 'sum', 'none'] = 'mean',
 ):
+    """ Get the binary crossentropy loss function that treats unknown labels as negative.
+
+    Args:
+        alpha_pos (float, optional): The weight of the positive loss term. Defaults to 1.
+
+        alpha_neg (float, optional): The weight of the negative loss term. Defaults to 1.
+        
+        normalize (bool, optional): Whether applying normalization to the losses (https://arxiv.org/pdf/1902.09720.pdfs). Defaults to False.
+
+        reduction (str, optional): Specifies the reduction to apply to the output: ``'none'`` | ``'mean'`` | ``'sum'``. ``'none'``: no reduction will be applied, ``'mean'``: the sum of the output will be divided by the number of elements in the output, ``'sum'``: the output will be summed. Defaults to ``'mean'``.
+
+    """
     return PartialLoss(
         lossfn_pos = FocalLossTerm(alpha_pos),
         lossfn_neg = FocalLossTerm(alpha_neg),
@@ -24,6 +36,18 @@ def PartialBCEWithLogitLoss(
     normalize: bool = False,
     reduction: Literal['mean', 'sum', 'none'] = 'mean',
 ):
+    """ Get the binary crossentropy loss function that ignores unknown labels (0 gradient).
+
+    Args:
+        alpha_pos (float, optional): The weight of the positive loss term. Defaults to 1.
+
+        alpha_neg (float, optional): The weight of the negative loss term. Defaults to 1.
+        
+        normalize (bool, optional): Whether applying normalization to the losses (https://arxiv.org/pdf/1902.09720.pdfs). Defaults to False.
+
+        reduction (str, optional): Specifies the reduction to apply to the output: ``'none'`` | ``'mean'`` | ``'sum'``. ``'none'``: no reduction will be applied, ``'mean'``: the sum of the output will be divided by the number of elements in the output, ``'sum'``: the output will be summed. Defaults to ``'mean'``.
+
+    """
     return PartialLoss(
         lossfn_pos = FocalLossTerm(alpha_pos),
         lossfn_neg = FocalLossTerm(alpha_neg),
@@ -42,6 +66,24 @@ def PartialSelectiveBCEWithLogitLoss(
     likelihood_topk: int = 5,
     prior_threshold: float = 0.05,
 ):
+    """ Get the class-aware selective loss function with binary crossentropy (https://arxiv.org/abs/2110.10955).
+
+    Args:
+        alpha_pos (float, optional): The weight of the positive loss term. Defaults to 1.
+
+        alpha_neg (float, optional): The weight of the negative loss term. Defaults to 1.
+        
+        normalize (bool, optional): Whether applying normalization to the losses (https://arxiv.org/pdf/1902.09720.pdfs). Defaults to False.
+
+        reduction (str, optional): Specifies the reduction to apply to the output: ``'none'`` | ``'mean'`` | ``'sum'``. ``'none'``: no reduction will be applied, ``'mean'``: the sum of the output will be divided by the number of elements in the output, ``'sum'``: the output will be summed. Defaults to ``'mean'``.
+
+        label_priors (Tensor, optional): The label priors of the class-aware selective loss. Default to ``None``.
+
+        likelihood_topk (int, optional): The Top-K likelihood of the class-aware selective loss. Default to ``5``.
+
+        prior_threshold (float, optional): The threshold that determine the mode used for each category. Default to ``0.05``.
+
+    """
     return PartialLoss(
         lossfn_pos = FocalLossTerm(alpha_pos),
         lossfn_neg = FocalLossTerm(alpha_neg),
@@ -63,6 +105,22 @@ def PartialNegativeFocalWithLogitLoss(
     discard_focal_grad: bool = True,
     reduction: Literal['mean', 'sum', 'none'] = 'mean',
 ):
+    """ Get the focal loss function that treats unknown labels as negative.
+
+    Args:
+        gamma (float, optional): The focal term. Defaults to 1.
+
+        alpha_pos (float, optional): The weight of the positive loss term. Defaults to 1.
+
+        alpha_neg (float, optional): The weight of the negative loss term. Defaults to 1.
+        
+        normalize (bool, optional): Whether applying normalization to the losses (https://arxiv.org/pdf/1902.09720.pdfs). Defaults to False.
+
+        discard_focal_grad: Whether discarding the gradient of the focal term. Defaults to True.
+
+        reduction (str, optional): Specifies the reduction to apply to the output: ``'none'`` | ``'mean'`` | ``'sum'``. ``'none'``: no reduction will be applied, ``'mean'``: the sum of the output will be divided by the number of elements in the output, ``'sum'``: the output will be summed. Defaults to ``'mean'``.
+
+    """
     return PartialLoss(
         lossfn_pos = FocalLossTerm(alpha_pos, gamma, discard_focal_grad=discard_focal_grad),
         lossfn_neg = FocalLossTerm(alpha_neg, gamma, discard_focal_grad=discard_focal_grad),
@@ -80,6 +138,22 @@ def PartialFocalWithLogitLoss(
     discard_focal_grad: bool = True,
     reduction: Literal['mean', 'sum', 'none'] = 'mean',
 ):
+    """ Get the focal loss function that ignores unknown labels (0 gradient).
+
+    Args:
+        gamma (float, optional): The focal term. Defaults to 1.
+
+        alpha_pos (float, optional): The weight of the positive loss term. Defaults to 1.
+
+        alpha_neg (float, optional): The weight of the negative loss term. Defaults to 1.
+        
+        normalize (bool, optional): Whether applying normalization to the losses (https://arxiv.org/pdf/1902.09720.pdfs). Defaults to False.
+
+        discard_focal_grad: Whether discarding the gradient of the focal term. Defaults to True.
+
+        reduction (str, optional): Specifies the reduction to apply to the output: ``'none'`` | ``'mean'`` | ``'sum'``. ``'none'``: no reduction will be applied, ``'mean'``: the sum of the output will be divided by the number of elements in the output, ``'sum'``: the output will be summed. Defaults to ``'mean'``.
+
+    """
     return PartialLoss(
         lossfn_pos = FocalLossTerm(alpha_pos, gamma, discard_focal_grad=discard_focal_grad),
         lossfn_neg = FocalLossTerm(alpha_neg, gamma, discard_focal_grad=discard_focal_grad),
@@ -100,6 +174,28 @@ def PartialSelectiveFocalWithLogitLoss(
     likelihood_topk: int = 5,
     prior_threshold: float = 0.05,
 ):
+    """ Get the class-aware selective loss function with focal (https://arxiv.org/abs/2110.10955).
+
+    Args:
+        gamma (float, optional): The focal term. Defaults to 1.
+
+        alpha_pos (float, optional): The weight of the positive loss term. Defaults to 1.
+
+        alpha_neg (float, optional): The weight of the negative loss term. Defaults to 1.
+        
+        normalize (bool, optional): Whether applying normalization to the losses (https://arxiv.org/pdf/1902.09720.pdfs). Defaults to False.
+
+        discard_focal_grad: Whether discarding the gradient of the focal term. Defaults to True.
+
+        reduction (str, optional): Specifies the reduction to apply to the output: ``'none'`` | ``'mean'`` | ``'sum'``. ``'none'``: no reduction will be applied, ``'mean'``: the sum of the output will be divided by the number of elements in the output, ``'sum'``: the output will be summed. Defaults to ``'mean'``.
+
+        label_priors (Tensor, optional): The label priors of the class-aware selective loss. Default to ``None``.
+
+        likelihood_topk (int, optional): The Top-K likelihood of the class-aware selective loss. Default to ``5``.
+
+        prior_threshold (float, optional): The threshold that determine the mode used for each category. Default to ``0.05``.
+
+    """
     return PartialLoss(
         lossfn_pos = FocalLossTerm(alpha_pos, gamma, discard_focal_grad=discard_focal_grad),
         lossfn_neg = FocalLossTerm(alpha_neg, gamma, discard_focal_grad=discard_focal_grad),
@@ -123,6 +219,26 @@ def PartialNegativeAsymmetricWithLogitLoss(
     discard_focal_grad: bool = True,
     reduction: Literal['mean', 'sum', 'none'] = 'mean',
 ):
+    """ Get the asymmetric loss function that treats unknown labels as negative (https://openaccess.thecvf.com/content/ICCV2021/html/Ridnik_Asymmetric_Loss_for_Multi-Label_Classification_ICCV_2021_paper.html).
+
+    Args:
+        clip (float, optional): The threshold that discards easy negative labels.
+
+        gamma_pos (float, optional): The focal term of the positive loss term. Defaults to 1.
+
+        gamma_neg (float, optional): The focal term of the negative loss term. Defaults to 1.
+
+        alpha_pos (float, optional): The weight of the positive loss term. Defaults to 1.
+
+        alpha_neg (float, optional): The weight of the negative loss term. Defaults to 1.
+        
+        normalize (bool, optional): Whether applying normalization to the losses (https://arxiv.org/pdf/1902.09720.pdfs). Defaults to False.
+
+        discard_focal_grad: Whether discarding the gradient of the focal term. Defaults to True.
+
+        reduction (str, optional): Specifies the reduction to apply to the output: ``'none'`` | ``'mean'`` | ``'sum'``. ``'none'``: no reduction will be applied, ``'mean'``: the sum of the output will be divided by the number of elements in the output, ``'sum'``: the output will be summed. Defaults to ``'mean'``.
+
+    """
     return PartialLoss(
         lossfn_pos = FocalLossTerm(alpha_pos, gamma_pos, discard_focal_grad=discard_focal_grad),
         lossfn_neg = FocalLossTerm(alpha_neg, gamma_neg, clip, discard_focal_grad=discard_focal_grad),
@@ -142,6 +258,26 @@ def PartialAsymmetricWithLogitLoss(
     discard_focal_grad: bool = True,
     reduction: Literal['mean', 'sum', 'none'] = 'mean',
 ):
+    """ Get the asymmetric loss function that ignores unknown labels (0 gradient) (https://openaccess.thecvf.com/content/ICCV2021/html/Ridnik_Asymmetric_Loss_for_Multi-Label_Classification_ICCV_2021_paper.html).
+
+    Args:
+        clip (float, optional): The threshold that discards easy negative labels.
+
+        gamma_pos (float, optional): The focal term of the positive loss term. Defaults to 1.
+
+        gamma_neg (float, optional): The focal term of the negative loss term. Defaults to 1.
+
+        alpha_pos (float, optional): The weight of the positive loss term. Defaults to 1.
+
+        alpha_neg (float, optional): The weight of the negative loss term. Defaults to 1.
+        
+        normalize (bool, optional): Whether applying normalization to the losses (https://arxiv.org/pdf/1902.09720.pdfs). Defaults to False.
+
+        discard_focal_grad: Whether discarding the gradient of the focal term. Defaults to True.
+
+        reduction (str, optional): Specifies the reduction to apply to the output: ``'none'`` | ``'mean'`` | ``'sum'``. ``'none'``: no reduction will be applied, ``'mean'``: the sum of the output will be divided by the number of elements in the output, ``'sum'``: the output will be summed. Defaults to ``'mean'``.
+
+    """
     return PartialLoss(
         lossfn_pos = FocalLossTerm(alpha_pos, gamma_pos, discard_focal_grad=discard_focal_grad),
         lossfn_neg = FocalLossTerm(alpha_neg, gamma_neg, clip, discard_focal_grad=discard_focal_grad),
@@ -164,6 +300,32 @@ def PartialSelectiveAsymmetricWithLogitLoss(
     likelihood_topk: int = 5,
     prior_threshold: float = 0.05,
 ):
+    """ Get the class-aware selective loss function with asymmetric (https://arxiv.org/abs/2110.10955).
+
+    Args:
+        clip (float, optional): The threshold that discards easy negative labels.
+
+        gamma_pos (float, optional): The focal term of the positive loss term. Defaults to 1.
+
+        gamma_neg (float, optional): The focal term of the negative loss term. Defaults to 1.
+
+        alpha_pos (float, optional): The weight of the positive loss term. Defaults to 1.
+
+        alpha_neg (float, optional): The weight of the negative loss term. Defaults to 1.
+        
+        normalize (bool, optional): Whether applying normalization to the losses (https://arxiv.org/pdf/1902.09720.pdfs). Defaults to False.
+
+        discard_focal_grad: Whether discarding the gradient of the focal term. Defaults to True.
+
+        reduction (str, optional): Specifies the reduction to apply to the output: ``'none'`` | ``'mean'`` | ``'sum'``. ``'none'``: no reduction will be applied, ``'mean'``: the sum of the output will be divided by the number of elements in the output, ``'sum'``: the output will be summed. Defaults to ``'mean'``.
+
+        label_priors (Tensor, optional): The label priors of the class-aware selective loss. Default to ``None``.
+
+        likelihood_topk (int, optional): The Top-K likelihood of the class-aware selective loss. Default to ``5``.
+
+        prior_threshold (float, optional): The threshold that determine the mode used for each category. Default to ``0.05``.
+
+    """
     return PartialLoss(
         lossfn_pos = FocalLossTerm(alpha_pos, gamma_pos, discard_focal_grad=discard_focal_grad),
         lossfn_neg = FocalLossTerm(alpha_neg, gamma_neg, clip, discard_focal_grad=discard_focal_grad),

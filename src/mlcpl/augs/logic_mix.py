@@ -38,7 +38,28 @@ def logic_mix_target(target, unknown_as=None):
     return new_target
 
 class LogicMix(torch.utils.data.Dataset):
+    """Implementation of LogicMix.
+
+    """
     def __init__(self, dataset, probability=1, k_min=2, k_max=3, transform=None):
+        """Initialization
+
+        Args:
+            dataset:
+                The ``'MLCPLDataset'`` to be applied.
+
+            probability:
+                A hyperparameter. Defaults to 1.
+
+            k_min: 
+                A hyperparameter. Defaults to 2.
+
+            k_max: 
+                A hyperparameter. Defaults to 3.
+
+            transform: 
+                Optional transformation applied to augment images. Defaults to None.
+        """
         self.dataset = dataset
         self.probability = probability
         self.k_min = k_min
