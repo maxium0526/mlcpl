@@ -1,0 +1,879 @@
+<!DOCTYPE html>
+<html  lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1"><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+      <title>Metrics</title>
+    
+          <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+          <link rel="stylesheet" href="_static/theme.css " type="text/css" />
+      
+      <!-- sphinx script_files -->
+        <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js?v=b3ba4146"></script>
+        <script src="_static/doctools.js?v=888ff710"></script>
+        <script src="_static/sphinx_highlight.js?v=4825356b"></script>
+
+      
+      <!-- bundled in js (rollup iife) -->
+      <!-- <script src="_static/theme-vendors.js"></script> -->
+      <script src="_static/theme.js" defer></script>
+    
+  <link rel="index" title="Index" href="genindex.html" />
+  <link rel="search" title="Search" href="search.html" />
+  <link rel="next" title="Datasets" href="datasets.html" />
+  <link rel="prev" title="Loss Functions" href="loss_functions.html" /> 
+  </head>
+
+  <body>
+    <div id="app">
+    <div class="theme-container" :class="pageClasses"><navbar @toggle-sidebar="toggleSidebar">
+  <router-link to="index.html" class="home-link">
+    
+      <span class="site-name">mlcpl</span>
+    
+  </router-link>
+
+  <div class="links">
+    <navlinks class="can-hide">
+
+  
+    <div class="nav-item">
+      <a href="index.html#welcome-to-mlcpl-s-api-documentation"
+         class="nav-link ">
+         Contents:
+      </a>
+    </div>
+  
+    <div class="nav-item">
+      <a href="index.html#contents"
+         class="nav-link  router-link-active">
+         contents
+      </a>
+    </div>
+  
+
+
+
+    </navlinks>
+  </div>
+</navbar>
+
+      
+      <div class="sidebar-mask" @click="toggleSidebar(false)">
+      </div>
+        <sidebar @toggle-sidebar="toggleSidebar">
+          
+          <navlinks>
+            
+
+  
+    <div class="nav-item">
+      <a href="index.html#welcome-to-mlcpl-s-api-documentation"
+         class="nav-link ">
+         Contents:
+      </a>
+    </div>
+  
+    <div class="nav-item">
+      <a href="index.html#contents"
+         class="nav-link  router-link-active">
+         contents
+      </a>
+    </div>
+  
+
+
+
+            
+          </navlinks><div id="searchbox" class="searchbox" role="search">
+  <div class="caption"><span class="caption-text">Quick search</span>
+    <div class="searchformwrapper">
+      <form class="search" action="search.html" method="get">
+        <input type="text" name="q" />
+        <input type="submit" value="Search" />
+        <input type="hidden" name="check_keywords" value="yes" />
+        <input type="hidden" name="area" value="default" />
+      </form>
+    </div>
+  </div>
+</div><div class="sidebar-links" role="navigation" aria-label="main navigation">
+  
+    <div class="sidebar-group">
+      <p class="caption">
+        <span class="caption-text"><a href="index.html#welcome-to-mlcpl-s-api-documentation">Contents:</a></span>
+      </p>
+      <ul class="">
+        
+      </ul>
+    </div>
+  
+    <div class="sidebar-group">
+      <p class="caption">
+        <span class="caption-text"><a href="index.html#contents">contents</a></span>
+      </p>
+      <ul class="current">
+        
+          <li class="toctree-l1 ">
+            
+              <a href="loss_functions.html" class="reference internal ">Loss Functions</a>
+            
+
+            
+          </li>
+
+        
+          <li class="toctree-l1 current">
+            
+              <a href="#" class="reference internal current">Metrics</a>
+            
+
+            
+              <ul>
+                
+                  <li class="toctree-l2"><a href="#metrics" class="reference internal">Metrics</a></li>
+                
+              </ul>
+            
+          </li>
+
+        
+          <li class="toctree-l1 ">
+            
+              <a href="datasets.html" class="reference internal ">Datasets</a>
+            
+
+            
+          </li>
+
+        
+          <li class="toctree-l1 ">
+            
+              <a href="data_augmentations.html" class="reference internal ">Data Augmentations</a>
+            
+
+            
+          </li>
+
+        
+          <li class="toctree-l1 ">
+            
+              <a href="pseudo_labeling.html" class="reference internal ">Pseudo Labeling</a>
+            
+
+            
+          </li>
+
+        
+      </ul>
+    </div>
+  
+</div>
+        </sidebar>
+
+      <page>
+          <div class="body-header" role="navigation" aria-label="navigation">
+  
+  <ul class="breadcrumbs">
+    <li><a href="index.html">Docs</a> &raquo;</li>
+    
+    <li>Metrics</li>
+  </ul>
+  
+
+  <ul class="page-nav">
+  <li class="prev">
+    <a href="loss_functions.html"
+       title="previous chapter">← Loss Functions</a>
+  </li>
+  <li class="next">
+    <a href="datasets.html"
+       title="next chapter">Datasets →</a>
+  </li>
+</ul>
+  
+</div>
+<hr>
+          <div class="content" role="main" v-pre>
+            
+  <section id="metrics">
+<h1>Metrics<a class="headerlink" href="#metrics" title="Permalink to this heading">¶</a></h1>
+<p>For more information, see <a class="reference external" href="https://lightning.ai/docs/torchmetrics/v1.5.2/classification/hinge_loss.html#binary-hinge-loss">https://lightning.ai/docs/torchmetrics/v1.5.2/classification/hinge_loss.html#binary-hinge-loss</a>.</p>
+<dl class="py function">
+<dt class="sig sig-object py" id="mlcpl.metrics.partial_multilabel_average_precision">
+<span class="sig-prename descclassname"><span class="pre">mlcpl.metrics.</span></span><span class="sig-name descname"><span class="pre">partial_multilabel_average_precision</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">preds</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">target</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">average</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Literal</span><span class="p"><span class="pre">[</span></span><span class="s"><span class="pre">'macro'</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="s"><span class="pre">'micro'</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="s"><span class="pre">'weighted'</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="s"><span class="pre">'none'</span></span><span class="p"><span class="pre">]</span></span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">'macro'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">thresholds</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#mlcpl.metrics.partial_multilabel_average_precision" title="Permalink to this definition">¶</a></dt>
+<dd><p>Compute the average precision (AP) score.</p>
+<dl class="simple">
+<dt>Args:</dt><dd><dl class="simple">
+<dt>preds:</dt><dd><p>Tensor with predictions</p>
+</dd>
+<dt>target:</dt><dd><p>Tensor with true labels</p>
+</dd>
+<dt>average:</dt><dd><p>Defines the reduction that is applied over labels. Should be one of the following:</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">micro</span></code>: Sum score over all labels</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">macro</span></code>: Calculate score for each label and average them</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">weighted</span></code>: calculates score for each label and computes weighted average using their support</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">&quot;none&quot;</span></code> or <code class="docutils literal notranslate"><span class="pre">None</span></code>: calculates score for each label and applies no reduction</p></li>
+</ul>
+</dd>
+<dt>thresholds:</dt><dd><p>Can be one of:</p>
+<ul class="simple">
+<li><p>If set to <cite>None</cite>, will use a non-binned approach where thresholds are dynamically calculated from
+all the data. Most accurate but also most memory consuming approach.</p></li>
+<li><p>If set to an <cite>int</cite> (larger than 1), will use that number of thresholds linearly spaced from
+0 to 1 as bins for the calculation.</p></li>
+<li><p>If set to an <cite>list</cite> of floats, will use the indicated thresholds in the list as bins for the calculation</p></li>
+<li><p>If set to an 1d <cite>tensor</cite> of floats, will use the indicated thresholds in the tensor as
+bins for the calculation.</p></li>
+</ul>
+</dd>
+</dl>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="mlcpl.metrics.partial_multilabel_auroc">
+<span class="sig-prename descclassname"><span class="pre">mlcpl.metrics.</span></span><span class="sig-name descname"><span class="pre">partial_multilabel_auroc</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">preds</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">target</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">average</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Literal</span><span class="p"><span class="pre">[</span></span><span class="s"><span class="pre">'macro'</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="s"><span class="pre">'micro'</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="s"><span class="pre">'weighted'</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="s"><span class="pre">'none'</span></span><span class="p"><span class="pre">]</span></span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">'macro'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">thresholds</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#mlcpl.metrics.partial_multilabel_auroc" title="Permalink to this definition">¶</a></dt>
+<dd><p>Compute Area Under the Receiver Operating Characteristic Curve.</p>
+<dl>
+<dt>Args:</dt><dd><p>preds: Tensor with predictions</p>
+<p>target: Tensor with true labels</p>
+<dl class="simple">
+<dt>average:</dt><dd><p>Defines the reduction that is applied over labels. Should be one of the following:</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">micro</span></code>: Sum score over all labels</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">macro</span></code>: Calculate score for each label and average them</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">weighted</span></code>: calculates score for each label and computes weighted average using their support</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">&quot;none&quot;</span></code> or <code class="docutils literal notranslate"><span class="pre">None</span></code>: calculates score for each label and applies no reduction</p></li>
+</ul>
+</dd>
+<dt>thresholds:</dt><dd><p>Can be one of:</p>
+<ul class="simple">
+<li><p>If set to <cite>None</cite>, will use a non-binned approach where thresholds are dynamically calculated from
+all the data. Most accurate but also most memory consuming approach.</p></li>
+<li><p>If set to an <cite>int</cite> (larger than 1), will use that number of thresholds linearly spaced from
+0 to 1 as bins for the calculation.</p></li>
+<li><p>If set to an <cite>list</cite> of floats, will use the indicated thresholds in the list as bins for the calculation</p></li>
+<li><p>If set to an 1d <cite>tensor</cite> of floats, will use the indicated thresholds in the tensor as
+bins for the calculation.</p></li>
+</ul>
+</dd>
+</dl>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="mlcpl.metrics.partial_multilabel_fbeta_score">
+<span class="sig-prename descclassname"><span class="pre">mlcpl.metrics.</span></span><span class="sig-name descname"><span class="pre">partial_multilabel_fbeta_score</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">preds</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">target</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">beta</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">1.0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">threshold</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">0.5</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">average</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Literal</span><span class="p"><span class="pre">[</span></span><span class="s"><span class="pre">'macro'</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="s"><span class="pre">'micro'</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="s"><span class="pre">'weighted'</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="s"><span class="pre">'none'</span></span><span class="p"><span class="pre">]</span></span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">'macro'</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#mlcpl.metrics.partial_multilabel_fbeta_score" title="Permalink to this definition">¶</a></dt>
+<dd><p>Compute F_Beta score.</p>
+<dl>
+<dt>Args:</dt><dd><p>preds: Tensor with predictions</p>
+<p>target: Tensor with true labels</p>
+<p>beta: Weighting between precision and recall in calculation. Setting to 1 corresponds to equal weight</p>
+<p>threshold: Threshold for transforming probability to binary (0,1) predictions</p>
+<dl class="simple">
+<dt>average:</dt><dd><p>Defines the reduction that is applied over labels. Should be one of the following:</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">micro</span></code>: Sum statistics over all labels</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">macro</span></code>: Calculate statistics for each label and average them</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">weighted</span></code>: calculates statistics for each label and computes weighted average using their support</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">&quot;none&quot;</span></code> or <code class="docutils literal notranslate"><span class="pre">None</span></code>: calculates statistic for each label and applies no reduction</p></li>
+</ul>
+</dd>
+</dl>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="mlcpl.metrics.partial_multilabel_f1_score">
+<span class="sig-prename descclassname"><span class="pre">mlcpl.metrics.</span></span><span class="sig-name descname"><span class="pre">partial_multilabel_f1_score</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">preds</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">target</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">threshold</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">0.5</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">average</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Literal</span><span class="p"><span class="pre">[</span></span><span class="s"><span class="pre">'macro'</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="s"><span class="pre">'micro'</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="s"><span class="pre">'weighted'</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="s"><span class="pre">'none'</span></span><span class="p"><span class="pre">]</span></span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">'macro'</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#mlcpl.metrics.partial_multilabel_f1_score" title="Permalink to this definition">¶</a></dt>
+<dd><p>Compute F-1 score.</p>
+<dl>
+<dt>Args:</dt><dd><p>preds: Tensor with predictions</p>
+<p>target: Tensor with true labels</p>
+<p>threshold: Threshold for transforming probability to binary (0,1) predictions</p>
+<dl class="simple">
+<dt>average:</dt><dd><p>Defines the reduction that is applied over labels. Should be one of the following:</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">micro</span></code>: Sum statistics over all labels</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">macro</span></code>: Calculate statistics for each label and average them</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">weighted</span></code>: calculates statistics for each label and computes weighted average using their support</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">&quot;none&quot;</span></code> or <code class="docutils literal notranslate"><span class="pre">None</span></code>: calculates statistic for each label and applies no reduction</p></li>
+</ul>
+</dd>
+</dl>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="mlcpl.metrics.partial_multilabel_precision">
+<span class="sig-prename descclassname"><span class="pre">mlcpl.metrics.</span></span><span class="sig-name descname"><span class="pre">partial_multilabel_precision</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">preds</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">target</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">threshold</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">0.5</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">average</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Literal</span><span class="p"><span class="pre">[</span></span><span class="s"><span class="pre">'macro'</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="s"><span class="pre">'micro'</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="s"><span class="pre">'weighted'</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="s"><span class="pre">'none'</span></span><span class="p"><span class="pre">]</span></span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">'macro'</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#mlcpl.metrics.partial_multilabel_precision" title="Permalink to this definition">¶</a></dt>
+<dd><p>Compute precision.</p>
+<dl>
+<dt>Args:</dt><dd><p>preds: Tensor with predictions</p>
+<p>target: Tensor with true labels</p>
+<p>threshold: Threshold for transforming probability to binary (0,1) predictions</p>
+<dl class="simple">
+<dt>average:</dt><dd><p>Defines the reduction that is applied over labels. Should be one of the following:</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">micro</span></code>: Sum statistics over all labels</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">macro</span></code>: Calculate statistics for each label and average them</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">weighted</span></code>: calculates statistics for each label and computes weighted average using their support</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">&quot;none&quot;</span></code> or <code class="docutils literal notranslate"><span class="pre">None</span></code>: calculates statistic for each label and applies no reduction</p></li>
+</ul>
+</dd>
+</dl>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="mlcpl.metrics.partial_multilabel_recall">
+<span class="sig-prename descclassname"><span class="pre">mlcpl.metrics.</span></span><span class="sig-name descname"><span class="pre">partial_multilabel_recall</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">preds</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">target</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">threshold</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">0.5</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">average</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Literal</span><span class="p"><span class="pre">[</span></span><span class="s"><span class="pre">'macro'</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="s"><span class="pre">'micro'</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="s"><span class="pre">'weighted'</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="s"><span class="pre">'none'</span></span><span class="p"><span class="pre">]</span></span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">'macro'</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#mlcpl.metrics.partial_multilabel_recall" title="Permalink to this definition">¶</a></dt>
+<dd><p>Compute recall.</p>
+<dl>
+<dt>Args:</dt><dd><p>preds: Tensor with predictions</p>
+<p>target: Tensor with true labels</p>
+<p>threshold: Threshold for transforming probability to binary (0,1) predictions</p>
+<dl class="simple">
+<dt>average:</dt><dd><p>Defines the reduction that is applied over labels. Should be one of the following:</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">micro</span></code>: Sum statistics over all labels</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">macro</span></code>: Calculate statistics for each label and average them</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">weighted</span></code>: calculates statistics for each label and computes weighted average using their support</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">&quot;none&quot;</span></code> or <code class="docutils literal notranslate"><span class="pre">None</span></code>: calculates statistic for each label and applies no reduction</p></li>
+</ul>
+</dd>
+</dl>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="mlcpl.metrics.partial_multilabel_sensitivity">
+<span class="sig-prename descclassname"><span class="pre">mlcpl.metrics.</span></span><span class="sig-name descname"><span class="pre">partial_multilabel_sensitivity</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">preds</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">target</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">threshold</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">0.5</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">average</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Literal</span><span class="p"><span class="pre">[</span></span><span class="s"><span class="pre">'macro'</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="s"><span class="pre">'micro'</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="s"><span class="pre">'weighted'</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="s"><span class="pre">'none'</span></span><span class="p"><span class="pre">]</span></span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">'macro'</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#mlcpl.metrics.partial_multilabel_sensitivity" title="Permalink to this definition">¶</a></dt>
+<dd><p>Compute sensitivity.</p>
+<dl>
+<dt>Args:</dt><dd><p>preds: Tensor with predictions</p>
+<p>target: Tensor with true labels</p>
+<p>threshold: Threshold for transforming probability to binary (0,1) predictions</p>
+<dl class="simple">
+<dt>average:</dt><dd><p>Defines the reduction that is applied over labels. Should be one of the following:</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">micro</span></code>: Sum statistics over all labels</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">macro</span></code>: Calculate statistics for each label and average them</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">weighted</span></code>: calculates statistics for each label and computes weighted average using their support</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">&quot;none&quot;</span></code> or <code class="docutils literal notranslate"><span class="pre">None</span></code>: calculates statistic for each label and applies no reduction</p></li>
+</ul>
+</dd>
+</dl>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="mlcpl.metrics.partial_multilabel_specificity">
+<span class="sig-prename descclassname"><span class="pre">mlcpl.metrics.</span></span><span class="sig-name descname"><span class="pre">partial_multilabel_specificity</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">preds</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">target</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">threshold</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">0.5</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">average</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Literal</span><span class="p"><span class="pre">[</span></span><span class="s"><span class="pre">'macro'</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="s"><span class="pre">'micro'</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="s"><span class="pre">'weighted'</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="s"><span class="pre">'none'</span></span><span class="p"><span class="pre">]</span></span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">'macro'</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#mlcpl.metrics.partial_multilabel_specificity" title="Permalink to this definition">¶</a></dt>
+<dd><p>Compute specificity.</p>
+<dl>
+<dt>Args:</dt><dd><p>preds: Tensor with predictions</p>
+<p>target: Tensor with true labels</p>
+<p>threshold: Threshold for transforming probability to binary (0,1) predictions</p>
+<dl class="simple">
+<dt>average:</dt><dd><p>Defines the reduction that is applied over labels. Should be one of the following:</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">micro</span></code>: Sum statistics over all labels</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">macro</span></code>: Calculate statistics for each label and average them</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">weighted</span></code>: calculates statistics for each label and computes weighted average using their support</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">&quot;none&quot;</span></code> or <code class="docutils literal notranslate"><span class="pre">None</span></code>: calculates statistic for each label and applies no reduction</p></li>
+</ul>
+</dd>
+</dl>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="mlcpl.metrics.partial_multilabel_precision_at_fixed_recall">
+<span class="sig-prename descclassname"><span class="pre">mlcpl.metrics.</span></span><span class="sig-name descname"><span class="pre">partial_multilabel_precision_at_fixed_recall</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">preds</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">target</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">min_recall</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">thresholds</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#mlcpl.metrics.partial_multilabel_precision_at_fixed_recall" title="Permalink to this definition">¶</a></dt>
+<dd><p>Compute the highest possible precision value given the minimum recall thresholds.</p>
+<dl>
+<dt>Args:</dt><dd><p>preds: Tensor with predictions</p>
+<p>target: Tensor with true labels</p>
+<p>min_recall: float value specifying minimum recall threshold.</p>
+<dl class="simple">
+<dt>thresholds:</dt><dd><p>Can be one of:</p>
+<ul class="simple">
+<li><p>If set to <code class="docutils literal notranslate"><span class="pre">None</span></code>, will use a non-binned approach where thresholds are dynamically calculated from
+all the data. Most accurate but also most memory consuming approach.</p></li>
+<li><p>If set to an <code class="docutils literal notranslate"><span class="pre">int</span></code> (larger than 1), will use that number of thresholds linearly spaced from
+0 to 1 as bins for the calculation.</p></li>
+<li><p>If set to an <code class="docutils literal notranslate"><span class="pre">list</span></code> of floats, will use the indicated thresholds in the list as bins for the calculation</p></li>
+<li><p>If set to an 1d <code class="xref py py-class docutils literal notranslate"><span class="pre">Tensor</span></code> of floats, will use the indicated thresholds in the tensor as
+bins for the calculation.</p></li>
+</ul>
+</dd>
+</dl>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="mlcpl.metrics.partial_multilabel_recall_at_fixed_precision">
+<span class="sig-prename descclassname"><span class="pre">mlcpl.metrics.</span></span><span class="sig-name descname"><span class="pre">partial_multilabel_recall_at_fixed_precision</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">preds</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">target</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">min_precision</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">thresholds</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#mlcpl.metrics.partial_multilabel_recall_at_fixed_precision" title="Permalink to this definition">¶</a></dt>
+<dd><p>Compute the highest possible recall value given the minimum precision thresholds.</p>
+<dl>
+<dt>Args:</dt><dd><p>preds: Tensor with predictions</p>
+<p>target: Tensor with true labels</p>
+<p>min_precision: float value specifying minimum precision threshold.</p>
+<dl class="simple">
+<dt>thresholds:</dt><dd><p>Can be one of:</p>
+<ul class="simple">
+<li><p>If set to <code class="docutils literal notranslate"><span class="pre">None</span></code>, will use a non-binned approach where thresholds are dynamically calculated from
+all the data. Most accurate but also most memory consuming approach.</p></li>
+<li><p>If set to an <code class="docutils literal notranslate"><span class="pre">int</span></code> (larger than 1), will use that number of thresholds linearly spaced from
+0 to 1 as bins for the calculation.</p></li>
+<li><p>If set to an <code class="docutils literal notranslate"><span class="pre">list</span></code> of floats, will use the indicated thresholds in the list as bins for the calculation</p></li>
+<li><p>If set to an 1d <code class="xref py py-class docutils literal notranslate"><span class="pre">Tensor</span></code> of floats, will use the indicated thresholds in the tensor as
+bins for the calculation.</p></li>
+</ul>
+</dd>
+</dl>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="mlcpl.metrics.partial_multilabel_sensitivity_at_specificity">
+<span class="sig-prename descclassname"><span class="pre">mlcpl.metrics.</span></span><span class="sig-name descname"><span class="pre">partial_multilabel_sensitivity_at_specificity</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">preds</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">target</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">min_specificity</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">thresholds</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#mlcpl.metrics.partial_multilabel_sensitivity_at_specificity" title="Permalink to this definition">¶</a></dt>
+<dd><p>Compute the highest possible sensitivity value given the minimum specificity thresholds.</p>
+<dl>
+<dt>Args:</dt><dd><p>preds: Tensor with predictions</p>
+<p>target: Tensor with true labels</p>
+<p>min_specificity: float value specifying minimum specificity threshold.</p>
+<dl class="simple">
+<dt>thresholds:</dt><dd><p>Can be one of:</p>
+<ul class="simple">
+<li><p>If set to <code class="docutils literal notranslate"><span class="pre">None</span></code>, will use a non-binned approach where thresholds are dynamically calculated from
+all the data. Most accurate but also most memory consuming approach.</p></li>
+<li><p>If set to an <code class="docutils literal notranslate"><span class="pre">int</span></code> (larger than 1), will use that number of thresholds linearly spaced from
+0 to 1 as bins for the calculation.</p></li>
+<li><p>If set to an <code class="docutils literal notranslate"><span class="pre">list</span></code> of floats, will use the indicated thresholds in the list as bins for the calculation</p></li>
+<li><p>If set to an 1d <code class="xref py py-class docutils literal notranslate"><span class="pre">Tensor</span></code> of floats, will use the indicated thresholds in the tensor as
+bins for the calculation.</p></li>
+</ul>
+</dd>
+</dl>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="mlcpl.metrics.partial_multilabel_specificity_at_sensitivity">
+<span class="sig-prename descclassname"><span class="pre">mlcpl.metrics.</span></span><span class="sig-name descname"><span class="pre">partial_multilabel_specificity_at_sensitivity</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">preds</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">target</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">min_sensitivity</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">thresholds</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#mlcpl.metrics.partial_multilabel_specificity_at_sensitivity" title="Permalink to this definition">¶</a></dt>
+<dd><p>Compute the highest possible specificity value given the minimum sensitivity thresholds.</p>
+<dl>
+<dt>Args:</dt><dd><p>preds: Tensor with predictions</p>
+<p>target: Tensor with true labels</p>
+<p>min_sensitivity: float value specifying minimum sensitivity threshold.</p>
+<dl class="simple">
+<dt>thresholds:</dt><dd><p>Can be one of:</p>
+<ul class="simple">
+<li><p>If set to <code class="docutils literal notranslate"><span class="pre">None</span></code>, will use a non-binned approach where thresholds are dynamically calculated from
+all the data. Most accurate but also most memory consuming approach.</p></li>
+<li><p>If set to an <code class="docutils literal notranslate"><span class="pre">int</span></code> (larger than 1), will use that number of thresholds linearly spaced from
+0 to 1 as bins for the calculation.</p></li>
+<li><p>If set to an <code class="docutils literal notranslate"><span class="pre">list</span></code> of floats, will use the indicated thresholds in the list as bins for the calculation</p></li>
+<li><p>If set to an 1d <code class="xref py py-class docutils literal notranslate"><span class="pre">Tensor</span></code> of floats, will use the indicated thresholds in the tensor as
+bins for the calculation.</p></li>
+</ul>
+</dd>
+</dl>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="mlcpl.metrics.partial_multilabel_roc">
+<span class="sig-prename descclassname"><span class="pre">mlcpl.metrics.</span></span><span class="sig-name descname"><span class="pre">partial_multilabel_roc</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">preds</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">target</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">thresholds</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#mlcpl.metrics.partial_multilabel_roc" title="Permalink to this definition">¶</a></dt>
+<dd><p>Compute the Receiver Operating Characteristic Curves.</p>
+<dl>
+<dt>Args:</dt><dd><p>preds: Tensor with predictions</p>
+<p>target: Tensor with true labels</p>
+<dl class="simple">
+<dt>thresholds:</dt><dd><p>Can be one of:</p>
+<ul class="simple">
+<li><p>If set to <cite>None</cite>, will use a non-binned approach where thresholds are dynamically calculated from
+all the data. Most accurate but also most memory consuming approach.</p></li>
+<li><p>If set to an <cite>int</cite> (larger than 1), will use that number of thresholds linearly spaced from
+0 to 1 as bins for the calculation.</p></li>
+<li><p>If set to an <cite>list</cite> of floats, will use the indicated thresholds in the list as bins for the calculation</p></li>
+<li><p>If set to an 1d <cite>tensor</cite> of floats, will use the indicated thresholds in the tensor as
+bins for the calculation.</p></li>
+</ul>
+</dd>
+</dl>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="mlcpl.metrics.partial_multilabel_precision_recall_curve">
+<span class="sig-prename descclassname"><span class="pre">mlcpl.metrics.</span></span><span class="sig-name descname"><span class="pre">partial_multilabel_precision_recall_curve</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">preds</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">target</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">thresholds</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#mlcpl.metrics.partial_multilabel_precision_recall_curve" title="Permalink to this definition">¶</a></dt>
+<dd><p>Compute the Precision Recall Curves.</p>
+<dl>
+<dt>Args:</dt><dd><p>preds: Tensor with predictions</p>
+<p>target: Tensor with true labels</p>
+<dl class="simple">
+<dt>thresholds:</dt><dd><p>Can be one of:</p>
+<ul class="simple">
+<li><p>If set to <cite>None</cite>, will use a non-binned approach where thresholds are dynamically calculated from
+all the data. Most accurate but also most memory consuming approach.</p></li>
+<li><p>If set to an <cite>int</cite> (larger than 1), will use that number of thresholds linearly spaced from
+0 to 1 as bins for the calculation.</p></li>
+<li><p>If set to an <cite>list</cite> of floats, will use the indicated thresholds in the list as bins for the calculation</p></li>
+<li><p>If set to an 1d <cite>tensor</cite> of floats, will use the indicated thresholds in the tensor as
+bins for the calculation.</p></li>
+</ul>
+</dd>
+</dl>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="mlcpl.metrics.partial_multilabel_accuracy">
+<span class="sig-prename descclassname"><span class="pre">mlcpl.metrics.</span></span><span class="sig-name descname"><span class="pre">partial_multilabel_accuracy</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">preds</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">target</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">threshold</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">0.5</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">average</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Literal</span><span class="p"><span class="pre">[</span></span><span class="s"><span class="pre">'macro'</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="s"><span class="pre">'micro'</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="s"><span class="pre">'weighted'</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="s"><span class="pre">'none'</span></span><span class="p"><span class="pre">]</span></span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">'macro'</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#mlcpl.metrics.partial_multilabel_accuracy" title="Permalink to this definition">¶</a></dt>
+<dd><p>Compute accuracy.</p>
+<dl>
+<dt>Args:</dt><dd><p>preds: Tensor with predictions</p>
+<p>target: Tensor with true labels</p>
+<p>threshold: Threshold for transforming probability to binary (0,1) predictions</p>
+<dl class="simple">
+<dt>average:</dt><dd><p>Defines the reduction that is applied over labels. Should be one of the following:</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">micro</span></code>: Sum statistics over all labels</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">macro</span></code>: Calculate statistics for each label and average them</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">weighted</span></code>: calculates statistics for each label and computes weighted average using their support</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">&quot;none&quot;</span></code> or <code class="docutils literal notranslate"><span class="pre">None</span></code>: calculates statistic for each label and applies no reduction</p></li>
+</ul>
+</dd>
+</dl>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="mlcpl.metrics.partial_multilabel_calibration_error">
+<span class="sig-prename descclassname"><span class="pre">mlcpl.metrics.</span></span><span class="sig-name descname"><span class="pre">partial_multilabel_calibration_error</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">preds</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">target</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">n_bins</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">15</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">average</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Literal</span><span class="p"><span class="pre">[</span></span><span class="s"><span class="pre">'macro'</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="s"><span class="pre">'micro'</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="s"><span class="pre">'weighted'</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="s"><span class="pre">'none'</span></span><span class="p"><span class="pre">]</span></span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">'macro'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">norm</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Literal</span><span class="p"><span class="pre">[</span></span><span class="s"><span class="pre">'l1'</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="s"><span class="pre">'l2'</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="s"><span class="pre">'max'</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="s"><span class="pre">'ECE'</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="s"><span class="pre">'ACE'</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="s"><span class="pre">'MCE'</span></span><span class="p"><span class="pre">]</span></span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">'l1'</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#mlcpl.metrics.partial_multilabel_calibration_error" title="Permalink to this definition">¶</a></dt>
+<dd><p>Compute calibration error.</p>
+<dl>
+<dt>Args:</dt><dd><p>preds: Tensor with predictions</p>
+<p>target: Tensor with true labels</p>
+<p>n_bins: Number of bins to use when computing the metric.</p>
+<dl class="simple">
+<dt>average:</dt><dd><p>Defines the reduction that is applied over labels. Should be one of the following:</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">micro</span></code>: Sum statistics over all labels</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">macro</span></code>: Calculate statistics for each label and average them</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">weighted</span></code>: calculates statistics for each label and computes weighted average using their support</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">&quot;none&quot;</span></code> or <code class="docutils literal notranslate"><span class="pre">None</span></code>: calculates statistic for each label and applies no reduction</p></li>
+</ul>
+</dd>
+</dl>
+<p>norm: Norm used to compare empirical and expected probability bins.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="mlcpl.metrics.partial_multilabel_expected_calibration_error">
+<span class="sig-prename descclassname"><span class="pre">mlcpl.metrics.</span></span><span class="sig-name descname"><span class="pre">partial_multilabel_expected_calibration_error</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">preds</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">target</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">n_bins</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">15</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">average</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Literal</span><span class="p"><span class="pre">[</span></span><span class="s"><span class="pre">'macro'</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="s"><span class="pre">'micro'</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="s"><span class="pre">'weighted'</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="s"><span class="pre">'none'</span></span><span class="p"><span class="pre">]</span></span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">'macro'</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#mlcpl.metrics.partial_multilabel_expected_calibration_error" title="Permalink to this definition">¶</a></dt>
+<dd><p>Compute expected calibration error.</p>
+<dl>
+<dt>Args:</dt><dd><p>preds: Tensor with predictions</p>
+<p>target: Tensor with true labels</p>
+<p>n_bins: Number of bins to use when computing the metric.</p>
+<dl class="simple">
+<dt>average:</dt><dd><p>Defines the reduction that is applied over labels. Should be one of the following:</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">micro</span></code>: Sum statistics over all labels</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">macro</span></code>: Calculate statistics for each label and average them</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">weighted</span></code>: calculates statistics for each label and computes weighted average using their support</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">&quot;none&quot;</span></code> or <code class="docutils literal notranslate"><span class="pre">None</span></code>: calculates statistic for each label and applies no reduction</p></li>
+</ul>
+</dd>
+</dl>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="mlcpl.metrics.partial_multilabel_average_calibration_error">
+<span class="sig-prename descclassname"><span class="pre">mlcpl.metrics.</span></span><span class="sig-name descname"><span class="pre">partial_multilabel_average_calibration_error</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">preds</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">target</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">n_bins</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">15</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">average</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Literal</span><span class="p"><span class="pre">[</span></span><span class="s"><span class="pre">'macro'</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="s"><span class="pre">'micro'</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="s"><span class="pre">'weighted'</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="s"><span class="pre">'none'</span></span><span class="p"><span class="pre">]</span></span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">'macro'</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#mlcpl.metrics.partial_multilabel_average_calibration_error" title="Permalink to this definition">¶</a></dt>
+<dd><p>Compute average calibration error.</p>
+<dl>
+<dt>Args:</dt><dd><p>preds: Tensor with predictions</p>
+<p>target: Tensor with true labels</p>
+<p>n_bins: Number of bins to use when computing the metric.</p>
+<dl class="simple">
+<dt>average:</dt><dd><p>Defines the reduction that is applied over labels. Should be one of the following:</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">micro</span></code>: Sum statistics over all labels</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">macro</span></code>: Calculate statistics for each label and average them</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">weighted</span></code>: calculates statistics for each label and computes weighted average using their support</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">&quot;none&quot;</span></code> or <code class="docutils literal notranslate"><span class="pre">None</span></code>: calculates statistic for each label and applies no reduction</p></li>
+</ul>
+</dd>
+</dl>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="mlcpl.metrics.partial_multilabel_maximum_calibration_error">
+<span class="sig-prename descclassname"><span class="pre">mlcpl.metrics.</span></span><span class="sig-name descname"><span class="pre">partial_multilabel_maximum_calibration_error</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">preds</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">target</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">n_bins</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">15</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">average</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Literal</span><span class="p"><span class="pre">[</span></span><span class="s"><span class="pre">'macro'</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="s"><span class="pre">'micro'</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="s"><span class="pre">'weighted'</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="s"><span class="pre">'none'</span></span><span class="p"><span class="pre">]</span></span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">'macro'</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#mlcpl.metrics.partial_multilabel_maximum_calibration_error" title="Permalink to this definition">¶</a></dt>
+<dd><p>Compute maximum calibration error.</p>
+<dl>
+<dt>Args:</dt><dd><p>preds: Tensor with predictions</p>
+<p>target: Tensor with true labels</p>
+<p>n_bins: Number of bins to use when computing the metric.</p>
+<dl class="simple">
+<dt>average:</dt><dd><p>Defines the reduction that is applied over labels. Should be one of the following:</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">micro</span></code>: Sum statistics over all labels</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">macro</span></code>: Calculate statistics for each label and average them</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">weighted</span></code>: calculates statistics for each label and computes weighted average using their support</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">&quot;none&quot;</span></code> or <code class="docutils literal notranslate"><span class="pre">None</span></code>: calculates statistic for each label and applies no reduction</p></li>
+</ul>
+</dd>
+</dl>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="mlcpl.metrics.partial_multilabel_cohen_kappa">
+<span class="sig-prename descclassname"><span class="pre">mlcpl.metrics.</span></span><span class="sig-name descname"><span class="pre">partial_multilabel_cohen_kappa</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">preds</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">target</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">threshold</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">0.5</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">average</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Literal</span><span class="p"><span class="pre">[</span></span><span class="s"><span class="pre">'macro'</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="s"><span class="pre">'micro'</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="s"><span class="pre">'weighted'</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="s"><span class="pre">'none'</span></span><span class="p"><span class="pre">]</span></span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">'macro'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">weights</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Literal</span><span class="p"><span class="pre">[</span></span><span class="s"><span class="pre">'linear'</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="s"><span class="pre">'quadratic'</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="s"><span class="pre">'none'</span></span><span class="p"><span class="pre">]</span></span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">'none'</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#mlcpl.metrics.partial_multilabel_cohen_kappa" title="Permalink to this definition">¶</a></dt>
+<dd><p>Calculate Cohen’s kappa score.</p>
+<dl>
+<dt>Args:</dt><dd><p>preds: Tensor with predictions</p>
+<p>target: Tensor with true labels</p>
+<p>threshold: Threshold for transforming probability to binary (0,1) predictions</p>
+<dl class="simple">
+<dt>average:</dt><dd><p>Defines the reduction that is applied over labels. Should be one of the following:</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">micro</span></code>: Sum statistics over all labels</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">macro</span></code>: Calculate statistics for each label and average them</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">weighted</span></code>: calculates statistics for each label and computes weighted average using their support</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">&quot;none&quot;</span></code> or <code class="docutils literal notranslate"><span class="pre">None</span></code>: calculates statistic for each label and applies no reduction</p></li>
+</ul>
+</dd>
+</dl>
+<p>weights: Weighting type to calculate the score. Choose from:</p>
+<blockquote>
+<div><ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">None</span></code> or <code class="docutils literal notranslate"><span class="pre">'none'</span></code>: no weighting</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">'linear'</span></code>: linear weighting</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">'quadratic'</span></code>: quadratic weighting</p></li>
+</ul>
+</div></blockquote>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="mlcpl.metrics.partial_multilabel_confusion_matrix">
+<span class="sig-prename descclassname"><span class="pre">mlcpl.metrics.</span></span><span class="sig-name descname"><span class="pre">partial_multilabel_confusion_matrix</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">preds</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">target</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">threshold</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">0.5</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">normalize</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Literal</span><span class="p"><span class="pre">[</span></span><span class="s"><span class="pre">'none'</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="s"><span class="pre">'true'</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="s"><span class="pre">'pred'</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="s"><span class="pre">'all'</span></span><span class="p"><span class="pre">]</span></span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">'none'</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#mlcpl.metrics.partial_multilabel_confusion_matrix" title="Permalink to this definition">¶</a></dt>
+<dd><p>Compute the <cite>confusion matrix</cite>.</p>
+<dl>
+<dt>Args:</dt><dd><p>preds: Tensor with predictions</p>
+<p>target: Tensor with true labels</p>
+<p>threshold: Threshold for transforming probability to binary (0,1) predictions</p>
+<p>normalize: Normalization mode for confusion matrix. Choose from:</p>
+<blockquote>
+<div><ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">None</span></code> or <code class="docutils literal notranslate"><span class="pre">'none'</span></code>: no normalization (default)</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">'true'</span></code>: normalization over the targets (most commonly used)</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">'pred'</span></code>: normalization over the predictions</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">'all'</span></code>: normalization over the whole matrix</p></li>
+</ul>
+</div></blockquote>
+</dd>
+<dt>Returns:</dt><dd><p>A <code class="docutils literal notranslate"><span class="pre">[num_labels,</span> <span class="pre">2,</span> <span class="pre">2]</span></code> tensor</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="mlcpl.metrics.partial_multilabel_dice">
+<span class="sig-prename descclassname"><span class="pre">mlcpl.metrics.</span></span><span class="sig-name descname"><span class="pre">partial_multilabel_dice</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">preds</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">target</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">threshold</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">0.5</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">average</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Literal</span><span class="p"><span class="pre">[</span></span><span class="s"><span class="pre">'macro'</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="s"><span class="pre">'micro'</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="s"><span class="pre">'weighted'</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="s"><span class="pre">'samples'</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="s"><span class="pre">'none'</span></span><span class="p"><span class="pre">]</span></span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">'micro'</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#mlcpl.metrics.partial_multilabel_dice" title="Permalink to this definition">¶</a></dt>
+<dd><p>Compute Dice.</p>
+<dl>
+<dt>Args:</dt><dd><p>preds: Predictions from model (probabilities, logits or labels)</p>
+<p>target: Ground truth values</p>
+<p>zero_division: The value to use for the score if denominator equals zero</p>
+<dl class="simple">
+<dt>average:</dt><dd><p>Defines the reduction that is applied. Should be one of the following:</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">'micro'</span></code> [default]: Calculate the metric globally, across all samples and classes.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">'macro'</span></code>: Calculate the metric for each class separately, and average the
+metrics across classes (with equal weights for each class).</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">'weighted'</span></code>: Calculate the metric for each class separately, and average the
+metrics across classes, weighting each class by its support (<code class="docutils literal notranslate"><span class="pre">tp</span> <span class="pre">+</span> <span class="pre">fn</span></code>).</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">'none'</span></code> or <code class="docutils literal notranslate"><span class="pre">None</span></code>: Calculate the metric for each class separately, and return
+the metric for every class.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">'samples'</span></code>: Calculate the metric for each sample, and average the metrics
+across samples (with equal weights for each sample).</p></li>
+</ul>
+</dd>
+</dl>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="mlcpl.metrics.partial_multilabel_exact_match">
+<span class="sig-prename descclassname"><span class="pre">mlcpl.metrics.</span></span><span class="sig-name descname"><span class="pre">partial_multilabel_exact_match</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">preds</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">target</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">threshold</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">0.5</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#mlcpl.metrics.partial_multilabel_exact_match" title="Permalink to this definition">¶</a></dt>
+<dd><p>Compute Exact match (also known as subset accuracy).</p>
+<dl>
+<dt>Args:</dt><dd><p>preds: Tensor with predictions</p>
+<p>target: Tensor with true labels</p>
+<p>threshold: Threshold for transforming probability to binary (0,1) predictions</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="mlcpl.metrics.partial_multilabel_hamming_distance">
+<span class="sig-prename descclassname"><span class="pre">mlcpl.metrics.</span></span><span class="sig-name descname"><span class="pre">partial_multilabel_hamming_distance</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">preds</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">target</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">threshold</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">0.5</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">average</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Literal</span><span class="p"><span class="pre">[</span></span><span class="s"><span class="pre">'macro'</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="s"><span class="pre">'micro'</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="s"><span class="pre">'weighted'</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="s"><span class="pre">'none'</span></span><span class="p"><span class="pre">]</span></span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">'macro'</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#mlcpl.metrics.partial_multilabel_hamming_distance" title="Permalink to this definition">¶</a></dt>
+<dd><p>Compute hamming distance.</p>
+<dl>
+<dt>Args:</dt><dd><p>preds: Tensor with predictions</p>
+<p>target: Tensor with true labels</p>
+<p>threshold: Threshold for transforming probability to binary (0,1) predictions</p>
+<dl class="simple">
+<dt>average:</dt><dd><p>Defines the reduction that is applied over labels. Should be one of the following:</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">micro</span></code>: Sum statistics over all labels</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">macro</span></code>: Calculate statistics for each label and average them</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">weighted</span></code>: calculates statistics for each label and computes weighted average using their support</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">&quot;none&quot;</span></code> or <code class="docutils literal notranslate"><span class="pre">None</span></code>: calculates statistic for each label and applies no reduction</p></li>
+</ul>
+</dd>
+</dl>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="mlcpl.metrics.partial_multilabel_hinge_loss">
+<span class="sig-prename descclassname"><span class="pre">mlcpl.metrics.</span></span><span class="sig-name descname"><span class="pre">partial_multilabel_hinge_loss</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">preds</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">target</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">squared</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">average</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Literal</span><span class="p"><span class="pre">[</span></span><span class="s"><span class="pre">'macro'</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="s"><span class="pre">'micro'</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="s"><span class="pre">'weighted'</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="s"><span class="pre">'none'</span></span><span class="p"><span class="pre">]</span></span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">'macro'</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#mlcpl.metrics.partial_multilabel_hinge_loss" title="Permalink to this definition">¶</a></dt>
+<dd><p>Compute the mean Hinge loss typically used for Support Vector Machines.</p>
+<dl>
+<dt>Args:</dt><dd><p>preds: Tensor with predictions</p>
+<p>target: Tensor with true labels</p>
+<dl class="simple">
+<dt>squared:</dt><dd><p>If True, this will compute the squared hinge loss. Otherwise, computes the regular hinge loss.</p>
+</dd>
+<dt>average:</dt><dd><p>Defines the reduction that is applied over labels. Should be one of the following:</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">micro</span></code>: Sum statistics over all labels</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">macro</span></code>: Calculate statistics for each label and average them</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">weighted</span></code>: calculates statistics for each label and computes weighted average using their support</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">&quot;none&quot;</span></code> or <code class="docutils literal notranslate"><span class="pre">None</span></code>: calculates statistic for each label and applies no reduction</p></li>
+</ul>
+</dd>
+</dl>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="mlcpl.metrics.partial_multilabel_jaccard_index">
+<span class="sig-prename descclassname"><span class="pre">mlcpl.metrics.</span></span><span class="sig-name descname"><span class="pre">partial_multilabel_jaccard_index</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">preds</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">target</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">threshold</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">0.5</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">average</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Literal</span><span class="p"><span class="pre">[</span></span><span class="s"><span class="pre">'macro'</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="s"><span class="pre">'micro'</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="s"><span class="pre">'weighted'</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="s"><span class="pre">'none'</span></span><span class="p"><span class="pre">]</span></span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">'macro'</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#mlcpl.metrics.partial_multilabel_jaccard_index" title="Permalink to this definition">¶</a></dt>
+<dd><p>Compute jaccard index score.</p>
+<dl>
+<dt>Args:</dt><dd><p>preds: Tensor with predictions</p>
+<p>target: Tensor with true labels</p>
+<p>threshold: Threshold for transforming probability to binary (0,1) predictions</p>
+<dl class="simple">
+<dt>average:</dt><dd><p>Defines the reduction that is applied over labels. Should be one of the following:</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">micro</span></code>: Sum statistics over all labels</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">macro</span></code>: Calculate statistics for each label and average them</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">weighted</span></code>: calculates statistics for each label and computes weighted average using their support</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">&quot;none&quot;</span></code> or <code class="docutils literal notranslate"><span class="pre">None</span></code>: calculates statistic for each label and applies no reduction</p></li>
+</ul>
+</dd>
+</dl>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="mlcpl.metrics.partial_multilabel_ranking_average_precision">
+<span class="sig-prename descclassname"><span class="pre">mlcpl.metrics.</span></span><span class="sig-name descname"><span class="pre">partial_multilabel_ranking_average_precision</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">preds</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">target</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#mlcpl.metrics.partial_multilabel_ranking_average_precision" title="Permalink to this definition">¶</a></dt>
+<dd><p>Compute ranking average precision.</p>
+<dl>
+<dt>Args:</dt><dd><p>preds: Tensor with predictions</p>
+<p>target: Tensor with true labels</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="mlcpl.metrics.partial_multilabel_ranking_loss">
+<span class="sig-prename descclassname"><span class="pre">mlcpl.metrics.</span></span><span class="sig-name descname"><span class="pre">partial_multilabel_ranking_loss</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">preds</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">target</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#mlcpl.metrics.partial_multilabel_ranking_loss" title="Permalink to this definition">¶</a></dt>
+<dd><p>Compute multilabel ranking loss.</p>
+<dl>
+<dt>Args:</dt><dd><p>preds: Tensor with predictions</p>
+<p>target: Tensor with true labels</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="mlcpl.metrics.partial_multilabel_matthews_corrcoef">
+<span class="sig-prename descclassname"><span class="pre">mlcpl.metrics.</span></span><span class="sig-name descname"><span class="pre">partial_multilabel_matthews_corrcoef</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">preds</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">target</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">threshold</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">0.5</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#mlcpl.metrics.partial_multilabel_matthews_corrcoef" title="Permalink to this definition">¶</a></dt>
+<dd><p>Compute mattews correlation coefficient.</p>
+<dl>
+<dt>Args:</dt><dd><p>preds: Tensor with predictions</p>
+<p>target: Tensor with true labels</p>
+<p>threshold: Threshold for transforming probability to binary (0,1) predictions</p>
+</dd>
+</dl>
+</dd></dl>
+
+</section>
+
+
+          </div>
+          <div class="page-nav">
+            <div class="inner"><ul class="page-nav">
+  <li class="prev">
+    <a href="loss_functions.html"
+       title="previous chapter">← Loss Functions</a>
+  </li>
+  <li class="next">
+    <a href="datasets.html"
+       title="next chapter">Datasets →</a>
+  </li>
+</ul><div class="footer" role="contentinfo">
+      &#169; Copyright 2025, maxium0526.
+    <br>
+    Created using <a href="http://sphinx-doc.org/">Sphinx</a> 7.1.2 with <a href="https://github.com/schettino72/sphinx_press_theme">Press Theme</a> 0.9.1.
+</div>
+            </div>
+          </div>
+      </page>
+    </div></div>
+    
+    
+  </body>
+</html>

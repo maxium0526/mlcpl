@@ -1,0 +1,316 @@
+<!DOCTYPE html>
+<html  lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1"><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+      <title>Welcome to mlcpl’s API documentation!</title>
+    
+          <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+          <link rel="stylesheet" href="_static/theme.css " type="text/css" />
+      
+      <!-- sphinx script_files -->
+        <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js?v=b3ba4146"></script>
+        <script src="_static/doctools.js?v=888ff710"></script>
+        <script src="_static/sphinx_highlight.js?v=4825356b"></script>
+
+      
+      <!-- bundled in js (rollup iife) -->
+      <!-- <script src="_static/theme-vendors.js"></script> -->
+      <script src="_static/theme.js" defer></script>
+    
+  <link rel="index" title="Index" href="genindex.html" />
+  <link rel="search" title="Search" href="search.html" />
+  <link rel="next" title="Loss Functions" href="loss_functions.html" /> 
+  </head>
+
+  <body>
+    <div id="app">
+    <div class="theme-container" :class="pageClasses"><navbar @toggle-sidebar="toggleSidebar">
+  <router-link to="#" class="home-link">
+    
+      <span class="site-name">mlcpl</span>
+    
+  </router-link>
+
+  <div class="links">
+    <navlinks class="can-hide">
+
+  
+    <div class="nav-item">
+      <a href="#welcome-to-mlcpl-s-api-documentation"
+         class="nav-link ">
+         Contents:
+      </a>
+    </div>
+  
+    <div class="nav-item">
+      <a href="#contents"
+         class="nav-link ">
+         contents
+      </a>
+    </div>
+  
+
+
+
+    </navlinks>
+  </div>
+</navbar>
+
+      
+      <div class="sidebar-mask" @click="toggleSidebar(false)">
+      </div>
+        <sidebar @toggle-sidebar="toggleSidebar">
+          
+          <navlinks>
+            
+
+  
+    <div class="nav-item">
+      <a href="#welcome-to-mlcpl-s-api-documentation"
+         class="nav-link ">
+         Contents:
+      </a>
+    </div>
+  
+    <div class="nav-item">
+      <a href="#contents"
+         class="nav-link ">
+         contents
+      </a>
+    </div>
+  
+
+
+
+            
+          </navlinks><div id="searchbox" class="searchbox" role="search">
+  <div class="caption"><span class="caption-text">Quick search</span>
+    <div class="searchformwrapper">
+      <form class="search" action="search.html" method="get">
+        <input type="text" name="q" />
+        <input type="submit" value="Search" />
+        <input type="hidden" name="check_keywords" value="yes" />
+        <input type="hidden" name="area" value="default" />
+      </form>
+    </div>
+  </div>
+</div><div class="sidebar-links" role="navigation" aria-label="main navigation">
+  
+    <div class="sidebar-group">
+      <p class="caption">
+        <span class="caption-text"><a href="#welcome-to-mlcpl-s-api-documentation">Contents:</a></span>
+      </p>
+      <ul class="">
+        
+      </ul>
+    </div>
+  
+    <div class="sidebar-group">
+      <p class="caption">
+        <span class="caption-text"><a href="#contents">contents</a></span>
+      </p>
+      <ul class="">
+        
+          <li class="toctree-l1 ">
+            
+              <a href="loss_functions.html" class="reference internal ">Loss Functions</a>
+            
+
+            
+          </li>
+
+        
+          <li class="toctree-l1 ">
+            
+              <a href="metrics.html" class="reference internal ">Metrics</a>
+            
+
+            
+          </li>
+
+        
+          <li class="toctree-l1 ">
+            
+              <a href="datasets.html" class="reference internal ">Datasets</a>
+            
+
+            
+          </li>
+
+        
+          <li class="toctree-l1 ">
+            
+              <a href="data_augmentations.html" class="reference internal ">Data Augmentations</a>
+            
+
+            
+          </li>
+
+        
+          <li class="toctree-l1 ">
+            
+              <a href="pseudo_labeling.html" class="reference internal ">Pseudo Labeling</a>
+            
+
+            
+          </li>
+
+        
+      </ul>
+    </div>
+  
+</div>
+        </sidebar>
+
+      <page>
+          <div class="body-header" role="navigation" aria-label="navigation">
+  
+  <ul class="breadcrumbs">
+    <li><a href="#">Docs</a> &raquo;</li>
+    
+    <li>Welcome to mlcpl’s API documentation!</li>
+  </ul>
+  
+
+  <ul class="page-nav">
+  <li class="next">
+    <a href="loss_functions.html"
+       title="next chapter">Loss Functions →</a>
+  </li>
+</ul>
+  
+</div>
+<hr>
+          <div class="content" role="main" v-pre>
+            
+  <section id="welcome-to-mlcpl-s-api-documentation">
+<h1>Welcome to mlcpl’s API documentation!<a class="headerlink" href="#welcome-to-mlcpl-s-api-documentation" title="Permalink to this heading">¶</a></h1>
+<div class="toctree-wrapper compound">
+</div>
+<section id="contents">
+<h2>Contents<a class="headerlink" href="#contents" title="Permalink to this heading">¶</a></h2>
+<div class="toctree-wrapper compound">
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="loss_functions.html">Loss Functions</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="loss_functions.html#mlcpl.losses.PartialNegativeBCEWithLogitLoss"><code class="docutils literal notranslate"><span class="pre">PartialNegativeBCEWithLogitLoss()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="loss_functions.html#mlcpl.losses.PartialBCEWithLogitLoss"><code class="docutils literal notranslate"><span class="pre">PartialBCEWithLogitLoss()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="loss_functions.html#mlcpl.losses.PartialSelectiveBCEWithLogitLoss"><code class="docutils literal notranslate"><span class="pre">PartialSelectiveBCEWithLogitLoss()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="loss_functions.html#mlcpl.losses.PartialNegativeFocalWithLogitLoss"><code class="docutils literal notranslate"><span class="pre">PartialNegativeFocalWithLogitLoss()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="loss_functions.html#mlcpl.losses.PartialFocalWithLogitLoss"><code class="docutils literal notranslate"><span class="pre">PartialFocalWithLogitLoss()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="loss_functions.html#mlcpl.losses.PartialSelectiveFocalWithLogitLoss"><code class="docutils literal notranslate"><span class="pre">PartialSelectiveFocalWithLogitLoss()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="loss_functions.html#mlcpl.losses.PartialAsymmetricWithLogitLoss"><code class="docutils literal notranslate"><span class="pre">PartialAsymmetricWithLogitLoss()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="loss_functions.html#mlcpl.losses.PartialSelectiveAsymmetricWithLogitLoss"><code class="docutils literal notranslate"><span class="pre">PartialSelectiveAsymmetricWithLogitLoss()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="loss_functions.html#mlcpl.losses.LargeLossRejection"><code class="docutils literal notranslate"><span class="pre">LargeLossRejection()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="loss_functions.html#mlcpl.losses.LargeLossCorrectionTemporary"><code class="docutils literal notranslate"><span class="pre">LargeLossCorrectionTemporary()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="loss_functions.html#mlcpl.losses.PartialStrictlyProperAsymmetricWithLogitLoss"><code class="docutils literal notranslate"><span class="pre">PartialStrictlyProperAsymmetricWithLogitLoss()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="metrics.html">Metrics</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="metrics.html#mlcpl.metrics.partial_multilabel_average_precision"><code class="docutils literal notranslate"><span class="pre">partial_multilabel_average_precision()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="metrics.html#mlcpl.metrics.partial_multilabel_auroc"><code class="docutils literal notranslate"><span class="pre">partial_multilabel_auroc()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="metrics.html#mlcpl.metrics.partial_multilabel_fbeta_score"><code class="docutils literal notranslate"><span class="pre">partial_multilabel_fbeta_score()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="metrics.html#mlcpl.metrics.partial_multilabel_f1_score"><code class="docutils literal notranslate"><span class="pre">partial_multilabel_f1_score()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="metrics.html#mlcpl.metrics.partial_multilabel_precision"><code class="docutils literal notranslate"><span class="pre">partial_multilabel_precision()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="metrics.html#mlcpl.metrics.partial_multilabel_recall"><code class="docutils literal notranslate"><span class="pre">partial_multilabel_recall()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="metrics.html#mlcpl.metrics.partial_multilabel_sensitivity"><code class="docutils literal notranslate"><span class="pre">partial_multilabel_sensitivity()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="metrics.html#mlcpl.metrics.partial_multilabel_specificity"><code class="docutils literal notranslate"><span class="pre">partial_multilabel_specificity()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="metrics.html#mlcpl.metrics.partial_multilabel_precision_at_fixed_recall"><code class="docutils literal notranslate"><span class="pre">partial_multilabel_precision_at_fixed_recall()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="metrics.html#mlcpl.metrics.partial_multilabel_recall_at_fixed_precision"><code class="docutils literal notranslate"><span class="pre">partial_multilabel_recall_at_fixed_precision()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="metrics.html#mlcpl.metrics.partial_multilabel_sensitivity_at_specificity"><code class="docutils literal notranslate"><span class="pre">partial_multilabel_sensitivity_at_specificity()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="metrics.html#mlcpl.metrics.partial_multilabel_specificity_at_sensitivity"><code class="docutils literal notranslate"><span class="pre">partial_multilabel_specificity_at_sensitivity()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="metrics.html#mlcpl.metrics.partial_multilabel_roc"><code class="docutils literal notranslate"><span class="pre">partial_multilabel_roc()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="metrics.html#mlcpl.metrics.partial_multilabel_precision_recall_curve"><code class="docutils literal notranslate"><span class="pre">partial_multilabel_precision_recall_curve()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="metrics.html#mlcpl.metrics.partial_multilabel_accuracy"><code class="docutils literal notranslate"><span class="pre">partial_multilabel_accuracy()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="metrics.html#mlcpl.metrics.partial_multilabel_calibration_error"><code class="docutils literal notranslate"><span class="pre">partial_multilabel_calibration_error()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="metrics.html#mlcpl.metrics.partial_multilabel_expected_calibration_error"><code class="docutils literal notranslate"><span class="pre">partial_multilabel_expected_calibration_error()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="metrics.html#mlcpl.metrics.partial_multilabel_average_calibration_error"><code class="docutils literal notranslate"><span class="pre">partial_multilabel_average_calibration_error()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="metrics.html#mlcpl.metrics.partial_multilabel_maximum_calibration_error"><code class="docutils literal notranslate"><span class="pre">partial_multilabel_maximum_calibration_error()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="metrics.html#mlcpl.metrics.partial_multilabel_cohen_kappa"><code class="docutils literal notranslate"><span class="pre">partial_multilabel_cohen_kappa()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="metrics.html#mlcpl.metrics.partial_multilabel_confusion_matrix"><code class="docutils literal notranslate"><span class="pre">partial_multilabel_confusion_matrix()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="metrics.html#mlcpl.metrics.partial_multilabel_dice"><code class="docutils literal notranslate"><span class="pre">partial_multilabel_dice()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="metrics.html#mlcpl.metrics.partial_multilabel_exact_match"><code class="docutils literal notranslate"><span class="pre">partial_multilabel_exact_match()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="metrics.html#mlcpl.metrics.partial_multilabel_hamming_distance"><code class="docutils literal notranslate"><span class="pre">partial_multilabel_hamming_distance()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="metrics.html#mlcpl.metrics.partial_multilabel_hinge_loss"><code class="docutils literal notranslate"><span class="pre">partial_multilabel_hinge_loss()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="metrics.html#mlcpl.metrics.partial_multilabel_jaccard_index"><code class="docutils literal notranslate"><span class="pre">partial_multilabel_jaccard_index()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="metrics.html#mlcpl.metrics.partial_multilabel_ranking_average_precision"><code class="docutils literal notranslate"><span class="pre">partial_multilabel_ranking_average_precision()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="metrics.html#mlcpl.metrics.partial_multilabel_ranking_loss"><code class="docutils literal notranslate"><span class="pre">partial_multilabel_ranking_loss()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="metrics.html#mlcpl.metrics.partial_multilabel_matthews_corrcoef"><code class="docutils literal notranslate"><span class="pre">partial_multilabel_matthews_corrcoef()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="datasets.html">Datasets</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="datasets.html#the-mlcpldataset-class">The <code class="docutils literal notranslate"><span class="pre">MLCPLDataset</span></code> class</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="datasets.html#mlcpl.datasets.MLCPLDataset"><code class="docutils literal notranslate"><span class="pre">MLCPLDataset()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="datasets.html#mlcpl.datasets.MLCPLDataset.__init__"><code class="docutils literal notranslate"><span class="pre">__init__()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="datasets.html#mlcpl.datasets.MLCPLDataset.summary"><code class="docutils literal notranslate"><span class="pre">summary()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="datasets.html#mlcpl.datasets.MLCPLDataset.__getitem__"><code class="docutils literal notranslate"><span class="pre">__getitem__()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="datasets.html#mlcpl.datasets.MLCPLDataset.__to_one_hot"><code class="docutils literal notranslate"><span class="pre">__to_one_hot()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="datasets.html#mlcpl.datasets.MLCPLDataset.get_statistics"><code class="docutils literal notranslate"><span class="pre">get_statistics()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="datasets.html#mlcpl.datasets.MLCPLDataset.drop_labels_uniform"><code class="docutils literal notranslate"><span class="pre">drop_labels_uniform()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="datasets.html#mlcpl.datasets.MLCPLDataset.drop_labels_single_positive"><code class="docutils literal notranslate"><span class="pre">drop_labels_single_positive()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="datasets.html#mlcpl.datasets.MLCPLDataset.drop_labels_fix_per_category"><code class="docutils literal notranslate"><span class="pre">drop_labels_fix_per_category()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="datasets.html#dataset-loaders">Dataset Loaders</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="datasets.html#mlcpl.datasets.MSCOCO"><code class="docutils literal notranslate"><span class="pre">MSCOCO()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="datasets.html#mlcpl.datasets.Pascal_VOC_2007"><code class="docutils literal notranslate"><span class="pre">Pascal_VOC_2007()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="datasets.html#mlcpl.datasets.LVIS"><code class="docutils literal notranslate"><span class="pre">LVIS()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="datasets.html#mlcpl.datasets.Open_Images_V6"><code class="docutils literal notranslate"><span class="pre">Open_Images_V6()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="datasets.html#mlcpl.datasets.Open_Images_V3"><code class="docutils literal notranslate"><span class="pre">Open_Images_V3()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="datasets.html#mlcpl.datasets.CheXpert"><code class="docutils literal notranslate"><span class="pre">CheXpert()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="datasets.html#mlcpl.datasets.VAW"><code class="docutils literal notranslate"><span class="pre">VAW()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="datasets.html#mlcpl.datasets.NUS_WIDE"><code class="docutils literal notranslate"><span class="pre">NUS_WIDE()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="datasets.html#mlcpl.datasets.VISPR"><code class="docutils literal notranslate"><span class="pre">VISPR()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="datasets.html#mlcpl.datasets.Vireo_Food_172"><code class="docutils literal notranslate"><span class="pre">Vireo_Food_172()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="datasets.html#mlcpl.datasets.VG_200"><code class="docutils literal notranslate"><span class="pre">VG_200()</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="data_augmentations.html">Data Augmentations</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="data_augmentations.html#mlcpl.augs.LogicMix"><code class="docutils literal notranslate"><span class="pre">LogicMix()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="data_augmentations.html#mlcpl.augs.LogicMix.__init__"><code class="docutils literal notranslate"><span class="pre">__init__()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="data_augmentations.html#mlcpl.augs.MixUpPME"><code class="docutils literal notranslate"><span class="pre">MixUpPME()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="data_augmentations.html#mlcpl.augs.MixUpPME.__init__"><code class="docutils literal notranslate"><span class="pre">__init__()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="pseudo_labeling.html">Pseudo Labeling</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="pseudo_labeling.html#mlcpl.pseudo_labeling.CurriculumLabeling"><code class="docutils literal notranslate"><span class="pre">CurriculumLabeling()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="pseudo_labeling.html#mlcpl.pseudo_labeling.CurriculumLabeling.__init__"><code class="docutils literal notranslate"><span class="pre">__init__()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="pseudo_labeling.html#mlcpl.pseudo_labeling.CurriculumLabeling.update"><code class="docutils literal notranslate"><span class="pre">update()</span></code></a></li>
+</ul>
+</li>
+</ul>
+</div>
+</section>
+</section>
+<section id="indices-and-tables">
+<h1>Indices and tables<a class="headerlink" href="#indices-and-tables" title="Permalink to this heading">¶</a></h1>
+<ul class="simple">
+<li><p><a class="reference internal" href="genindex.html"><span class="std std-ref">Index</span></a></p></li>
+<li><p><a class="reference internal" href="search.html"><span class="std std-ref">Search Page</span></a></p></li>
+</ul>
+</section>
+
+
+          </div>
+          <div class="page-nav">
+            <div class="inner"><ul class="page-nav">
+  <li class="next">
+    <a href="loss_functions.html"
+       title="next chapter">Loss Functions →</a>
+  </li>
+</ul><div class="footer" role="contentinfo">
+      &#169; Copyright 2025, maxium0526.
+    <br>
+    Created using <a href="http://sphinx-doc.org/">Sphinx</a> 7.1.2 with <a href="https://github.com/schettino72/sphinx_press_theme">Press Theme</a> 0.9.1.
+</div>
+            </div>
+          </div>
+      </page>
+    </div></div>
+    
+    
+  </body>
+</html>

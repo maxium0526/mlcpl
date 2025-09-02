@@ -1,0 +1,556 @@
+<!DOCTYPE html>
+<html  lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1"><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+      <title>Datasets</title>
+    
+          <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+          <link rel="stylesheet" href="_static/theme.css " type="text/css" />
+      
+      <!-- sphinx script_files -->
+        <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js?v=b3ba4146"></script>
+        <script src="_static/doctools.js?v=888ff710"></script>
+        <script src="_static/sphinx_highlight.js?v=4825356b"></script>
+
+      
+      <!-- bundled in js (rollup iife) -->
+      <!-- <script src="_static/theme-vendors.js"></script> -->
+      <script src="_static/theme.js" defer></script>
+    
+  <link rel="index" title="Index" href="genindex.html" />
+  <link rel="search" title="Search" href="search.html" />
+  <link rel="next" title="Data Augmentations" href="data_augmentations.html" />
+  <link rel="prev" title="Metrics" href="metrics.html" /> 
+  </head>
+
+  <body>
+    <div id="app">
+    <div class="theme-container" :class="pageClasses"><navbar @toggle-sidebar="toggleSidebar">
+  <router-link to="index.html" class="home-link">
+    
+      <span class="site-name">mlcpl</span>
+    
+  </router-link>
+
+  <div class="links">
+    <navlinks class="can-hide">
+
+  
+    <div class="nav-item">
+      <a href="index.html#welcome-to-mlcpl-s-api-documentation"
+         class="nav-link ">
+         Contents:
+      </a>
+    </div>
+  
+    <div class="nav-item">
+      <a href="index.html#contents"
+         class="nav-link  router-link-active">
+         contents
+      </a>
+    </div>
+  
+
+
+
+    </navlinks>
+  </div>
+</navbar>
+
+      
+      <div class="sidebar-mask" @click="toggleSidebar(false)">
+      </div>
+        <sidebar @toggle-sidebar="toggleSidebar">
+          
+          <navlinks>
+            
+
+  
+    <div class="nav-item">
+      <a href="index.html#welcome-to-mlcpl-s-api-documentation"
+         class="nav-link ">
+         Contents:
+      </a>
+    </div>
+  
+    <div class="nav-item">
+      <a href="index.html#contents"
+         class="nav-link  router-link-active">
+         contents
+      </a>
+    </div>
+  
+
+
+
+            
+          </navlinks><div id="searchbox" class="searchbox" role="search">
+  <div class="caption"><span class="caption-text">Quick search</span>
+    <div class="searchformwrapper">
+      <form class="search" action="search.html" method="get">
+        <input type="text" name="q" />
+        <input type="submit" value="Search" />
+        <input type="hidden" name="check_keywords" value="yes" />
+        <input type="hidden" name="area" value="default" />
+      </form>
+    </div>
+  </div>
+</div><div class="sidebar-links" role="navigation" aria-label="main navigation">
+  
+    <div class="sidebar-group">
+      <p class="caption">
+        <span class="caption-text"><a href="index.html#welcome-to-mlcpl-s-api-documentation">Contents:</a></span>
+      </p>
+      <ul class="">
+        
+      </ul>
+    </div>
+  
+    <div class="sidebar-group">
+      <p class="caption">
+        <span class="caption-text"><a href="index.html#contents">contents</a></span>
+      </p>
+      <ul class="current">
+        
+          <li class="toctree-l1 ">
+            
+              <a href="loss_functions.html" class="reference internal ">Loss Functions</a>
+            
+
+            
+          </li>
+
+        
+          <li class="toctree-l1 ">
+            
+              <a href="metrics.html" class="reference internal ">Metrics</a>
+            
+
+            
+          </li>
+
+        
+          <li class="toctree-l1 current">
+            
+              <a href="#" class="reference internal current">Datasets</a>
+            
+
+            
+              <ul>
+                
+                  <li class="toctree-l2"><a href="#the-mlcpldataset-class" class="reference internal">The MLCPLDataset class</a></li>
+                
+                  <li class="toctree-l2"><a href="#dataset-loaders" class="reference internal">Dataset Loaders</a></li>
+                
+              </ul>
+            
+          </li>
+
+        
+          <li class="toctree-l1 ">
+            
+              <a href="data_augmentations.html" class="reference internal ">Data Augmentations</a>
+            
+
+            
+          </li>
+
+        
+          <li class="toctree-l1 ">
+            
+              <a href="pseudo_labeling.html" class="reference internal ">Pseudo Labeling</a>
+            
+
+            
+          </li>
+
+        
+      </ul>
+    </div>
+  
+</div>
+        </sidebar>
+
+      <page>
+          <div class="body-header" role="navigation" aria-label="navigation">
+  
+  <ul class="breadcrumbs">
+    <li><a href="index.html">Docs</a> &raquo;</li>
+    
+    <li>Datasets</li>
+  </ul>
+  
+
+  <ul class="page-nav">
+  <li class="prev">
+    <a href="metrics.html"
+       title="previous chapter">← Metrics</a>
+  </li>
+  <li class="next">
+    <a href="data_augmentations.html"
+       title="next chapter">Data Augmentations →</a>
+  </li>
+</ul>
+  
+</div>
+<hr>
+          <div class="content" role="main" v-pre>
+            
+  <section id="datasets">
+<h1>Datasets<a class="headerlink" href="#datasets" title="Permalink to this heading">¶</a></h1>
+<section id="the-mlcpldataset-class">
+<h2>The <code class="docutils literal notranslate"><span class="pre">MLCPLDataset</span></code> class<a class="headerlink" href="#the-mlcpldataset-class" title="Permalink to this heading">¶</a></h2>
+<dl class="py function">
+<dt class="sig sig-object py" id="mlcpl.datasets.MLCPLDataset">
+<span class="sig-prename descclassname"><span class="pre">mlcpl.datasets.</span></span><span class="sig-name descname"><span class="pre">MLCPLDataset</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwds</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#mlcpl.datasets.MLCPLDataset" title="Permalink to this definition">¶</a></dt>
+<dd><p>A subclass of the torch Dataset for partially labeled multi-label datasets.</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="mlcpl.datasets.MLCPLDataset.__init__">
+<span class="sig-prename descclassname"><span class="pre">mlcpl.datasets.MLCPLDataset.</span></span><span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">self,</span> <span class="pre">name:</span> <span class="pre">str,</span> <span class="pre">dataset_path:</span> <span class="pre">str,</span> <span class="pre">records:</span> <span class="pre">~typing.List[~typing.Tuple],</span> <span class="pre">num_categories:</span> <span class="pre">int,</span> <span class="pre">transform:</span> <span class="pre">~typing.Callable</span> <span class="pre">=</span> <span class="pre">ToTensor(),</span> <span class="pre">categories:</span> <span class="pre">~typing.List[str]</span> <span class="pre">|</span> <span class="pre">None</span> <span class="pre">=</span> <span class="pre">None,</span> <span class="pre">read_func:</span> <span class="pre">~typing.Callable</span> <span class="pre">=</span> <span class="pre">&lt;function</span> <span class="pre">read_jpg&gt;</span></em><span class="sig-paren">)</span><a class="headerlink" href="#mlcpl.datasets.MLCPLDataset.__init__" title="Permalink to this definition">¶</a></dt>
+<dd><p>Construct a MLCPLDataset object</p>
+<dl>
+<dt>Args:</dt><dd><p>name (str): Dataset name</p>
+<p>dataset_path (str): The absolute/relative path of the dataset folder.</p>
+<p>records (List[tuple]): In consists of information of samples. Each tuple store a sample’s (id, img_path, list of positive categories, list of negative categories)</p>
+<p>num_categories (int): The total number of categories.</p>
+<p>transform (Callable): The transform function applied to images.</p>
+<p>categories (List[str], optional): Categories’s name. Defaults to None.</p>
+<p>read_func (Callable, optional): The function to read an image into a PILLOW Image instance. Defaults to read_jpg.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="mlcpl.datasets.MLCPLDataset.summary">
+<span class="sig-prename descclassname"><span class="pre">mlcpl.datasets.MLCPLDataset.</span></span><span class="sig-name descname"><span class="pre">summary</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#mlcpl.datasets.MLCPLDataset.summary" title="Permalink to this definition">¶</a></dt>
+<dd><p>print general infromation of the dataset</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="mlcpl.datasets.MLCPLDataset.__getitem__">
+<span class="sig-prename descclassname"><span class="pre">mlcpl.datasets.MLCPLDataset.</span></span><span class="sig-name descname"><span class="pre">__getitem__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">idx</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#mlcpl.datasets.MLCPLDataset.__getitem__" title="Permalink to this definition">¶</a></dt>
+<dd><p>loads and returns a sample from the dataset at the given index idx. See <a class="reference external" href="https://pytorch.org/tutorials/beginner/basics/data_tutorial.html">https://pytorch.org/tutorials/beginner/basics/data_tutorial.html</a>.</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="mlcpl.datasets.MLCPLDataset.__to_one_hot">
+<span class="sig-prename descclassname"><span class="pre">mlcpl.datasets.MLCPLDataset.</span></span><span class="sig-name descname"><span class="pre">__to_one_hot</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">pos_categories</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">int</span><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">neg_categories</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">int</span><span class="p"><span class="pre">]</span></span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Tensor</span></span></span><a class="headerlink" href="#mlcpl.datasets.MLCPLDataset.__to_one_hot" title="Permalink to this definition">¶</a></dt>
+<dd><p>Produce an one-hot vector based on given categories.</p>
+<dl>
+<dt>Args:</dt><dd><p>pos_categories (List[int]): Positive categories</p>
+<p>neg_categories (List[int]): Negative categories</p>
+</dd>
+<dt>Returns:</dt><dd><p>Tensor: An one-hot tensor with shape (N).</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="mlcpl.datasets.MLCPLDataset.get_statistics">
+<span class="sig-prename descclassname"><span class="pre">mlcpl.datasets.MLCPLDataset.</span></span><span class="sig-name descname"><span class="pre">get_statistics</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#mlcpl.datasets.MLCPLDataset.get_statistics" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return some statistics given the dataset’s informations</p>
+<dl>
+<dt>Args:</dt><dd><p>records (List[Tuple]): In consists of information of samples. Each tuple store a sample’s (id, img_path, list of positive categories, list of negative categories)</p>
+<p>num_categories (int): The total number of categories</p>
+</dd>
+<dt>Returns:</dt><dd><p>Dict: A dict consisting of statistics</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="mlcpl.datasets.MLCPLDataset.drop_labels_uniform">
+<span class="sig-prename descclassname"><span class="pre">mlcpl.datasets.MLCPLDataset.</span></span><span class="sig-name descname"><span class="pre">drop_labels_uniform</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">target_label_proportion</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">seed</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">526</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#mlcpl.datasets.MLCPLDataset.drop_labels_uniform" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="mlcpl.datasets.MLCPLDataset.drop_labels_single_positive">
+<span class="sig-prename descclassname"><span class="pre">mlcpl.datasets.MLCPLDataset.</span></span><span class="sig-name descname"><span class="pre">drop_labels_single_positive</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">seed</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">526</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">Tuple</span><span class="p"><span class="pre">]</span></span></span></span><a class="headerlink" href="#mlcpl.datasets.MLCPLDataset.drop_labels_single_positive" title="Permalink to this definition">¶</a></dt>
+<dd><p>Only one positive label is retained and all other labels are dropped for each sample.</p>
+<dl class="simple">
+<dt>Args:</dt><dd><p>seed (int, optional): The random seed. Defaults to 526.</p>
+</dd>
+<dt>Returns:</dt><dd><p>Self: self</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="mlcpl.datasets.MLCPLDataset.drop_labels_fix_per_category">
+<span class="sig-prename descclassname"><span class="pre">mlcpl.datasets.MLCPLDataset.</span></span><span class="sig-name descname"><span class="pre">drop_labels_fix_per_category</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">max_num_labels_per_category</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">seed</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">526</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#mlcpl.datasets.MLCPLDataset.drop_labels_fix_per_category" title="Permalink to this definition">¶</a></dt>
+<dd><p>Drop labels with the FPC method. See <a class="reference external" href="https://openaccess.thecvf.com/content/CVPR2022/papers/Ben-Baruch_Multi-Label_Classification_With_Partial_Annotations_Using_Class-Aware_Selective_Loss_CVPR_2022_paper.pdf">https://openaccess.thecvf.com/content/CVPR2022/papers/Ben-Baruch_Multi-Label_Classification_With_Partial_Annotations_Using_Class-Aware_Selective_Loss_CVPR_2022_paper.pdf</a></p>
+<dl>
+<dt>Args:</dt><dd><p>max_num_labels_per_category (int): The maximum number of labels for each category</p>
+<p>seed (int, optional): The random seed. Defaults to 526.</p>
+</dd>
+<dt>Returns:</dt><dd><p>Self: self</p>
+</dd>
+</dl>
+</dd></dl>
+
+</section>
+<section id="dataset-loaders">
+<h2>Dataset Loaders<a class="headerlink" href="#dataset-loaders" title="Permalink to this heading">¶</a></h2>
+<dl class="py function">
+<dt class="sig sig-object py" id="mlcpl.datasets.MSCOCO">
+<span class="sig-prename descclassname"><span class="pre">mlcpl.datasets.</span></span><span class="sig-name descname"><span class="pre">MSCOCO</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">dataset_path</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">year</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'2014'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">split</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'train'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">transform</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">ToTensor()</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#mlcpl.datasets.MSCOCO" title="Permalink to this definition">¶</a></dt>
+<dd><p>Load the MS-COCO dataset.</p>
+<dl class="simple">
+<dt>Args:</dt><dd><dl class="simple">
+<dt>dataset_path: </dt><dd><p>Path to the dataset folder.</p>
+</dd>
+<dt>year:</dt><dd><p>The year of split. Defaults to ‘2014’.</p>
+</dd>
+<dt>split: </dt><dd><p>The sub-split of the dataset. Defaults to ‘train’.</p>
+</dd>
+<dt>transform: </dt><dd><p>Transformation applied to images. Defaults to transforms.ToTensor().</p>
+</dd>
+</dl>
+</dd>
+<dt>Returns:</dt><dd><p>A <code class="docutils literal notranslate"><span class="pre">MLCPLDataset</span></code> object.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="mlcpl.datasets.Pascal_VOC_2007">
+<span class="sig-prename descclassname"><span class="pre">mlcpl.datasets.</span></span><span class="sig-name descname"><span class="pre">Pascal_VOC_2007</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">dataset_path</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">split</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'train'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">transform</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">ToTensor()</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#mlcpl.datasets.Pascal_VOC_2007" title="Permalink to this definition">¶</a></dt>
+<dd><p>Load the Pascal VOC 2007 dataset.</p>
+<dl class="simple">
+<dt>Args:</dt><dd><dl class="simple">
+<dt>dataset_path: </dt><dd><p>Path to the dataset folder.</p>
+</dd>
+<dt>split: </dt><dd><p>The sub-split of the dataset. Defaults to ‘train’.</p>
+</dd>
+<dt>transform: </dt><dd><p>Transformation applied to images. Defaults to transforms.ToTensor().</p>
+</dd>
+</dl>
+</dd>
+<dt>Returns:</dt><dd><p>A <code class="docutils literal notranslate"><span class="pre">MLCPLDataset</span></code> object.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="mlcpl.datasets.LVIS">
+<span class="sig-prename descclassname"><span class="pre">mlcpl.datasets.</span></span><span class="sig-name descname"><span class="pre">LVIS</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">dataset_path</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">split</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'train'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">transform</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">ToTensor()</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#mlcpl.datasets.LVIS" title="Permalink to this definition">¶</a></dt>
+<dd><p>Load the LVIS dataset.</p>
+<dl class="simple">
+<dt>Args:</dt><dd><dl class="simple">
+<dt>dataset_path: </dt><dd><p>Path to the dataset folder.</p>
+</dd>
+<dt>split: </dt><dd><p>The sub-split of the dataset. Defaults to ‘train’.</p>
+</dd>
+<dt>transform: </dt><dd><p>Transformation applied to images. Defaults to transforms.ToTensor().</p>
+</dd>
+</dl>
+</dd>
+<dt>Returns:</dt><dd><p>A <code class="docutils literal notranslate"><span class="pre">MLCPLDataset</span></code> object.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="mlcpl.datasets.Open_Images_V6">
+<span class="sig-prename descclassname"><span class="pre">mlcpl.datasets.</span></span><span class="sig-name descname"><span class="pre">Open_Images_V6</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">dataset_path</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">split</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">transform</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">ToTensor()</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">use_cache</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">cache_dir</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'output/dataset'</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#mlcpl.datasets.Open_Images_V6" title="Permalink to this definition">¶</a></dt>
+<dd><p>Load the Open Images v6 dataset.</p>
+<dl class="simple">
+<dt>Args:</dt><dd><dl class="simple">
+<dt>dataset_path: </dt><dd><p>Path to the dataset folder.</p>
+</dd>
+<dt>split: </dt><dd><p>The sub-split of the dataset. Defaults to ‘train’.</p>
+</dd>
+<dt>transform: </dt><dd><p>Transformation applied to images. Defaults to transforms.ToTensor().</p>
+</dd>
+<dt>use_cache:</dt><dd><p>Whether saving the loaded metadata to cache. Defaults to True.</p>
+</dd>
+<dt>cache_dir:</dt><dd><p>The path to the cache. Defaults to ‘output/dataset’.</p>
+</dd>
+</dl>
+</dd>
+<dt>Returns:</dt><dd><p>A <code class="docutils literal notranslate"><span class="pre">MLCPLDataset</span></code> object.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="mlcpl.datasets.Open_Images_V3">
+<span class="sig-prename descclassname"><span class="pre">mlcpl.datasets.</span></span><span class="sig-name descname"><span class="pre">Open_Images_V3</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">dataset_path</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">split</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'train'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">transform</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">ToTensor()</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">use_cache</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">cache_dir</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'output/dataset'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">check_images</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#mlcpl.datasets.Open_Images_V3" title="Permalink to this definition">¶</a></dt>
+<dd><p>Load the Open Images v3 dataset.</p>
+<dl class="simple">
+<dt>Args:</dt><dd><dl class="simple">
+<dt>dataset_path: </dt><dd><p>Path to the dataset folder.</p>
+</dd>
+<dt>split: </dt><dd><p>The sub-split of the dataset. Defaults to ‘train’.</p>
+</dd>
+<dt>transform: </dt><dd><p>Transformation applied to images. Defaults to transforms.ToTensor().</p>
+</dd>
+<dt>use_cache:</dt><dd><p>Whether saving the loaded metadata to cache. Defaults to True.</p>
+</dd>
+<dt>cache_dir:</dt><dd><p>The path to the cache. Defaults to ‘output/dataset’.</p>
+</dd>
+<dt>check_images:</dt><dd><p>Whether perform a check to detect if each image file in the metadata exists. Defaults to True.</p>
+</dd>
+</dl>
+</dd>
+<dt>Returns:</dt><dd><p>A <code class="docutils literal notranslate"><span class="pre">MLCPLDataset</span></code> object.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="mlcpl.datasets.CheXpert">
+<span class="sig-prename descclassname"><span class="pre">mlcpl.datasets.</span></span><span class="sig-name descname"><span class="pre">CheXpert</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">dataset_path</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">split</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'train'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">competition_categories</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">transform</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">ToTensor()</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#mlcpl.datasets.CheXpert" title="Permalink to this definition">¶</a></dt>
+<dd><p>Load the CheXpert dataset.</p>
+<dl class="simple">
+<dt>Args:</dt><dd><dl class="simple">
+<dt>dataset_path: </dt><dd><p>Path to the dataset folder.</p>
+</dd>
+<dt>split: </dt><dd><p>The sub-split of the dataset. Defaults to ‘train’.</p>
+</dd>
+<dt>competition_categories:</dt><dd><p>If True, the returned dataset only consists of 5 categories of the CheXpert competition: Atelectasis, Cardiomegaly, Consolidation, Edema, and Pleural Effusion. Defaults to False.</p>
+</dd>
+<dt>transform: </dt><dd><p>Transformation applied to images. Defaults to transforms.ToTensor().</p>
+</dd>
+</dl>
+</dd>
+<dt>Returns:</dt><dd><p>A <code class="docutils literal notranslate"><span class="pre">MLCPLDataset</span></code> object.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="mlcpl.datasets.VAW">
+<span class="sig-prename descclassname"><span class="pre">mlcpl.datasets.</span></span><span class="sig-name descname"><span class="pre">VAW</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">dataset_path</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">vg_dataset_path</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">split</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'train'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">use_cache</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">cache_dir</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'output/dataset'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">transform</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">ToTensor()</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#mlcpl.datasets.VAW" title="Permalink to this definition">¶</a></dt>
+<dd><p>Load the VAW dataset.</p>
+<dl class="simple">
+<dt>Args:</dt><dd><dl class="simple">
+<dt>dataset_path: </dt><dd><p>Path to the dataset folder.</p>
+</dd>
+<dt>vg_dataset_path: </dt><dd><p>Path to the Visual Gerome dataset folder.</p>
+</dd>
+<dt>split: </dt><dd><p>The sub-split of the dataset. Defaults to ‘train’.</p>
+</dd>
+<dt>transform: </dt><dd><p>Transformation applied to images. Defaults to transforms.ToTensor().</p>
+</dd>
+<dt>use_cache:</dt><dd><p>Whether saving the loaded metadata to cache. Defaults to True.</p>
+</dd>
+<dt>cache_dir:</dt><dd><p>The path to the cache. Defaults to ‘output/dataset’.</p>
+</dd>
+</dl>
+</dd>
+<dt>Returns:</dt><dd><p>A <code class="docutils literal notranslate"><span class="pre">MLCPLDataset</span></code> object.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="mlcpl.datasets.NUS_WIDE">
+<span class="sig-prename descclassname"><span class="pre">mlcpl.datasets.</span></span><span class="sig-name descname"><span class="pre">NUS_WIDE</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">dataset_path</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">split</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'train'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">transform</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">ToTensor()</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#mlcpl.datasets.NUS_WIDE" title="Permalink to this definition">¶</a></dt>
+<dd><p>Load the NUS-WIDE dataset.</p>
+<dl class="simple">
+<dt>Args:</dt><dd><dl class="simple">
+<dt>dataset_path: </dt><dd><p>Path to the dataset folder.</p>
+</dd>
+<dt>split: </dt><dd><p>The sub-split of the dataset. Defaults to ‘train’.</p>
+</dd>
+<dt>transform: </dt><dd><p>Transformation applied to images. Defaults to transforms.ToTensor().</p>
+</dd>
+</dl>
+</dd>
+<dt>Returns:</dt><dd><p>A <code class="docutils literal notranslate"><span class="pre">MLCPLDataset</span></code> object.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="mlcpl.datasets.VISPR">
+<span class="sig-prename descclassname"><span class="pre">mlcpl.datasets.</span></span><span class="sig-name descname"><span class="pre">VISPR</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">dataset_path</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">split</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'train'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">transform</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">ToTensor()</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#mlcpl.datasets.VISPR" title="Permalink to this definition">¶</a></dt>
+<dd><p>Load the VISPR dataset.</p>
+<dl class="simple">
+<dt>Args:</dt><dd><dl class="simple">
+<dt>dataset_path: </dt><dd><p>Path to the dataset folder.</p>
+</dd>
+<dt>split: </dt><dd><p>The sub-split of the dataset. Defaults to ‘train’.</p>
+</dd>
+<dt>transform: </dt><dd><p>Transformation applied to images. Defaults to transforms.ToTensor().</p>
+</dd>
+</dl>
+</dd>
+<dt>Returns:</dt><dd><p>A <code class="docutils literal notranslate"><span class="pre">MLCPLDataset</span></code> object.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="mlcpl.datasets.Vireo_Food_172">
+<span class="sig-prename descclassname"><span class="pre">mlcpl.datasets.</span></span><span class="sig-name descname"><span class="pre">Vireo_Food_172</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">dataset_path</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">split</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'train'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">transform</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">ToTensor()</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#mlcpl.datasets.Vireo_Food_172" title="Permalink to this definition">¶</a></dt>
+<dd><p>Load the Vireo Food 172 dataset.</p>
+<dl class="simple">
+<dt>Args:</dt><dd><dl class="simple">
+<dt>dataset_path: </dt><dd><p>Path to the dataset folder.</p>
+</dd>
+<dt>split: </dt><dd><p>The sub-split of the dataset. Defaults to ‘train’.</p>
+</dd>
+<dt>transform: </dt><dd><p>Transformation applied to images. Defaults to transforms.ToTensor().</p>
+</dd>
+</dl>
+</dd>
+<dt>Returns:</dt><dd><p>A <code class="docutils literal notranslate"><span class="pre">MLCPLDataset</span></code> object.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="mlcpl.datasets.VG_200">
+<span class="sig-prename descclassname"><span class="pre">mlcpl.datasets.</span></span><span class="sig-name descname"><span class="pre">VG_200</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">dataset_path</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">metadata_path</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">split</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'train'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">transform</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">ToTensor()</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#mlcpl.datasets.VG_200" title="Permalink to this definition">¶</a></dt>
+<dd><p>Load the VG-200 dataset.</p>
+<dl class="simple">
+<dt>Args:</dt><dd><dl class="simple">
+<dt>dataset_path: </dt><dd><p>Path to the dataset folder.</p>
+</dd>
+<dt>metadata_path:</dt><dd><p>Path to the folder of the metadata file.</p>
+</dd>
+<dt>split: </dt><dd><p>The sub-split of the dataset. Defaults to ‘train’.</p>
+</dd>
+<dt>transform: </dt><dd><p>Transformation applied to images. Defaults to transforms.ToTensor().</p>
+</dd>
+</dl>
+</dd>
+<dt>Returns:</dt><dd><p>A <code class="docutils literal notranslate"><span class="pre">MLCPLDataset</span></code> object.</p>
+</dd>
+</dl>
+</dd></dl>
+
+</section>
+</section>
+
+
+          </div>
+          <div class="page-nav">
+            <div class="inner"><ul class="page-nav">
+  <li class="prev">
+    <a href="metrics.html"
+       title="previous chapter">← Metrics</a>
+  </li>
+  <li class="next">
+    <a href="data_augmentations.html"
+       title="next chapter">Data Augmentations →</a>
+  </li>
+</ul><div class="footer" role="contentinfo">
+      &#169; Copyright 2025, maxium0526.
+    <br>
+    Created using <a href="http://sphinx-doc.org/">Sphinx</a> 7.1.2 with <a href="https://github.com/schettino72/sphinx_press_theme">Press Theme</a> 0.9.1.
+</div>
+            </div>
+          </div>
+      </page>
+    </div></div>
+    
+    
+  </body>
+</html>

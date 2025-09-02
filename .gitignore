@@ -15,4 +15,3 @@ output/
 uv.lock
 *.egg-info
 notebook_examples_bak/
-docs/build/
