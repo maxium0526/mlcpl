@@ -31,4 +31,4 @@ html_static_path = ['_static']
 import os
 import sys
 sys.path.insert(0, os.path.abspath('..')) # Adjust path as needed
-sys.path.insert(0, os.path.abspath('..source')) # Adjust path as needed
+sys.path.insert(0, os.path.abspath('..src')) # Adjust path as needed
