@@ -7,6 +7,7 @@ output/
 !/src/mlcpl/metrics/*.py
 !/src/mlcpl/cft/*.py
 !/src/mlcpl/augs/*.py
+!/docs/source/conf.py
 *.csv
 *.png
 *.pt
