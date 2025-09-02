@@ -43,6 +43,11 @@ dev = [
     "sphinx>=7.1.2",
     "sphinx-press-theme",
 ]
+
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
 [tool.pytest.ini_options]
 testpaths = ["tests"]
 python_files = "test_*.py"
