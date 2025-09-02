@@ -1,2 +1,1 @@
 sphinx-press-theme==0.9.1
-mlcpl==0.1.0
